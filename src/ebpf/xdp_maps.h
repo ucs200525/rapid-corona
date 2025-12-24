@@ -31,7 +31,7 @@ struct flow_stats {
     __u64 last_seen;  // timestamp in nanoseconds
     __u8 flags;       // TCP flags OR'd together
     __u8 pad[7];
-} __attribute__((packed));
+};
 
 /* Per-IP tracking structure */
 struct ip_stats {
@@ -41,7 +41,7 @@ struct ip_stats {
     __u32 flow_count;  // Number of flows from this IP
     __u16 syn_count;   // SYN packets (for SYN flood detection)
     __u16 udp_count;   // UDP packets
-} __attribute__((packed));
+};
 
 /* Attack signature structure */
 struct attack_signature {
@@ -64,7 +64,7 @@ struct stats {
     __u64 udp_packets;
     __u64 icmp_packets;
     __u64 other_packets;
-} __attribute__((packed));
+};
 
 /*
  * BPF Maps

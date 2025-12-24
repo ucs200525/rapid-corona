@@ -1,0 +1,118 @@
+"""
+Configuration file for DDoS Mitigation System
+"""
+
+import os
+import platform
+
+# System Configuration
+PLATFORM = platform.system().lower()  # 'linux' or 'windows'
+DEBUG_MODE = os.getenv('DEBUG', 'False').lower() == 'true'
+
+# Network Configuration
+DEFAULT_INTERFACE = 'eth0' if PLATFORM == 'linux' else 'Ethernet'
+NETWORK_INTERFACE = os.getenv('INTERFACE', DEFAULT_INTERFACE)
+
+# eBPF Configuration
+EBPF_PROGRAM_PATH = 'src/ebpf/xdp_filter.o'
+XDP_MODE = 'native'  # Options: 'native', 'generic', 'offload'
+
+# Detection Thresholds
+class DetectionThresholds:
+    # Packet rate thresholds (packets per second)
+    NORMAL_PPS_BASELINE = 10000  # Expected normal traffic
+    ALERT_PPS_THRESHOLD = 100000  # Alert threshold
+    ATTACK_PPS_THRESHOLD = 500000  # Definite attack threshold
+    
+    # Statistical thresholds
+    SIGMA_MULTIPLIER = 3.5  # Standard deviation multiplier for anomaly
+    MIN_ENTROPY = 3.0  # Minimum source IP entropy (lower = more concentrated)
+    
+    # Rate of change detection
+    MAX_CHANGE_RATE = 5.0  # Max allowed rate increase (5x)
+    
+    # Protocol distribution (approximate normal ratios)
+    NORMAL_TCP_RATIO = 0.85  # 85% TCP
+    NORMAL_UDP_RATIO = 0.10  # 10% UDP
+    NORMAL_ICMP_RATIO = 0.05  # 5% ICMP
+    PROTOCOL_DEVIATION_THRESHOLD = 0.3  # 30% deviation is suspicious
+
+# Time Window Configuration
+class TimeWindows:
+    BASELINE_WINDOW = 300  # 5 minutes for baseline calculation
+    DETECTION_WINDOW = 10   # 10 seconds for attack detection
+    ALERT_COOLDOWN = 60     # 60 seconds between duplicate alerts
+    STATISTICS_UPDATE = 1   # 1 second for statistics update
+
+# eBPF Map Configuration
+class EbpfMapConfig:
+    FLOW_MAP_SIZE = 65536       # Max concurrent flows
+    IP_TRACKING_SIZE = 131072   # Max tracked IPs
+    BLACKLIST_SIZE = 10000      # Max blacklisted IPs
+    SIGNATURE_MAP_SIZE = 1000   # Max attack signatures
+
+# Monitoring Configuration
+class MonitoringConfig:
+    DASHBOARD_ENABLED = True
+    DASHBOARD_PORT = 5000
+    DASHBOARD_HOST = '0.0.0.0'
+    
+    # Metrics export
+    METRICS_ENABLED = True
+    METRICS_PORT = 9090
+    
+    # Logging
+    LOG_LEVEL = 'INFO' if not DEBUG_MODE else 'DEBUG'
+    LOG_FILE = 'logs/ddos_mitigation.log'
+    LOG_MAX_BYTES = 10 * 1024 * 1024  # 10 MB
+    LOG_BACKUP_COUNT = 5
+
+# Alert Configuration
+class AlertConfig:
+    ALERT_TO_CONSOLE = True
+    ALERT_TO_FILE = True
+    ALERT_FILE = 'logs/alerts.log'
+    
+    # Future: Email, Slack, etc.
+    # ALERT_EMAIL = None
+    # ALERT_SLACK_WEBHOOK = None
+
+# Traffic Profiling
+class ProfilingConfig:
+    ENABLE_PROFILING = True
+    PROFILE_SAVE_INTERVAL = 300  # Save profile every 5 minutes
+    PROFILE_FILE = 'data/traffic_profile.json'
+    LEARNING_PERIOD = 3600  # 1 hour initial learning period
+
+# Performance Configuration
+class PerformanceConfig:
+    # eBPF processing
+    EBPF_POLL_TIMEOUT = 100  # milliseconds
+    
+    # User-space processing
+    WORKER_THREADS = 4
+    BATCH_SIZE = 1000  # Process statistics in batches
+    
+    # Memory limits
+    MAX_MEMORY_MB = 1024  # 1 GB max memory usage
+
+# Simulation Configuration (for testing)
+class SimulationConfig:
+    ENABLE_SIMULATOR = False
+    NORMAL_TRAFFIC_RATE = 50000  # pps
+    ATTACK_TRAFFIC_RATE = 1000000  # pps
+    SIMULATION_DURATION = 300  # seconds
+
+# Platform-specific paths
+if PLATFORM == 'linux':
+    DATA_DIR = '/var/lib/ddos-mitigation'
+    LOG_DIR = '/var/log/ddos-mitigation'
+else:  # Windows
+    DATA_DIR = os.path.join(os.getenv('PROGRAMDATA', 'C:\\ProgramData'), 'ddos-mitigation')
+    LOG_DIR = os.path.join(DATA_DIR, 'logs')
+
+# Create directories if they don't exist
+os.makedirs(DATA_DIR, exist_ok=True)
+os.makedirs(LOG_DIR, exist_ok=True)
+os.makedirs('data', exist_ok=True)
+os.makedirs('logs', exist_ok=True)

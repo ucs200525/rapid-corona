@@ -1,5 +1,5 @@
 /*
- * XDP DDoS Mitigation Filter
+ * XDP DDoS Mitigation Filter - BCC Compatible Version
  * High-performance packet filtering at NIC driver level
  */
 
@@ -10,12 +10,58 @@
 #include <linux/udp.h>
 #include <linux/icmp.h>
 #include <linux/in.h>
-#include <bpf/bpf_helpers.h>
-#include <bpf/bpf_endian.h>
 
-#include "xdp_maps.h"
+/* BPF map definitions - BCC style */
 
-/* Helper to get current time in nanoseconds */
+/* Flow tracking structure */
+struct flow_key {
+    __u32 src_ip;
+    __u32 dst_ip;
+    __u16 src_port;
+    __u16 dst_port;
+    __u8 protocol;
+    __u8 pad[3];
+};
+
+struct flow_stats {
+    __u64 packets;
+    __u64 bytes;
+    __u64 last_seen;
+    __u8 flags;
+    __u8 pad[7];
+};
+
+/* Per-IP tracking structure */
+struct ip_stats {
+    __u64 packets;
+    __u64 bytes;
+    __u64 last_seen;
+    __u32 flow_count;
+    __u32 syn_count;
+    __u32 udp_count;
+};
+
+/* Statistics structure (per-CPU) */
+struct stats {
+    __u64 total_packets;
+    __u64 total_bytes;
+    __u64 dropped_packets;
+    __u64 dropped_bytes;
+    __u64 passed_packets;
+    __u64 passed_bytes;
+    __u64 tcp_packets;
+    __u64 udp_packets;
+    __u64 icmp_packets;
+    __u64 other_packets;
+};
+
+/* BPF Maps - BCC style declarations */
+BPF_HASH(flow_map, struct flow_key, struct flow_stats, 65536);
+BPF_HASH(ip_tracking_map, __u32, struct ip_stats, 131072);
+BPF_HASH(blacklist_map, __u32, __u64, 10000);
+BPF_PERCPU_ARRAY(stats_map, struct stats, 1);
+
+/* Helper to get current time */
 static __always_inline __u64 get_time_ns(void) {
     return bpf_ktime_get_ns();
 }
@@ -35,7 +81,6 @@ static __always_inline void update_stats(struct stats *s, __u64 bytes, __u8 prot
         __sync_fetch_and_add(&s->passed_bytes, bytes);
     }
     
-    // Protocol-specific stats
     switch (protocol) {
         case IPPROTO_TCP:
             __sync_fetch_and_add(&s->tcp_packets, 1);
@@ -54,27 +99,25 @@ static __always_inline void update_stats(struct stats *s, __u64 bytes, __u8 prot
 
 /* Check if IP is blacklisted */
 static __always_inline int is_blacklisted(__u32 src_ip) {
-    __u64 *timestamp = bpf_map_lookup_elem(&blacklist_map, &src_ip);
+    __u64 *timestamp = blacklist_map.lookup(&src_ip);
     return (timestamp != NULL);
 }
 
 /* Update IP tracking statistics */
 static __always_inline void update_ip_stats(__u32 src_ip, __u64 bytes, __u8 protocol, __u8 tcp_flags) {
-    struct ip_stats *ip_stat = bpf_map_lookup_elem(&ip_tracking_map, &src_ip);
+    struct ip_stats *ip_stat = ip_tracking_map.lookup(&src_ip);
     
     if (ip_stat) {
-        // Update existing entry
         __sync_fetch_and_add(&ip_stat->packets, 1);
         __sync_fetch_and_add(&ip_stat->bytes, bytes);
         ip_stat->last_seen = get_time_ns();
         
-        if (protocol == IPPROTO_TCP && (tcp_flags & 0x02)) {  // SYN flag
+        if (protocol == IPPROTO_TCP && (tcp_flags & 0x02)) {
             __sync_fetch_and_add(&ip_stat->syn_count, 1);
         } else if (protocol == IPPROTO_UDP) {
             __sync_fetch_and_add(&ip_stat->udp_count, 1);
         }
     } else {
-        // Create new entry
         struct ip_stats new_stat = {
             .packets = 1,
             .bytes = bytes,
@@ -83,13 +126,13 @@ static __always_inline void update_ip_stats(__u32 src_ip, __u64 bytes, __u8 prot
             .syn_count = (protocol == IPPROTO_TCP && (tcp_flags & 0x02)) ? 1 : 0,
             .udp_count = (protocol == IPPROTO_UDP) ? 1 : 0,
         };
-        bpf_map_update_elem(&ip_tracking_map, &src_ip, &new_stat, BPF_ANY);
+        ip_tracking_map.update(&src_ip, &new_stat);
     }
 }
 
 /* Update flow statistics */
 static __always_inline void update_flow_stats(struct flow_key *key, __u64 bytes, __u8 tcp_flags) {
-    struct flow_stats *flow = bpf_map_lookup_elem(&flow_map, key);
+    struct flow_stats *flow = flow_map.lookup(key);
     
     if (flow) {
         __sync_fetch_and_add(&flow->packets, 1);
@@ -103,12 +146,11 @@ static __always_inline void update_flow_stats(struct flow_key *key, __u64 bytes,
             .last_seen = get_time_ns(),
             .flags = tcp_flags,
         };
-        bpf_map_update_elem(&flow_map, key, &new_flow, BPF_ANY);
+        flow_map.update(key, &new_flow);
     }
 }
 
 /* Main XDP program */
-SEC("xdp")
 int xdp_ddos_filter(struct xdp_md *ctx) {
     void *data_end = (void *)(long)ctx->data_end;
     void *data = (void *)(long)ctx->data;
@@ -123,14 +165,14 @@ int xdp_ddos_filter(struct xdp_md *ctx) {
     
     // Get stats structure
     __u32 stats_key = 0;
-    struct stats *s = bpf_map_lookup_elem(&stats_map, &stats_key);
+    struct stats *s = stats_map.lookup(&stats_key);
     
     // Parse Ethernet header
     if (data + sizeof(*eth) > data_end)
         return XDP_DROP;
     
     // Only process IPv4
-    if (eth->h_proto != bpf_htons(ETH_P_IP))
+    if (eth->h_proto != htons(ETH_P_IP))
         return XDP_PASS;
     
     // Parse IP header
@@ -142,12 +184,8 @@ int xdp_ddos_filter(struct xdp_md *ctx) {
     __u32 dst_ip = iph->daddr;
     __u8 protocol = iph->protocol;
     
-    // Get configuration
-    __u32 config_key = 0;
-    struct config *cfg = bpf_map_lookup_elem(&config_map, &config_key);
-    
     // Check blacklist
-    if (cfg && cfg->blacklist_enabled && is_blacklisted(src_ip)) {
+    if (is_blacklisted(src_ip)) {
         action = XDP_DROP;
         update_stats(s, packet_size, protocol, action);
         return action;
@@ -169,17 +207,16 @@ int xdp_ddos_filter(struct xdp_md *ctx) {
         if ((void *)(tcph + 1) > data_end)
             goto update_tracking;
         
-        fkey.src_port = bpf_ntohs(tcph->source);
-        fkey.dst_port = bpf_ntohs(tcph->dest);
+        fkey.src_port = ntohs(tcph->source);
+        fkey.dst_port = ntohs(tcph->dest);
         
         // Extract TCP flags
         tcp_flags = ((unsigned char *)tcph)[13];
         
-        // Simple SYN flood detection: too many SYNs without ACK
-        if (tcp_flags & 0x02) {  // SYN flag
-            struct ip_stats *ip_stat = bpf_map_lookup_elem(&ip_tracking_map, &src_ip);
+        // Simple SYN flood detection
+        if (tcp_flags & 0x02) {
+            struct ip_stats *ip_stat = ip_tracking_map.lookup(&src_ip);
             if (ip_stat && ip_stat->syn_count > 1000) {
-                // More than 1000 SYNs from this IP - potential SYN flood
                 action = XDP_DROP;
             }
         }
@@ -189,8 +226,8 @@ int xdp_ddos_filter(struct xdp_md *ctx) {
         if ((void *)(udph + 1) > data_end)
             goto update_tracking;
         
-        fkey.src_port = bpf_ntohs(udph->source);
-        fkey.dst_port = bpf_ntohs(udph->dest);
+        fkey.src_port = ntohs(udph->source);
+        fkey.dst_port = ntohs(udph->dest);
     }
     
 update_tracking:
@@ -201,5 +238,3 @@ update_tracking:
     
     return action;
 }
-
-char _license[] SEC("license") = "GPL";

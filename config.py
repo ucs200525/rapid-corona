@@ -14,7 +14,7 @@ DEFAULT_INTERFACE = 'eth0' if PLATFORM == 'linux' else 'Ethernet'
 NETWORK_INTERFACE = os.getenv('INTERFACE', DEFAULT_INTERFACE)
 
 # eBPF Configuration
-EBPF_PROGRAM_PATH = 'src/ebpf/xdp_filter.o'
+EBPF_PROGRAM_PATH = 'src/ebpf/xdp_filter.c'  # BCC compiles from C source
 XDP_MODE = 'native'  # Options: 'native', 'generic', 'offload'
 
 # Detection Thresholds

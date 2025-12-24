@@ -52,15 +52,24 @@ class TrafficMonitor:
         Load XDP program onto the network interface
         
         Args:
-            program_path: Path to compiled BPF object file
+            program_path: Path to BPF C source file (not compiled)
             
         Returns:
             True if loaded successfully
         """
         try:
-            # Load the BPF program
-            with open(program_path, 'rb') as f:
-                self.bpf = BPF(text="", obj=f.read())
+            # BCC expects C source code, not compiled object
+            # Change path from .o to .c
+            if program_path.endswith('.o'):
+                c_source_path = program_path.replace('.o', '.c')
+            else:
+                c_source_path = program_path
+            
+            # Load the BPF program from C source
+            with open(c_source_path, 'r') as f:
+                bpf_source = f.read()
+            
+            self.bpf = BPF(text=bpf_source)
             
             # Get the XDP function
             fn = self.bpf.load_func("xdp_ddos_filter", BPF.XDP)

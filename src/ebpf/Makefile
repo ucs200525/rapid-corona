@@ -1,4 +1,11 @@
 # Makefile for eBPF XDP programs
+#
+# Two modes of operation:
+# 1. BCC Runtime: Python uses xdp_filter.c (compiled at runtime by BCC)
+# 2. Standalone libbpf: Use this Makefile to compile xdp_filter_libbpf.c
+#
+# For BCC runtime (Python traffic_monitor.py), no compilation is needed.
+# For standalone libbpf loading, run: make
 
 CLANG := clang
 LLC := llc
@@ -20,21 +27,24 @@ CFLAGS := -O2 -g -Wall -Werror \
 	-Wno-pointer-sign \
 	-Wno-compare-distinct-pointer-types
 
-# Source and object files
-SRC := xdp_filter.c
-OBJ := $(SRC:.c=.o)
+# Source and object files (libbpf version for standalone compilation)
+LIBBPF_SRC := xdp_filter_libbpf.c
+LIBBPF_OBJ := xdp_filter.o
 
-.PHONY: all clean verify
+.PHONY: all clean verify help
 
-all: $(OBJ)
+all: $(LIBBPF_OBJ)
 
-%.o: %.c xdp_maps.h
+$(LIBBPF_OBJ): $(LIBBPF_SRC) xdp_maps.h
 	$(CLANG) $(CFLAGS) -c $< -o $@
 	@echo "✓ Compiled $< -> $@"
+	@echo ""
+	@echo "To load this XDP program:"
+	@echo "  sudo ip link set dev <interface> xdp obj $@ sec xdp"
 
-verify: $(OBJ)
+verify: $(LIBBPF_OBJ)
 	@echo "Verifying eBPF program..."
-	@llvm-objdump -S $(OBJ) | head -20
+	@llvm-objdump -S $(LIBBPF_OBJ) | head -20
 	@echo "✓ eBPF program compiled successfully"
 
 clean:
@@ -44,8 +54,20 @@ clean:
 help:
 	@echo "eBPF XDP Filter Makefile"
 	@echo ""
+	@echo "This project supports two modes:"
+	@echo ""
+	@echo "1. BCC Runtime (Python):"
+	@echo "   - Uses: xdp_filter.c"
+	@echo "   - Compiled at runtime by BCC"
+	@echo "   - Run: python -m main"
+	@echo ""
+	@echo "2. Standalone libbpf:"
+	@echo "   - Uses: xdp_filter_libbpf.c"
+	@echo "   - Pre-compiled with this Makefile"
+	@echo "   - Output: xdp_filter.o"
+	@echo ""
 	@echo "Targets:"
-	@echo "  all     - Compile XDP program (default)"
+	@echo "  all     - Compile XDP program (libbpf version)"
 	@echo "  verify  - Compile and verify the program"
 	@echo "  clean   - Remove build artifacts"
 	@echo "  help    - Show this help message"

@@ -131,12 +131,15 @@ class TrafficMonitor:
                 'other_packets': 0,
             }
             
-            # BCC automatically aggregates per-CPU maps
-            key = 0
-            stats = stats_map[key]
+            # BCC returns a list of per-CPU values for PERCPU_ARRAY
+            # We need to sum across all CPUs
+            key = stats_map.Key(0)
+            per_cpu_stats = stats_map[key]
             
-            for field in total_stats.keys():
-                total_stats[field] = getattr(stats, field, 0)
+            # per_cpu_stats is a list of stats structures, one per CPU
+            for cpu_stats in per_cpu_stats:
+                for field in total_stats.keys():
+                    total_stats[field] += getattr(cpu_stats, field, 0)
             
             return total_stats
             

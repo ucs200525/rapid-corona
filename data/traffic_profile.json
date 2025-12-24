@@ -1,0 +1,13 @@
+{
+  "avg_pps": 0.0,
+  "peak_pps": 0.0,
+  "avg_bps": 0.0,
+  "peak_bps": 0.0,
+  "tcp_ratio": 0.85,
+  "udp_ratio": 0.1,
+  "icmp_ratio": 0.05,
+  "unique_ips_per_minute": 0.0,
+  "learning_samples": 0,
+  "last_updated": 0.0,
+  "is_learned": false
+}

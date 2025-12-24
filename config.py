@@ -20,16 +20,17 @@ XDP_MODE = 'native'  # Options: 'native', 'generic', 'offload'
 # Detection Thresholds
 class DetectionThresholds:
     # Packet rate thresholds (packets per second)
-    NORMAL_PPS_BASELINE = 10000  # Expected normal traffic
-    ALERT_PPS_THRESHOLD = 100000  # Alert threshold
-    ATTACK_PPS_THRESHOLD = 500000  # Definite attack threshold
+    # NOTE: Lowered for testing - increase in production
+    NORMAL_PPS_BASELINE = 100   # Expected normal traffic
+    ALERT_PPS_THRESHOLD = 500   # Alert threshold (was 100000)
+    ATTACK_PPS_THRESHOLD = 2000 # Definite attack threshold (was 500000)
     
     # Statistical thresholds
-    SIGMA_MULTIPLIER = 3.5  # Standard deviation multiplier for anomaly
+    SIGMA_MULTIPLIER = 2.0  # Standard deviation multiplier for anomaly (was 3.5)
     MIN_ENTROPY = 3.0  # Minimum source IP entropy (lower = more concentrated)
     
     # Rate of change detection
-    MAX_CHANGE_RATE = 5.0  # Max allowed rate increase (5x)
+    MAX_CHANGE_RATE = 3.0  # Max allowed rate increase (3x, was 5x)
     
     # Protocol distribution (approximate normal ratios)
     NORMAL_TCP_RATIO = 0.85  # 85% TCP

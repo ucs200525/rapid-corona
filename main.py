@@ -8,6 +8,7 @@ import logging
 import signal
 import sys
 import time
+import threading
 from pathlib import Path
 
 # Setup logging first
@@ -140,6 +141,9 @@ class DDoSMitigationSystem:
                     current_pps = 0
                     current_bps = 0
                 
+                # Store for get_status() API
+                self._current_pps = current_pps
+                self._current_bps = current_bps
                 self._prev_total_packets = stats.get('total_packets', 0)
                 self._prev_total_bytes = stats.get('total_bytes', 0)
                 
@@ -215,6 +219,11 @@ class DDoSMitigationSystem:
         baseline = self.anomaly_detector.get_baseline_info()
         profile = self.traffic_profiler.get_profile()
         blacklist = self.traffic_monitor.get_blacklist() if self.traffic_monitor else []
+        ip_stats = self.traffic_monitor.get_ip_statistics(limit=20) if self.traffic_monitor else []
+        
+        # Calculate current rates for real-time display
+        current_pps = getattr(self, '_current_pps', 0)
+        current_bps = getattr(self, '_current_bps', 0)
         
         return {
             'running': self.running,
@@ -224,6 +233,9 @@ class DDoSMitigationSystem:
             'profile': profile.__dict__ if profile else {},
             'blacklist': blacklist,
             'recent_alerts': self.alert_system.get_recent_alerts(10),
+            'ip_stats': ip_stats[:10],  # Top 10 IPs
+            'current_pps': current_pps,
+            'current_bps': current_bps,
         }
 
 
@@ -264,6 +276,19 @@ Examples:
         help='Enable debug logging'
     )
     
+    parser.add_argument(
+        '--dashboard',
+        action='store_true',
+        help='Enable web dashboard (default port: 5000)'
+    )
+    
+    parser.add_argument(
+        '--port', '-p',
+        type=int,
+        default=5000,
+        help='Dashboard port (default: 5000)'
+    )
+    
     args = parser.parse_args()
     
     if args.debug:
@@ -280,6 +305,17 @@ Examples:
     
     # Start system
     system = DDoSMitigationSystem(args.interface, args.mode)
+    
+    # Start dashboard in background thread if enabled
+    if args.dashboard:
+        from src.dashboard import run_dashboard
+        dashboard_thread = threading.Thread(
+            target=run_dashboard,
+            args=(system, '0.0.0.0', args.port),
+            daemon=True
+        )
+        dashboard_thread.start()
+        logger.info(f"Dashboard started at http://localhost:{args.port}")
     
     try:
         success = system.start()

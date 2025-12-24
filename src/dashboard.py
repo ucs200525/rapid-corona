@@ -206,8 +206,30 @@ def index():
             const stats = data.statistics || {};
             const baseline = data.baseline || {};
             const alerts = data.recent_alerts || [];
+            const ipStats = data.ip_stats || [];
+            const currentPps = data.current_pps || 0;
             
             const html = `
+                <div class="card">
+                    <h2>⚡ Real-time Status</h2>
+                    <div class="metric">
+                        <span>Interface</span>
+                        <span class="metric-value">${data.interface || 'N/A'}</span>
+                    </div>
+                    <div class="metric">
+                        <span>Current PPS</span>
+                        <span class="metric-value" style="color: ${currentPps > 100 ? '#ff4757' : '#2ed573'}">${formatNumber(currentPps)}</span>
+                    </div>
+                    <div class="metric">
+                        <span>Baseline PPS</span>
+                        <span class="metric-value">${formatNumber(baseline.mean_pps || 0)}</span>
+                    </div>
+                    <div class="metric">
+                        <span>Drop Rate</span>
+                        <span class="metric-value" style="color: ${stats.dropped_packets > 0 ? '#ff4757' : '#2ed573'}">${formatNumber(stats.dropped_packets || 0)}</span>
+                    </div>
+                </div>
+                
                 <div class="card">
                     <h2>📊 Traffic Statistics</h2>
                     <div class="metric">
@@ -220,7 +242,7 @@ def index():
                     </div>
                     <div class="metric">
                         <span>Dropped Packets</span>
-                        <span class="metric-value">${formatNumber(stats.dropped_packets || 0)}</span>
+                        <span class="metric-value" style="color: ${stats.dropped_packets > 0 ? '#ff4757' : 'inherit'}">${formatNumber(stats.dropped_packets || 0)}</span>
                     </div>
                     <div class="metric">
                         <span>Passed Packets</span>
@@ -269,15 +291,28 @@ def index():
                 </div>
                 
                 <div class="card">
+                    <h2>🔥 Top IPs (by packets)</h2>
+                    ${ipStats.length > 0 ? 
+                        ipStats.slice(0, 5).map(ip => `
+                            <div class="metric">
+                                <span>${ip.ip}</span>
+                                <span class="metric-value">${formatNumber(ip.packets)} pkts</span>
+                            </div>
+                        `).join('') : 
+                        '<div class="metric"><span>No IPs tracked yet</span></div>'
+                    }
+                </div>
+                
+                <div class="card">
                     <h2>🚫 Blacklist</h2>
                     <div class="metric">
                         <span>Blocked IPs</span>
-                        <span class="metric-value">${data.blacklist ? data.blacklist.length : 0}</span>
+                        <span class="metric-value" style="color: ${data.blacklist && data.blacklist.length > 0 ? '#ff4757' : 'inherit'}">${data.blacklist ? data.blacklist.length : 0}</span>
                     </div>
                     ${data.blacklist && data.blacklist.length > 0 ? 
                         data.blacklist.slice(0, 5).map(ip => `
                             <div class="metric">
-                                <span>${ip}</span>
+                                <span>🚫 ${ip}</span>
                             </div>
                         `).join('') : 
                         '<div class="metric"><span>No blocked IPs</span></div>'
@@ -286,7 +321,7 @@ def index():
                 
                 <div class="card alerts">
                     <h2>🚨 Recent Alerts</h2>
-                    ${alerts.length > 0 ? alerts.map(alert => `
+                    ${alerts.length > 0 ? alerts.slice(-5).reverse().map(alert => `
                         <div class="alert-item alert-${alert.severity}">
                             <div class="alert-time">${new Date(alert.timestamp).toLocaleString()}</div>
                             <div><strong>${alert.severity.toUpperCase()}:</strong> ${alert.message}</div>

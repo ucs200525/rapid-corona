@@ -60,7 +60,7 @@ cd src\ebpf
 sudo python main.py --interface eth0
 
 # Linux - with generic XDP (works on all interfaces)
-sudo python main.py --interface eth0 --mode generic
+python3 main.py --interface enp0s3 --mode generic --dashboard
 
 # Windows
 python main.py --interface "Ethernet"

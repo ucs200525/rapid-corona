@@ -39,8 +39,8 @@ struct ip_stats {
     __u64 bytes;
     __u64 last_seen;
     __u32 flow_count;  // Number of flows from this IP
-    __u16 syn_count;   // SYN packets (for SYN flood detection)
-    __u16 udp_count;   // UDP packets
+    __u32 syn_count;   // SYN packets (for SYN flood detection) - must be 32-bit for atomic ops
+    __u32 udp_count;   // UDP packets - must be 32-bit for atomic ops
 };
 
 /* Attack signature structure */

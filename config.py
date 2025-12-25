@@ -104,6 +104,34 @@ class SimulationConfig:
     ATTACK_TRAFFIC_RATE = 1000000  # pps
     SIMULATION_DURATION = 300  # seconds
 
+
+# Phase 2: ML Configuration
+class MLConfig:
+    # Model paths
+    MODEL_DIR = 'data/models'
+    DEFAULT_MODEL_PATH = 'data/models/ddos_classifier.joblib'
+    
+    # Dataset paths
+    DATASET_DIR = 'data/cic-ddos-2019'
+    
+    # Training settings
+    MAX_TRAINING_FILES = 5
+    SAMPLES_PER_FILE = 50000
+    TEST_SIZE = 0.2
+    VALIDATION_SIZE = 0.1
+    
+    # Model hyperparameters
+    MODEL_TYPE = 'random_forest'
+    N_ESTIMATORS = 100
+    MAX_DEPTH = 15
+    
+    # Inference settings
+    ML_CONFIDENCE_THRESHOLD = 70.0  # Minimum confidence for ML detection
+    HYBRID_SCORE_THRESHOLD = 60.0   # Combined score threshold
+    
+    # Feature extraction
+    FEATURE_WINDOW_SIZE = 10.0  # seconds
+
 # Platform-specific paths
 if PLATFORM == 'linux':
     DATA_DIR = '/var/lib/ddos-mitigation'

@@ -319,6 +319,44 @@ def index():
                     }
                 </div>
                 
+                <div class="card">
+                    <h2>🤖 ML Classification (Phase 2)</h2>
+                    <div class="metric">
+                        <span>ML Enabled</span>
+                        <span class="metric-value" style="color: ${data.ml_enabled ? '#2ed573' : '#ffa502'}">${data.ml_enabled ? '✓ Active' : '○ Disabled'}</span>
+                    </div>
+                    ${data.ml_stats ? `
+                        <div class="metric">
+                            <span>Model Accuracy</span>
+                            <span class="metric-value">${data.ml_stats.model_accuracy ? (data.ml_stats.model_accuracy * 100).toFixed(1) + '%' : 'N/A'}</span>
+                        </div>
+                        <div class="metric">
+                            <span>Total Predictions</span>
+                            <span class="metric-value">${formatNumber(data.ml_stats.total_ml_predictions || 0)}</span>
+                        </div>
+                        <div class="metric">
+                            <span>Attacks Detected</span>
+                            <span class="metric-value" style="color: ${data.ml_stats.ml_attacks_detected > 0 ? '#ff4757' : '#2ed573'}">${data.ml_stats.ml_attacks_detected || 0}</span>
+                        </div>
+                        <div class="metric">
+                            <span>Avg Inference</span>
+                            <span class="metric-value">${(data.ml_stats.avg_inference_ms || 0).toFixed(2)} ms</span>
+                        </div>
+                    ` : '<div class="metric"><span>Load ML model to enable</span></div>'}
+                </div>
+                
+                ${data.feature_importance && Object.keys(data.feature_importance).length > 0 ? `
+                <div class="card">
+                    <h2>📊 Top Feature Importance</h2>
+                    ${Object.entries(data.feature_importance).slice(0, 5).map(([name, value]) => `
+                        <div class="metric">
+                            <span>${name.length > 20 ? name.substring(0, 20) + '...' : name}</span>
+                            <span class="metric-value">${(value * 100).toFixed(1)}%</span>
+                        </div>
+                    `).join('')}
+                </div>
+                ` : ''}
+                
                 <div class="card alerts">
                     <h2>🚨 Recent Alerts</h2>
                     ${alerts.length > 0 ? alerts.slice(-5).reverse().map(alert => `

@@ -1,87 +1,195 @@
 # DDoS Mitigation System - Usage Guide
 
-## Phase 1: Baseline Traffic Anomaly Detection
+## Overview
 
-This guide covers installation, configuration, and usage of the Phase 1 DDoS mitigation system.
+A machine learning-based DDoS mitigation system with real-time traffic analysis and automated defense.
+
+- **Phase 1**: Statistical anomaly detection with eBPF/XDP
+- **Phase 2**: ML-based classification using CIC-DDoS-2019 trained models
+
+---
 
 ## Prerequisites
 
 ### Linux
 - Linux kernel 4.18+ with XDP support
-- Ubuntu 20.04+, RHEL 8+, or compatible distribution
+- Ubuntu 20.04+, RHEL 8+, or compatible
 - Root/sudo access
-- Network interface with XDP support (most modern NICs)
+- Python 3.8+
 
-### Windows  
-- Windows 11 or Windows Server 2022+
-- Administrator privileges
-- Microsoft eBPF runtime
+### Dependencies
+```bash
+pip3 install -r requirements.txt
+```
 
-## Installation
+Required packages: `numpy`, `pandas`, `scipy`, `flask`, `scikit-learn`, `joblib`, `psutil`, `coloredlogs`
 
-### Quick Start (Linux)
+---
+
+## Quick Start
+
+
+### 1. Install & Setup
 
 ```bash
-# 1. Clone or navigate to project directory
+# Clone/navigate to project
 cd rapid-corona
 
-# 2. Run setup script
+# Run setup (Linux)
 sudo ./setup_ebpf.sh
 
-# 3. Compile eBPF programs
-cd src/ebpf
-make
-cd ../..
-
-# 4. Install Python dependencies
-pip install -r requirements.txt
-```
-
-### Quick Start (Windows)
-
-```powershell
-# Run as Administrator
-.\setup_ebpf.ps1
+# Compile eBPF programs
+cd src/ebpf && make && cd ../..
 
 # Install Python dependencies
-pip install -r requirements.txt
-
-# Build eBPF programs (requires clang)
-cd src\ebpf
-# Follow Microsoft eBPF build instructions
+pip3 install -r requirements.txt
 ```
 
-## Basic Usage
-
-### Starting the System
+### 2. Run the System
 
 ```bash
-# Linux - with native XDP (best performance)
-sudo python main.py --interface eth0
+# Basic - Statistical detection only (Phase 1)
+sudo python3 main.py --interface enp0s3 --dashboard
 
-# Linux - with generic XDP (works on all interfaces)
-python3 main.py --interface enp0s3 --mode generic --dashboard
+# With ML classification (Phase 2)
+sudo python3 main.py --interface enp0s3 --train-model --dashboard
 
-# Windows
-python main.py --interface "Ethernet"
+# With pre-trained ML model
+sudo python3 main.py --interface enp0s3 --ml-model data/models/ddos_classifier.joblib --dashboard
 ```
 
-### Command Line Options
+### 3. Access Dashboard
+Open **http://localhost:5000** in your browser.
 
-- `--interface, -i`: Network interface to monitor (default: eth0/Ethernet)
-- `--mode, -m`: XDP mode - native, generic, or offload (default: native)
-- `--debug, -d`: Enable debug logging
+---
 
-### Web Dashboard
+## Command Line Options
 
-Access the real-time monitoring dashboard at: `http://localhost:5000`
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--interface, -i` | Network interface to monitor | eth0 |
+| `--mode, -m` | XDP mode: native, generic, offload | native |
+| `--dashboard` | Enable web dashboard | False |
+| `--port, -p` | Dashboard port | 5000 |
+| `--debug, -d` | Enable debug logging | False |
+| `--ml-model` | Path to trained ML model | None |
+| `--train-model` | Train ML model before starting | False |
+| `--data-path` | Path to CIC-DDoS-2019 dataset | data/cic-ddos-2019 |
 
-The dashboard shows:
-- Traffic statistics (packets, bytes, drop rate)
-- Protocol distribution
-- Baseline profile status
-- Blacklisted IPs
-- Recent alerts
+### Examples
+
+```bash
+# Generic XDP mode (works on all interfaces)
+sudo python3 main.py --interface enp0s3 --mode generic --dashboard
+
+# With specific dashboard port
+sudo python3 main.py --interface eth0 --dashboard --port 8080
+
+# Debug mode with ML
+sudo python3 main.py --interface eth0 --ml-model data/models/ddos_classifier.joblib --debug
+```
+
+---
+
+## Phase 2: ML Classification
+
+### Training a Model
+
+#### Option 1: Synthetic Data (Quick Test)
+```bash
+# Train with auto-generated synthetic data
+python3 -m src.ml.model_trainer train --synthetic
+```
+
+#### Option 2: CIC-DDoS-2019 Dataset (Production)
+```bash
+# 1. Download dataset from: https://www.unb.ca/cic/datasets/ddos-2019.html
+# 2. Place CSV files in data/cic-ddos-2019/
+
+# 3. Train model
+python3 -m src.ml.model_trainer train --data-path data/cic-ddos-2019/
+
+# 4. Evaluate model
+python3 -m src.ml.model_trainer evaluate --model-path data/models/ddos_classifier.joblib
+
+# 5. Benchmark inference speed
+python3 -m src.ml.model_trainer benchmark --model-path data/models/ddos_classifier.joblib
+```
+
+### Model Training Options
+
+```bash
+python3 -m src.ml.model_trainer train \
+    --data-path data/cic-ddos-2019/ \
+    --model-path data/models/my_model.joblib \
+    --model-type random_forest \
+    --n-estimators 100 \
+    --max-depth 15 \
+    --max-files 5 \
+    --samples-per-file 50000
+```
+
+### What the ML Model Detects
+
+| Attack Type | Description |
+|-------------|-------------|
+| SYN_Flood | TCP SYN flood attacks |
+| UDP_Flood | UDP volumetric attacks |
+| DrDoS_UDP | Distributed reflection UDP |
+| DrDoS_DNS | DNS amplification attacks |
+| DrDoS_LDAP | LDAP amplification |
+| DDoS_Generic | Other attack patterns |
+| BENIGN | Normal traffic |
+
+---
+
+## Detection Methods
+
+### Phase 1: Statistical Detection
+
+1. **Absolute Thresholds** - Alert when PPS exceeds limits
+2. **Statistical Deviation** - Detect traffic > 3.5 sigma from baseline
+3. **Rate of Change** - Flag sudden spikes (>5x increase)
+4. **Protocol Distribution** - Monitor TCP/UDP/ICMP ratios
+5. **IP Entropy** - Low entropy = botnet, high = flash crowd
+6. **SYN Flood Detection** - Track excessive SYN packets per IP
+
+### Phase 2: ML Classification
+
+- **Random Forest classifier** trained on 64 CIC-DDoS-2019 features
+- **Real-time feature extraction** from live traffic
+- **Hybrid detection** combining statistical + ML scores
+- **Attack type classification** with confidence scores
+
+### Hybrid Scoring
+
+The system combines both methods:
+- ML confidence > 85% → Trust ML detection
+- Both agree → High confidence detection
+- Statistical score > 70 → Trust statistical
+- Combined score > 60 → Likely attack
+
+---
+
+## Web Dashboard
+
+Access at **http://localhost:5000**
+
+### Dashboard Cards
+
+| Card | Information |
+|------|-------------|
+| Real-time Status | Interface, current PPS, baseline PPS, drop rate |
+| Traffic Statistics | Total packets/bytes, dropped/passed counts |
+| Protocol Distribution | TCP, UDP, ICMP, Other packet counts |
+| Baseline Profile | Mean PPS, std dev, samples, learning status |
+| Top IPs | Highest traffic source IPs |
+| Blacklist | Blocked IP addresses |
+| **ML Classification** | Model accuracy, predictions, attacks detected, inference time |
+| **Feature Importance** | Top features contributing to ML predictions |
+| Recent Alerts | Alert history with severity |
+
+---
 
 ## Configuration
 
@@ -90,192 +198,158 @@ Edit `config.py` to customize:
 ### Detection Thresholds
 ```python
 class DetectionThresholds:
-    ALERT_PPS_THRESHOLD = 100000  # Alert at 100k pps
-    ATTACK_PPS_THRESHOLD = 500000  # Definite attack at 500k pps
-    SIGMA_MULTIPLIER = 3.5  # Statistical deviation threshold
-    MIN_ENTROPY = 3.0  # IP diversity threshold
+    ALERT_PPS_THRESHOLD = 500      # Alert threshold
+    ATTACK_PPS_THRESHOLD = 2000    # Attack threshold
+    SIGMA_MULTIPLIER = 2.0         # Statistical deviation
+    MIN_ENTROPY = 3.0              # IP diversity threshold
+```
+
+### ML Configuration
+```python
+class MLConfig:
+    DEFAULT_MODEL_PATH = 'data/models/ddos_classifier.joblib'
+    ML_CONFIDENCE_THRESHOLD = 70.0   # Min confidence for ML detection
+    HYBRID_SCORE_THRESHOLD = 60.0    # Combined score threshold
+    N_ESTIMATORS = 100               # Random Forest trees
+    MAX_DEPTH = 15                   # Tree depth
 ```
 
 ### Time Windows
 ```python
 class TimeWindows:
-    BASELINE_WINDOW = 300  # 5 minutes baseline learning
-    DETECTION_WINDOW = 10   # 10 second detection window
-    ALERT_COOLDOWN = 60     # 60 seconds between duplicate alerts
+    BASELINE_WINDOW = 300   # 5 min baseline learning
+    DETECTION_WINDOW = 10   # 10 sec detection window
+    ALERT_COOLDOWN = 60     # 60 sec between alerts
 ```
 
-## Testing & Benchmarking
+---
+
+## Testing
 
 ### Run Unit Tests
-
 ```bash
 # All tests
-pytest tests/ -v
+python3 -m pytest tests/ -v
 
-# Specific test
-pytest tests/test_detector.py -v
-pytest tests/test_simulator.py -v
+# ML classifier tests
+python3 -m pytest tests/test_ml_classifier.py -v
+
+# Anomaly detector tests
+python3 -m pytest tests/test_detector.py -v
 ```
 
 ### Benchmark Performance
-
 ```bash
-# List available scenarios
-python tests/benchmark.py --list
+# List scenarios
+python3 tests/benchmark.py --list
 
 # Run specific scenario
-python tests/benchmark.py --scenario "Large UDP Flood"
+python3 tests/benchmark.py --scenario "Large UDP Flood"
 
-# Run all medium scale scenarios
-python tests/benchmark.py --scale medium
-
-# Test specific packet rates
-python tests/benchmark.py --rate 100000 --rate 500000 --rate 1000000
-
-# Save results to file
-python tests/benchmark.py --scale large --output results.json
+# Test packet rates
+python3 tests/benchmark.py --rate 100000 --rate 500000
 ```
+
+---
 
 ## Traffic Simulation
 
-The traffic simulator can generate various attack patterns for testing:
+### Generate Attack Traffic
+```bash
+python3 attack_simulator.py --type udp_flood --rate 10000 --duration 60
+python3 attack_simulator.py --type syn_flood --rate 5000 --duration 30
+```
 
 ### Attack Types
-- **UDP Flood**: High-volume UDP packets
-- **SYN Flood**: TCP SYN packets overwhelming connections
-- **ICMP Flood**: ICMP echo request flood
-- **HTTP Flood**: Application-layer GET request flood
-- **Mixed Attack**: Multi-vector attack combining the above
+- `udp_flood` - High-volume UDP packets
+- `syn_flood` - TCP SYN flood
+- `icmp_flood` - ICMP echo flood
+- `http_flood` - HTTP GET flood
+- `mixed` - Multi-vector attack
 
-### Pre-defined Scenarios
-- **Small UDP Flood**: 10k pps (testing)
-- **Medium SYN Flood**: 100k pps
-- **Large UDP Flood**: 1M pps
-- **Hyper-Volumetric UDP**: 5M pps (India IX scale)
-- **Flash Crowd**: 500k pps legitimate traffic surge
+---
 
-## Understanding Detection
+## Files & Directories
 
-### Anomaly Detection Methods
+```
+rapid-corona/
+├── main.py                 # Main entry point
+├── config.py               # Configuration
+├── requirements.txt        # Python dependencies
+├── src/
+│   ├── anomaly_detector.py # Statistical + ML detection
+│   ├── traffic_monitor.py  # eBPF traffic monitoring
+│   ├── dashboard.py        # Web dashboard
+│   ├── ml/                 # ML module (Phase 2)
+│   │   ├── data_loader.py      # Dataset loading
+│   │   ├── feature_extractor.py # Real-time features
+│   │   ├── ml_classifier.py    # Random Forest classifier
+│   │   └── model_trainer.py    # Training CLI
+│   └── ebpf/               # eBPF programs
+├── data/
+│   ├── models/             # Trained ML models
+│   └── cic-ddos-2019/      # Dataset (user-provided)
+├── logs/                   # Log files
+└── tests/                  # Unit tests
+```
 
-The system uses multiple statistical methods:
-
-1. **Absolute Thresholds**
-   - Alert if PPS exceeds configured thresholds
-   - Immediate detection of obvious attacks
-
-2. **Statistical Deviation**
-   - Calculate standard deviation from learned baseline
-   - Detect traffic > 3.5 sigma from normal
-
-3. **Rate of Change**
-   - Flag sudden traffic spikes (>5x increase)
-   - Characteristic of attack onset
-
-4. **Protocol Distribution**
-   - Monitor TCP/UDP/ICMP ratios
-   - Detect protocol-specific floods
-
-5. **IP Entropy**
-   - Low entropy = concentrated sources (botnet)
-   - High entropy = diverse sources (flash crowd)
-
-6. **SYN Flood Detection**
-   - Track excessive SYN packets per IP
-   - eBPF-level counting for performance
-
-### Baseline Learning
-
-The system learns normal traffic patterns:
-- **Learning Period**: First 5 minutes (configurable)
-- **Adaptive Updates**: Continuous slow adaptation after learning
-- **Persistence**: Baseline saved to `data/traffic_profile.json`
-
-## Automated Mitigation
-
-When an attack is detected:
-
-1. **Alert Generated**: High/medium severity alert
-2. **Auto-Blacklisting**: Top attacking IPs added to blacklist
-3. **eBPF Filtering**: Blacklisted traffic dropped in kernel
-4. **Logging**: All events logged to `logs/`
-
-### Manual Blacklist Management
-
-The system auto-blacklists IPs during attacks. You can also manage manually via the API (dashboard integration coming in Phase 2).
-
-## Performance Expectations
-
-### Phase 1 Targets (eBPF/XDP)
-- ✅ 5M+ pps sustained traffic handling
-- ✅ <1 second detection latency (1M+ pps attacks)
-- ✅ >10M pps packet drop rate (blacklisted)
-- ✅ <20% CPU overhead at 5M pps
-
-### Comparison vs. Traditional Solutions
-- **vs. iptables**: 10-100x faster packet processing
-- **vs. Python Scapy**: 100-1000x higher throughput
-- **vs. Traditional appliances**: Comparable performance at fraction of cost
+---
 
 ## Troubleshooting
 
-### eBPF Program Won't Load
-
+### eBPF Won't Load
 ```bash
-# Check kernel version
-uname -r  # Should be 4.18+
+# Check kernel version (need 4.18+)
+uname -r
 
-# Check XDP support
-ip link show dev eth0  # Look for XDP in features
-
-# Try generic mode instead
-sudo python main.py --interface eth0 --mode generic
+# Try generic mode
+sudo python3 main.py --interface eth0 --mode generic
 ```
 
 ### Permission Denied
-
-Linux XDP programs require root:
 ```bash
-sudo python main.py --interface eth0
+# Require root for XDP
+sudo python3 main.py --interface eth0
 ```
 
-### No Traffic Detected
+### ML Model Not Loading
+```bash
+# Ensure model exists
+ls -la data/models/
 
-- Verify correct interface: `ip addr` or `ifconfig`
-- Check if traffic is flowing: `sudo tcpdump -i eth0 -c 10`
-- Ensure eBPF program loaded: Check logs for success message
+# Train a new model
+python3 -m src.ml.model_trainer train --synthetic
+```
 
-### High CPU Usage
+### Missing Dependencies
+```bash
+pip3 install scikit-learn joblib
+```
 
-- Switch to native XDP mode (if not already)
-- Reduce statistics update frequency in `config.py`
-- Ensure eBPF program is compiled with optimizations (-O2)
+---
+
+## Performance Expectations
+
+| Metric | Target |
+|--------|--------|
+| Packet handling | 5M+ pps |
+| Detection latency | <1 second |
+| ML inference | <10 ms per prediction |
+| CPU overhead | <20% at 5M pps |
+| Drop rate | >10M pps (blacklisted) |
+
+---
 
 ## Log Files
 
-- **Main log**: `logs/ddos_mitigation.log`
-- **Alert log**: `logs/alerts.log`
-- **Profile data**: `data/traffic_profile.json`
+| File | Content |
+|------|---------|
+| `logs/ddos_mitigation.log` | Main application log |
+| `logs/alerts.log` | Alert history |
+| `data/traffic_profile.json` | Learned traffic baseline |
+| `data/models/*.joblib` | Trained ML models |
 
-## Next Steps (Phase 2)
-
-After completing Phase 1, Phase 2 will add:
-- ML-based classification (distinguish attacks from flash crowds)
-- Advanced feature engineering
-- Model training on collected traffic data
-- Enhanced dashboard with ML insights
-
-## Next Steps (Phase 3)
-
-Phase 3 will add:
-- Auto signature generation
-- Advanced traffic shaping
-- Comparative benchmarking vs. commercial solutions
-- Production deployment guides
-
-## Support & Contribution
-
-This is a research/educational project for DDoS mitigation. Contributions welcome!
+---
 
 ## License
 

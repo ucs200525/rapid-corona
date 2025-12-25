@@ -1,6 +1,6 @@
 """
-Anomaly Detector - Statistical anomaly detection for DDoS attacks
-Analyzes traffic patterns and detects anomalies using statistical methods
+Anomaly Detector - Statistical and ML-based anomaly detection for DDoS attacks
+Phase 2: Enhanced with ML classification using CIC-DDoS-2019 trained models
 """
 
 import logging
@@ -8,12 +8,21 @@ import time
 import math
 from typing import Dict, List, Tuple, Optional
 from collections import deque
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import numpy as np
 
 from config import DetectionThresholds, TimeWindows
 
 logger = logging.getLogger(__name__)
+
+# ML imports (optional - gracefully degrade if not available)
+ML_AVAILABLE = False
+try:
+    from src.ml.ml_classifier import DDoSClassifier, PredictionResult
+    from src.ml.feature_extractor import FeatureExtractor
+    ML_AVAILABLE = True
+except ImportError:
+    logger.debug("ML module not available, using statistical detection only")
 
 
 @dataclass
@@ -32,11 +41,16 @@ class TrafficBaseline:
 
 @dataclass
 class AnomalyScore:
-    """Anomaly detection result"""
+    """Anomaly detection result with ML enhancement"""
     is_anomaly: bool
     score: float
     reasons: List[str]
     metrics: Dict[str, float]
+    # Phase 2: ML-based fields
+    ml_prediction: Optional[bool] = None
+    ml_confidence: float = 0.0
+    attack_type: str = "UNKNOWN"
+    detection_source: str = "statistical"  # 'statistical', 'ml', or 'hybrid'
 
 
 class AnomalyDetector:
@@ -300,3 +314,196 @@ class AnomalyDetector:
             'samples': self.baseline.samples,
             'last_updated': self.baseline.last_updated,
         }
+
+
+class MLEnhancedAnomalyDetector(AnomalyDetector):
+    """
+    ML-Enhanced Anomaly Detector - Phase 2
+    Combines statistical detection with ML classification for improved accuracy
+    """
+    
+    def __init__(self, model_path: Optional[str] = None):
+        """
+        Initialize ML-enhanced detector
+        
+        Args:
+            model_path: Path to trained ML model (optional)
+        """
+        super().__init__()
+        
+        self.ml_enabled = False
+        self.classifier = None
+        self.feature_extractor = None
+        self.ml_predictions_count = 0
+        self.ml_attacks_detected = 0
+        
+        if ML_AVAILABLE:
+            self.feature_extractor = FeatureExtractor()
+            
+            if model_path:
+                self.load_model(model_path)
+    
+    def load_model(self, model_path: str) -> bool:
+        """
+        Load trained ML model
+        
+        Args:
+            model_path: Path to model file
+            
+        Returns:
+            True if successful
+        """
+        if not ML_AVAILABLE:
+            logger.warning("ML module not available")
+            return False
+        
+        try:
+            self.classifier = DDoSClassifier()
+            if self.classifier.load(model_path):
+                self.ml_enabled = True
+                logger.info(f"ML model loaded: {model_path}")
+                logger.info(f"Model accuracy: {self.classifier.metrics.accuracy:.4f}" 
+                           if self.classifier.metrics else "")
+                return True
+            else:
+                self.classifier = None
+                return False
+        except Exception as e:
+            logger.error(f"Failed to load ML model: {e}")
+            return False
+    
+    def update_features(self, stats: Dict, ip_stats: Optional[List[Dict]] = None) -> None:
+        """Update feature extractor with new traffic data"""
+        if self.feature_extractor:
+            self.feature_extractor.update(stats, ip_stats)
+    
+    def detect_anomaly(self, stats: Dict, ip_stats: List[Dict]) -> AnomalyScore:
+        """
+        Hybrid anomaly detection using both statistical and ML methods
+        
+        Args:
+            stats: Overall traffic statistics
+            ip_stats: Per-IP statistics
+            
+        Returns:
+            AnomalyScore with combined detection results
+        """
+        # Get statistical detection result
+        stat_result = super().detect_anomaly(stats, ip_stats)
+        
+        # Update feature extractor
+        self.update_features(stats, ip_stats)
+        
+        # If ML not available, return statistical result
+        if not self.ml_enabled or not self.classifier:
+            return stat_result
+        
+        # Get ML prediction
+        try:
+            features = self.feature_extractor.extract_features_for_prediction(
+                scaler=self.classifier.scaler
+            )
+            ml_result = self.classifier.predict(features)
+            self.ml_predictions_count += 1
+            
+            if ml_result.is_attack:
+                self.ml_attacks_detected += 1
+            
+            # Combine statistical and ML detection
+            return self._combine_results(stat_result, ml_result)
+            
+        except Exception as e:
+            logger.debug(f"ML prediction failed: {e}")
+            return stat_result
+    
+    def _combine_results(self, stat_result: AnomalyScore, 
+                         ml_result: 'PredictionResult') -> AnomalyScore:
+        """
+        Combine statistical and ML detection results
+        
+        Strategy:
+        - If both agree: high confidence
+        - If ML detects attack but statistical doesn't: trust ML with moderate confidence
+        - If statistical detects but ML doesn't: verify with lower threshold
+        - Weight ML more heavily when confidence is high
+        """
+        combined_score = stat_result.score
+        reasons = stat_result.reasons.copy()
+        metrics = stat_result.metrics.copy()
+        
+        # Add ML metrics
+        metrics['ml_confidence'] = ml_result.confidence
+        metrics['ml_attack_prob'] = ml_result.attack_probability
+        metrics['ml_inference_ms'] = ml_result.inference_time_ms
+        
+        # Determine detection source
+        if ml_result.is_attack:
+            combined_score += 30 * (ml_result.confidence / 100)
+            reasons.append(f"ML detected {ml_result.attack_type} "
+                          f"(confidence: {ml_result.confidence:.1f}%)")
+        
+        # Determine final verdict
+        # High confidence ML detection takes precedence
+        if ml_result.is_attack and ml_result.confidence >= 85:
+            is_anomaly = True
+            detection_source = 'ml'
+        # Both agree
+        elif stat_result.is_anomaly and ml_result.is_attack:
+            is_anomaly = True
+            detection_source = 'hybrid'
+        # Statistical only with high score
+        elif stat_result.is_anomaly and stat_result.score >= 70:
+            is_anomaly = True
+            detection_source = 'statistical'
+        # ML only with moderate confidence
+        elif ml_result.is_attack and ml_result.confidence >= 70:
+            is_anomaly = True
+            detection_source = 'ml'
+        # Combined score check
+        elif combined_score >= 60:
+            is_anomaly = True
+            detection_source = 'hybrid'
+        else:
+            is_anomaly = stat_result.is_anomaly
+            detection_source = 'statistical'
+        
+        return AnomalyScore(
+            is_anomaly=is_anomaly,
+            score=min(combined_score, 100),
+            reasons=reasons,
+            metrics=metrics,
+            ml_prediction=ml_result.is_attack,
+            ml_confidence=ml_result.confidence,
+            attack_type=ml_result.attack_type if ml_result.is_attack else 'BENIGN',
+            detection_source=detection_source,
+        )
+    
+    def get_ml_stats(self) -> Dict:
+        """Get ML-specific statistics"""
+        stats = {
+            'ml_enabled': self.ml_enabled,
+            'ml_available': ML_AVAILABLE,
+            'total_ml_predictions': self.ml_predictions_count,
+            'ml_attacks_detected': self.ml_attacks_detected,
+        }
+        
+        if self.classifier:
+            stats.update({
+                'model_type': self.classifier.model_type,
+                'training_date': self.classifier.training_date,
+                'model_accuracy': self.classifier.metrics.accuracy if self.classifier.metrics else None,
+                'avg_inference_ms': (
+                    self.classifier.total_inference_time / max(self.classifier.total_predictions, 1)
+                ),
+            })
+        
+        if self.feature_extractor:
+            stats['feature_summary'] = self.feature_extractor.get_feature_summary()
+        
+        return stats
+    
+    def get_feature_importance(self, top_n: int = 10) -> Dict[str, float]:
+        """Get top feature importances from ML model"""
+        if self.classifier:
+            return self.classifier.get_feature_importance(top_n)
+        return {}

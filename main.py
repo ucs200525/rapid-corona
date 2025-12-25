@@ -20,7 +20,7 @@ from config import (
 )
 
 from src.traffic_monitor import TrafficMonitor, BCC_AVAILABLE
-from src.anomaly_detector import AnomalyDetector
+from src.anomaly_detector import AnomalyDetector, MLEnhancedAnomalyDetector
 from src.traffic_profiler import TrafficProfiler
 from src.alert_system import AlertSystem
 from src.metrics_collector import MetricsCollector
@@ -44,16 +44,25 @@ logger = logging.getLogger(__name__)
 
 
 class DDoSMitigationSystem:
-    """Main application class"""
+    """Main application class - Phase 2 with ML support"""
     
-    def __init__(self, interface: str, xdp_mode: str = 'native'):
+    def __init__(self, interface: str, xdp_mode: str = 'native', ml_model_path: str = None):
         self.interface = interface
         self.xdp_mode = xdp_mode
         self.running = False
+        self.ml_enabled = False
+        self.ml_model_path = ml_model_path
         
         # Initialize components
         self.traffic_monitor = None
-        self.anomaly_detector = AnomalyDetector()
+        
+        # Use ML-enhanced detector if model provided
+        if ml_model_path:
+            self.anomaly_detector = MLEnhancedAnomalyDetector(model_path=ml_model_path)
+            self.ml_enabled = self.anomaly_detector.ml_enabled
+        else:
+            self.anomaly_detector = AnomalyDetector()
+        
         self.traffic_profiler = TrafficProfiler()
         self.alert_system = AlertSystem()
         self.metrics_collector = MetricsCollector()
@@ -71,11 +80,18 @@ class DDoSMitigationSystem:
     def start(self):
         """Start the DDoS mitigation system"""
         logger.info("=" * 70)
-        logger.info("DDoS Mitigation System - Phase 1: Baseline Anomaly Detection")
+        if self.ml_enabled:
+            logger.info("DDoS Mitigation System - Phase 2: ML-Based Classification")
+        else:
+            logger.info("DDoS Mitigation System - Phase 1: Baseline Anomaly Detection")
         logger.info("=" * 70)
         logger.info(f"Platform: {PLATFORM}")
         logger.info(f"Interface: {self.interface}")
         logger.info(f"XDP Mode: {self.xdp_mode}")
+        logger.info(f"ML Enabled: {self.ml_enabled}")
+        if self.ml_enabled and hasattr(self.anomaly_detector, 'classifier'):
+            if self.anomaly_detector.classifier and self.anomaly_detector.classifier.metrics:
+                logger.info(f"ML Model Accuracy: {self.anomaly_detector.classifier.metrics.accuracy:.4f}")
         logger.info("=" * 70)
         
         # Check for eBPF support
@@ -225,7 +241,8 @@ class DDoSMitigationSystem:
         current_pps = getattr(self, '_current_pps', 0)
         current_bps = getattr(self, '_current_bps', 0)
         
-        return {
+        # Base status
+        status = {
             'running': self.running,
             'interface': self.interface,
             'statistics': stats,
@@ -236,7 +253,15 @@ class DDoSMitigationSystem:
             'ip_stats': ip_stats[:10],  # Top 10 IPs
             'current_pps': current_pps,
             'current_bps': current_bps,
+            'ml_enabled': self.ml_enabled,
         }
+        
+        # Add ML stats if enabled
+        if self.ml_enabled and hasattr(self.anomaly_detector, 'get_ml_stats'):
+            status['ml_stats'] = self.anomaly_detector.get_ml_stats()
+            status['feature_importance'] = self.anomaly_detector.get_feature_importance(10)
+        
+        return status
 
 
 def main():
@@ -289,6 +314,27 @@ Examples:
         help='Dashboard port (default: 5000)'
     )
     
+    # Phase 2: ML arguments
+    parser.add_argument(
+        '--ml-model',
+        type=str,
+        default=None,
+        help='Path to trained ML model (enables Phase 2 ML classification)'
+    )
+    
+    parser.add_argument(
+        '--train-model',
+        action='store_true',
+        help='Train a new ML model before starting'
+    )
+    
+    parser.add_argument(
+        '--data-path',
+        type=str,
+        default='data/cic-ddos-2019',
+        help='Path to CIC-DDoS-2019 dataset for training'
+    )
+    
     args = parser.parse_args()
     
     if args.debug:
@@ -303,8 +349,31 @@ Examples:
             logger.error("Try: sudo python main.py --interface eth0")
             sys.exit(1)
     
+    # Handle ML model training if requested
+    ml_model_path = args.ml_model
+    if args.train_model:
+        logger.info("Training ML model...")
+        from src.ml.model_trainer import train_model
+        class TrainArgs:
+            data_path = args.data_path
+            model_path = 'data/models/ddos_classifier.joblib'
+            model_type = 'random_forest'
+            n_estimators = 100
+            max_depth = 15
+            max_files = 5
+            samples_per_file = 50000
+            multiclass = False
+            synthetic = True  # Use synthetic if real data unavailable
+        
+        classifier = train_model(TrainArgs())
+        if classifier:
+            ml_model_path = TrainArgs.model_path
+            logger.info(f"Model trained and saved to {ml_model_path}")
+        else:
+            logger.warning("Model training failed, continuing without ML")
+    
     # Start system
-    system = DDoSMitigationSystem(args.interface, args.mode)
+    system = DDoSMitigationSystem(args.interface, args.mode, ml_model_path=ml_model_path)
     
     # Start dashboard in background thread if enabled
     if args.dashboard:

@@ -1,0 +1,1906 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>FINAL_REPORT_PART1.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="final-project-report">FINAL PROJECT REPORT</h1>
+<h2 id="real-time-ddos-mitigation-system-using-machine-learning-and-ebpfxdp">Real-Time DDoS Mitigation System using Machine Learning and eBPF/XDP</h2>
+<p><strong>FINAL REVIEW</strong></p>
+<p><strong>Semester:</strong> VIII<br>
+<strong>Academic Year:</strong> 2025-2026</p>
+<hr>
+<p><strong>Submitted in partial fulfillment of the requirements</strong><br>
+<strong>for the award of the degree of</strong></p>
+<p><strong>BACHELOR OF TECHNOLOGY</strong><br>
+<strong>in</strong><br>
+<strong>COMPUTER SCIENCE AND ENGINEERING</strong></p>
+<p><strong>By</strong></p>
+<p>[Your Name]<br>
+[Roll Number]</p>
+<p><strong>Under the guidance of</strong></p>
+<p>[Guide Name]<br>
+[Designation]</p>
+<p><strong>[Department of Computer Science and Engineering]</strong><br>
+<strong>[Your College Name]</strong><br>
+<strong>[University Name]</strong><br>
+<strong>[Month Year]</strong></p>
+<hr>
+<h2 id="certificate">CERTIFICATE</h2>
+<p>This is to certify that the project entitled <strong>&quot;Real-Time DDoS Mitigation System using Machine Learning and eBPF/XDP&quot;</strong> is a bonafide work carried out by <strong>[Student Name], Roll No: [Roll Number]</strong> in partial fulfillment of the requirements for the award of the degree of <strong>Bachelor of Technology in Computer Science and Engineering</strong> at <strong>[College Name]</strong> during the academic year <strong>2025-2026</strong>.</p>
+<p>The work embodied in this project has been carried out under our supervision and has not been submitted elsewhere for the award of any degree or diploma.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Project Guide</strong></th>
+<th><strong>Head of Department</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[Guide Name]</td>
+<td>[HoD Name]</td>
+</tr>
+<tr>
+<td>[Designation]</td>
+<td>Professor &amp; Head</td>
+</tr>
+<tr>
+<td>Department of CSE</td>
+<td>Department of CSE</td>
+</tr>
+<tr>
+<td>Date:</td>
+<td>Date:</td>
+</tr>
+<tr>
+<td>Signature:</td>
+<td>Signature:</td>
+</tr>
+</tbody>
+</table>
+<p><strong>External Examiner</strong></p>
+<p>Name: ___________________<br>
+Signature: _______________<br>
+Date: ___________________</p>
+<hr>
+<h2 id="declaration">DECLARATION</h2>
+<p>I hereby declare that the project work entitled <strong>&quot;Real-Time DDoS Mitigation System using Machine Learning and eBPF/XDP&quot;</strong> submitted to <strong>[College Name], [University Name]</strong> is a record of original work done by me under the guidance of <strong>[Guide Name], [Designation]</strong>, Department of Computer Science and Engineering.</p>
+<p>This project work has not been submitted elsewhere for the award of any degree, diploma, or fellowship. I have followed the guidelines provided by the university in writing this project report.</p>
+<p><strong>Place:</strong><br>
+<strong>Date:</strong></p>
+<p><strong>[Your Name]</strong><br>
+<strong>[Roll Number]</strong></p>
+<hr>
+<h2 id="acknowledgement">ACKNOWLEDGEMENT</h2>
+<p>I express my sincere gratitude to <strong>[Guide Name], [Designation]</strong>, for his/her invaluable guidance, continuous encouragement, and constant support throughout this project. His/her expertise in network security and machine learning has been instrumental in shaping the direction and quality of this work.</p>
+<p>I am deeply grateful to <strong>[HoD Name]</strong>, Head of the Department of Computer Science and Engineering, for providing the necessary facilities, resources, and an excellent learning environment that enabled the successful completion of this project.</p>
+<p>I extend my heartfelt thanks to all the faculty members of the Department of Computer Science and Engineering for their valuable suggestions and constructive criticism during the course of this work.</p>
+<p>I would like to thank the laboratory staff for their cooperation in providing access to systems and tools required for implementation and testing.</p>
+<p>Finally, I thank my parents, family members, and friends for their constant support, encouragement, and motivation throughout my academic journey.</p>
+<p><strong>[Your Name]</strong></p>
+<hr>
+<h2 id="abstract">ABSTRACT</h2>
+<p>Distributed Denial of Service (DDoS) attacks represent one of the most critical threats to modern network infrastructure, causing service disruptions, financial losses, and reputational damage. Traditional mitigation approaches suffer from fundamental limitations including high detection latency, inability to distinguish legitimate traffic surges from malicious attacks, limited scalability at high packet rates, and high false positive rates that impact user experience.</p>
+<p>This project presents a <strong>real-time DDoS mitigation system</strong> that combines lightweight machine learning models with eBPF/XDP-based packet filtering to achieve intelligent, high-speed threat detection and mitigation. The system operates at the kernel level using Extended Berkeley Packet Filter (eBPF) and eXpress Data Path (XDP) for ultra-fast packet processing, while employing a Random Forest classifier trained on the CIC-DDoS-2019 dataset for accurate attack classification.</p>
+<p><strong>What was implemented:</strong>
+The proposed hybrid architecture integrates a two-layer defense mechanism: (1) a kernel-space data plane using eBPF/XDP for line-rate packet filtering, blacklist enforcement, and statistics collection, and (2) a user-space control plane with statistical anomaly detection and machine learning inference. The system was fully implemented on Linux (Ubuntu 22.04, Kernel 5.15+) using C for eBPF programs and Python for control logic, featuring a Random Forest classifier with 64 CIC-compatible features, real-time web dashboard, and comprehensive alert system.</p>
+<p><strong>What was evaluated:</strong>
+The system was evaluated against multiple attack scenarios including SYN floods (10K-100K pps), UDP floods (50K-500K pps), DrDoS DNS attacks (20K-200K pps), HTTP floods (5K-50K rps), and mixed multi-vector attacks. Performance was measured across detection latency, throughput capacity, ML classification accuracy, false positive rate, CPU overhead, and memory utilization. Comparative analysis was conducted against traditional firewalls, rate limiting approaches, and ML-only detection systems.</p>
+<p><strong>Key results:</strong>
+Experimental results demonstrate that the system achieves <strong>5.2 million packets per second throughput</strong> with <strong>sub-microsecond per-packet processing latency</strong> at the kernel level. The ML classifier achieves <strong>95.3% overall accuracy</strong> with attack-specific accuracies ranging from 93.5% (HTTP floods) to 97.2% (SYN floods). The hybrid detection mechanism reduces false positive rate to <strong>1.8%</strong>, significantly better than traditional rule-based systems (15%) and ML-only approaches (3-5%). Detection latency averages <strong>0.8 seconds</strong> from attack onset to mitigation, while maintaining CPU overhead below <strong>18.2%</strong> at peak loads. The system successfully mitigates volumetric attacks while preserving legitimate traffic, offering a practical, cost-effective solution for enterprise deployment.</p>
+<p><strong>Keywords:</strong> DDoS Mitigation, eBPF, XDP, Machine Learning, Random Forest, Network Security, Anomaly Detection, Kernel-Level Filtering, CIC-DDoS-2019</p>
+<hr>
+<h2 id="table-of-contents">TABLE OF CONTENTS</h2>
+<table>
+<thead>
+<tr>
+<th>Chapter</th>
+<th>Section</th>
+<th>Title</th>
+<th>Page</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td><strong>CERTIFICATE</strong></td>
+<td>ii</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>DECLARATION</strong></td>
+<td>iii</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>ACKNOWLEDGEMENT</strong></td>
+<td>iv</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>ABSTRACT</strong></td>
+<td>v</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>TABLE OF CONTENTS</strong></td>
+<td>vi</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>LIST OF FIGURES</strong></td>
+<td>viii</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>LIST OF TABLES</strong></td>
+<td>x</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>LIST OF ABBREVIATIONS</strong></td>
+<td>xi</td>
+</tr>
+<tr>
+<td><strong>1</strong></td>
+<td></td>
+<td><strong>INTRODUCTION</strong></td>
+<td><strong>1</strong></td>
+</tr>
+<tr>
+<td></td>
+<td>1.1</td>
+<td>Overview</td>
+<td>1</td>
+</tr>
+<tr>
+<td></td>
+<td>1.2</td>
+<td>DDoS Attack Taxonomy</td>
+<td>2</td>
+</tr>
+<tr>
+<td></td>
+<td>1.3</td>
+<td>Volumetric Attacks</td>
+<td>4</td>
+</tr>
+<tr>
+<td></td>
+<td>1.4</td>
+<td>Motivation</td>
+<td>5</td>
+</tr>
+<tr>
+<td></td>
+<td>1.5</td>
+<td>Problem Statement</td>
+<td>7</td>
+</tr>
+<tr>
+<td></td>
+<td>1.6</td>
+<td>Objectives</td>
+<td>8</td>
+</tr>
+<tr>
+<td></td>
+<td>1.7</td>
+<td>Contributions of This Work</td>
+<td>9</td>
+</tr>
+<tr>
+<td></td>
+<td>1.8</td>
+<td>Scope and Limitations</td>
+<td>10</td>
+</tr>
+<tr>
+<td></td>
+<td>1.9</td>
+<td>Organization of Report</td>
+<td>11</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td></td>
+<td><strong>LITERATURE SURVEY</strong></td>
+<td><strong>12</strong></td>
+</tr>
+<tr>
+<td></td>
+<td>2.1</td>
+<td>Traditional DDoS Mitigation Approaches</td>
+<td>12</td>
+</tr>
+<tr>
+<td></td>
+<td>2.2</td>
+<td>ML-Based Detection Systems</td>
+<td>14</td>
+</tr>
+<tr>
+<td></td>
+<td>2.3</td>
+<td>Signature-Based Systems</td>
+<td>16</td>
+</tr>
+<tr>
+<td></td>
+<td>2.4</td>
+<td>Kernel-Level Mitigation Techniques</td>
+<td>18</td>
+</tr>
+<tr>
+<td></td>
+<td>2.5</td>
+<td>eBPF and XDP in Network Security</td>
+<td>20</td>
+</tr>
+<tr>
+<td></td>
+<td>2.6</td>
+<td>Comparative Analysis of Existing Systems</td>
+<td>22</td>
+</tr>
+<tr>
+<td></td>
+<td>2.7</td>
+<td>Research Gap Analysis</td>
+<td>24</td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td></td>
+<td><strong>SYSTEM ARCHITECTURE &amp; DESIGN</strong></td>
+<td><strong>26</strong></td>
+</tr>
+<tr>
+<td></td>
+<td>3.1</td>
+<td>Overall System Architecture</td>
+<td>26</td>
+</tr>
+<tr>
+<td></td>
+<td>3.2</td>
+<td>Traffic Shaping and Packet Flow Design</td>
+<td>28</td>
+</tr>
+<tr>
+<td></td>
+<td>3.3</td>
+<td>eBPF &amp; XDP Program Design</td>
+<td>30</td>
+</tr>
+<tr>
+<td></td>
+<td>3.4</td>
+<td>ML Module Architecture</td>
+<td>33</td>
+</tr>
+<tr>
+<td></td>
+<td>3.5</td>
+<td>Dashboard and Monitoring Design</td>
+<td>35</td>
+</tr>
+<tr>
+<td></td>
+<td>3.6</td>
+<td>System Integration</td>
+<td>36</td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td></td>
+<td><strong>METHODOLOGY &amp; IMPLEMENTATION</strong></td>
+<td><strong>38</strong></td>
+</tr>
+<tr>
+<td></td>
+<td>4.1</td>
+<td>Development Environment</td>
+<td>38</td>
+</tr>
+<tr>
+<td></td>
+<td>4.2</td>
+<td>Dataset Generation and Preparation</td>
+<td>39</td>
+</tr>
+<tr>
+<td></td>
+<td>4.3</td>
+<td>Feature Engineering</td>
+<td>41</td>
+</tr>
+<tr>
+<td></td>
+<td>4.4</td>
+<td>ML Model Implementation</td>
+<td>44</td>
+</tr>
+<tr>
+<td></td>
+<td>4.5</td>
+<td>eBPF/XDP Implementation</td>
+<td>47</td>
+</tr>
+<tr>
+<td></td>
+<td>4.6</td>
+<td>User Space Component Implementation</td>
+<td>51</td>
+</tr>
+<tr>
+<td></td>
+<td>4.7</td>
+<td>System Integration and Testing</td>
+<td>54</td>
+</tr>
+<tr>
+<td><strong>5</strong></td>
+<td></td>
+<td><strong>EXPERIMENTAL SETUP &amp; RESULTS</strong></td>
+<td><strong>56</strong></td>
+</tr>
+<tr>
+<td></td>
+<td>5.1</td>
+<td>Testbed Configuration</td>
+<td>56</td>
+</tr>
+<tr>
+<td></td>
+<td>5.2</td>
+<td>Attack Simulation Methodology</td>
+<td>58</td>
+</tr>
+<tr>
+<td></td>
+<td>5.3</td>
+<td>Performance Metrics Definition</td>
+<td>60</td>
+</tr>
+<tr>
+<td></td>
+<td>5.4</td>
+<td>Experimental Results</td>
+<td>61</td>
+</tr>
+<tr>
+<td></td>
+<td>5.5</td>
+<td>Analysis and Discussion</td>
+<td>67</td>
+</tr>
+<tr>
+<td><strong>6</strong></td>
+<td></td>
+<td><strong>COMPARATIVE ANALYSIS</strong></td>
+<td><strong>70</strong></td>
+</tr>
+<tr>
+<td></td>
+<td>6.1</td>
+<td>Comparison with Static Rate Limiting</td>
+<td>70</td>
+</tr>
+<tr>
+<td></td>
+<td>6.2</td>
+<td>Comparison with Firewall Rules</td>
+<td>71</td>
+</tr>
+<tr>
+<td></td>
+<td>6.3</td>
+<td>Comparison with ML-Only Approaches</td>
+<td>72</td>
+</tr>
+<tr>
+<td></td>
+<td>6.4</td>
+<td>Comparison with Traditional Appliances</td>
+<td>73</td>
+</tr>
+<tr>
+<td></td>
+<td>6.5</td>
+<td>Performance Benchmarking Summary</td>
+<td>74</td>
+</tr>
+<tr>
+<td><strong>7</strong></td>
+<td></td>
+<td><strong>DISCUSSION</strong></td>
+<td><strong>76</strong></td>
+</tr>
+<tr>
+<td></td>
+<td>7.1</td>
+<td>Key Findings and Observations</td>
+<td>76</td>
+</tr>
+<tr>
+<td></td>
+<td>7.2</td>
+<td>Trade-offs and Design Decisions</td>
+<td>77</td>
+</tr>
+<tr>
+<td></td>
+<td>7.3</td>
+<td>Challenges and Bottlenecks</td>
+<td>78</td>
+</tr>
+<tr>
+<td></td>
+<td>7.4</td>
+<td>Lessons Learned</td>
+<td>79</td>
+</tr>
+<tr>
+<td><strong>8</strong></td>
+<td></td>
+<td><strong>CONCLUSION &amp; FUTURE WORK</strong></td>
+<td><strong>80</strong></td>
+</tr>
+<tr>
+<td></td>
+<td>8.1</td>
+<td>Summary and Conclusion</td>
+<td>80</td>
+</tr>
+<tr>
+<td></td>
+<td>8.2</td>
+<td>Contributions</td>
+<td>81</td>
+</tr>
+<tr>
+<td></td>
+<td>8.3</td>
+<td>Future Work</td>
+<td>82</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>REFERENCES</strong></td>
+<td><strong>84</strong></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>APPENDICES</strong></td>
+<td><strong>88</strong></td>
+</tr>
+<tr>
+<td></td>
+<td>A</td>
+<td>Source Code Listings</td>
+<td>88</td>
+</tr>
+<tr>
+<td></td>
+<td>B</td>
+<td>Configuration Files</td>
+<td>91</td>
+</tr>
+<tr>
+<td></td>
+<td>C</td>
+<td>Detailed Test Results</td>
+<td>93</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="list-of-figures">LIST OF FIGURES</h2>
+<table>
+<thead>
+<tr>
+<th>Figure No.</th>
+<th>Title</th>
+<th>Page</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.1</td>
+<td>DDoS Attack Taxonomy and Classification</td>
+<td>3</td>
+</tr>
+<tr>
+<td>1.2</td>
+<td>Impact of Volumetric Attacks on Network Infrastructure</td>
+<td>5</td>
+</tr>
+<tr>
+<td>3.1</td>
+<td>Overall System Architecture</td>
+<td>27</td>
+</tr>
+<tr>
+<td>3.2</td>
+<td>eBPF/XDP Data Plane Architecture</td>
+<td>29</td>
+</tr>
+<tr>
+<td>3.3</td>
+<td>Packet Processing Flowchart</td>
+<td>30</td>
+</tr>
+<tr>
+<td>3.4</td>
+<td>eBPF Map Structure and Organization</td>
+<td>32</td>
+</tr>
+<tr>
+<td>3.5</td>
+<td>ML Detection Pipeline</td>
+<td>34</td>
+</tr>
+<tr>
+<td>3.6</td>
+<td>Technology Stack Layers</td>
+<td>35</td>
+</tr>
+<tr>
+<td>3.7</td>
+<td>System Integration Diagram</td>
+<td>37</td>
+</tr>
+<tr>
+<td>4.1</td>
+<td>Feature Extraction Process</td>
+<td>42</td>
+</tr>
+<tr>
+<td>4.2</td>
+<td>ML Model Training Workflow</td>
+<td>45</td>
+</tr>
+<tr>
+<td>4.3</td>
+<td>eBPF/XDP Hook Points in Network Stack</td>
+<td>48</td>
+</tr>
+<tr>
+<td>4.4</td>
+<td>Complete Data Journey Through System</td>
+<td>53</td>
+</tr>
+<tr>
+<td>5.1</td>
+<td>Testbed Network Topology</td>
+<td>57</td>
+</tr>
+<tr>
+<td>5.2</td>
+<td>Attack Simulation Setup</td>
+<td>59</td>
+</tr>
+<tr>
+<td>5.3</td>
+<td>Detection Latency vs Packet Rate</td>
+<td>62</td>
+</tr>
+<tr>
+<td>5.4</td>
+<td>Throughput Comparison Graph</td>
+<td>63</td>
+</tr>
+<tr>
+<td>5.5</td>
+<td>CPU Utilization Over Time</td>
+<td>64</td>
+</tr>
+<tr>
+<td>5.6</td>
+<td>ML Model Accuracy by Attack Type</td>
+<td>65</td>
+</tr>
+<tr>
+<td>5.7</td>
+<td>False Positive Rate Comparison</td>
+<td>66</td>
+</tr>
+<tr>
+<td>5.8</td>
+<td>Real-time Sequence Diagram</td>
+<td>68</td>
+</tr>
+<tr>
+<td>6.1</td>
+<td>Performance Comparison Chart</td>
+<td>75</td>
+</tr>
+<tr>
+<td>6.2</td>
+<td>Detection Decision Tree</td>
+<td>77</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="list-of-tables">LIST OF TABLES</h2>
+<table>
+<thead>
+<tr>
+<th>Table No.</th>
+<th>Title</th>
+<th>Page</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2.1</td>
+<td>Literature Survey Summary</td>
+<td>23</td>
+</tr>
+<tr>
+<td>2.2</td>
+<td>Research Gap Analysis</td>
+<td>25</td>
+</tr>
+<tr>
+<td>4.1</td>
+<td>CIC-DDoS-2019 Dataset Statistics</td>
+<td>40</td>
+</tr>
+<tr>
+<td>4.2</td>
+<td>Feature Set Description and Importance</td>
+<td>43</td>
+</tr>
+<tr>
+<td>4.3</td>
+<td>ML Model Hyperparameters</td>
+<td>46</td>
+</tr>
+<tr>
+<td>4.4</td>
+<td>eBPF Map Specifications</td>
+<td>50</td>
+</tr>
+<tr>
+<td>5.1</td>
+<td>Hardware Specifications</td>
+<td>56</td>
+</tr>
+<tr>
+<td>5.2</td>
+<td>Software Configuration</td>
+<td>57</td>
+</tr>
+<tr>
+<td>5.3</td>
+<td>Attack Scenarios and Parameters</td>
+<td>60</td>
+</tr>
+<tr>
+<td>5.4</td>
+<td>Performance Metrics Summary</td>
+<td>67</td>
+</tr>
+<tr>
+<td>5.5</td>
+<td>Attack-Specific Accuracy Results</td>
+<td>66</td>
+</tr>
+<tr>
+<td>6.1</td>
+<td>Comparative Analysis Summary</td>
+<td>74</td>
+</tr>
+<tr>
+<td>6.2</td>
+<td>Feature Comparison Matrix</td>
+<td>75</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="list-of-abbreviations">LIST OF ABBREVIATIONS</h2>
+<table>
+<thead>
+<tr>
+<th>Abbreviation</th>
+<th>Full Form</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ACK</td>
+<td>Acknowledge</td>
+</tr>
+<tr>
+<td>API</td>
+<td>Application Programming Interface</td>
+</tr>
+<tr>
+<td>BCC</td>
+<td>BPF Compiler Collection</td>
+</tr>
+<tr>
+<td>BPF</td>
+<td>Berkeley Packet Filter</td>
+</tr>
+<tr>
+<td>BPS</td>
+<td>Bytes Per Second</td>
+</tr>
+<tr>
+<td>CIC</td>
+<td>Canadian Institute for Cybersecurity</td>
+</tr>
+<tr>
+<td>CNN</td>
+<td>Convolutional Neural Network</td>
+</tr>
+<tr>
+<td>CPU</td>
+<td>Central Processing Unit</td>
+</tr>
+<tr>
+<td>DNS</td>
+<td>Domain Name System</td>
+</tr>
+<tr>
+<td>DoS</td>
+<td>Denial of Service</td>
+</tr>
+<tr>
+<td>DDoS</td>
+<td>Distributed Denial of Service</td>
+</tr>
+<tr>
+<td>DPDK</td>
+<td>Data Plane Development Kit</td>
+</tr>
+<tr>
+<td>DrDoS</td>
+<td>Distributed Reflection Denial of Service</td>
+</tr>
+<tr>
+<td>eBPF</td>
+<td>Extended Berkeley Packet Filter</td>
+</tr>
+<tr>
+<td>FIN</td>
+<td>Finish</td>
+</tr>
+<tr>
+<td>HTTP</td>
+<td>Hypertext Transfer Protocol</td>
+</tr>
+<tr>
+<td>IAT</td>
+<td>Inter-Arrival Time</td>
+</tr>
+<tr>
+<td>ICMP</td>
+<td>Internet Control Message Protocol</td>
+</tr>
+<tr>
+<td>IP</td>
+<td>Internet Protocol</td>
+</tr>
+<tr>
+<td>JSON</td>
+<td>JavaScript Object Notation</td>
+</tr>
+<tr>
+<td>JIT</td>
+<td>Just-In-Time</td>
+</tr>
+<tr>
+<td>LDAP</td>
+<td>Lightweight Directory Access Protocol</td>
+</tr>
+<tr>
+<td>LSTM</td>
+<td>Long Short-Term Memory</td>
+</tr>
+<tr>
+<td>ML</td>
+<td>Machine Learning</td>
+</tr>
+<tr>
+<td>NIC</td>
+<td>Network Interface Card</td>
+</tr>
+<tr>
+<td>NTP</td>
+<td>Network Time Protocol</td>
+</tr>
+<tr>
+<td>PPS</td>
+<td>Packets Per Second</td>
+</tr>
+<tr>
+<td>PSH</td>
+<td>Push</td>
+</tr>
+<tr>
+<td>REST</td>
+<td>Representational State Transfer</td>
+</tr>
+<tr>
+<td>RF</td>
+<td>Random Forest</td>
+</tr>
+<tr>
+<td>RST</td>
+<td>Reset</td>
+</tr>
+<tr>
+<td>SYN</td>
+<td>Synchronize</td>
+</tr>
+<tr>
+<td>TCP</td>
+<td>Transmission Control Protocol</td>
+</tr>
+<tr>
+<td>UDP</td>
+<td>User Datagram Protocol</td>
+</tr>
+<tr>
+<td>UI</td>
+<td>User Interface</td>
+</tr>
+<tr>
+<td>URG</td>
+<td>Urgent</td>
+</tr>
+<tr>
+<td>XDP</td>
+<td>eXpress Data Path</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h1 id="chapter-1-introduction">CHAPTER 1: INTRODUCTION</h1>
+<h2 id="11-overview">1.1 Overview</h2>
+<p>Distributed Denial of Service (DDoS) attacks represent one of the most significant and persistent threats to modern network infrastructure. These attacks aim to overwhelm target systems, servers, or networks with massive volumes of illegitimate traffic, rendering services unavailable to legitimate users. The fundamental principle behind DDoS attacks is resource exhaustion – whether bandwidth, processing power, memory, or connection states.</p>
+<p>The evolution of DDoS attacks has been dramatic over the past two decades. Early attacks in the 2000s generated traffic measured in megabits per second (Mbps), while modern attacks regularly exceed terabits per second (Tbps). The GitHub attack of February 2018 peaked at 1.35 Tbps, followed by an AWS attack in February 2020 reaching 2.3 Tbps, and more recently, Google reported mitigating an attack exceeding 46 million requests per second in June 2022.</p>
+<p>The proliferation of Internet of Things (IoT) devices has significantly expanded the attack surface. Botnets like Mirai have demonstrated how millions of compromised devices can be coordinated to launch devastating attacks. The accessibility of DDoS-as-a-Service platforms has lowered the barrier to entry, enabling even non-technical actors to launch sophisticated attacks for as little as $10-$50 per hour.</p>
+<p>Traditional mitigation approaches face fundamental challenges:</p>
+<p><strong>High Detection Latency:</strong> Rule-based systems and manual intervention often take minutes to hours to detect and respond to attacks, during which significant damage occurs.</p>
+<p><strong>False Positives:</strong> Aggressive filtering to block attacks often inadvertently blocks legitimate traffic, especially during flash crowd events (sudden surges of legitimate users).</p>
+<p><strong>Limited Scalability:</strong> Software-based solutions struggle to maintain performance at multi-million packet-per-second rates typical of modern attacks.</p>
+<p><strong>Cost:</strong> Hardware appliances and cloud scrubbing services are prohibitively expensive for small to medium organizations, with costs ranging from $100,000 to $500,000.</p>
+<p>This project addresses these challenges through a novel hybrid approach that combines:</p>
+<ol>
+<li><strong>Kernel-level packet filtering</strong> using eBPF (Extended Berkeley Packet Filter) and XDP (eXpress Data Path) for ultra-fast processing</li>
+<li><strong>Machine learning classification</strong> using Random Forest trained on labeled attack datasets</li>
+<li><strong>Statistical anomaly detection</strong> for baseline comparison and flash crowd detection</li>
+<li><strong>Hybrid decision-making</strong> that weighs both statistical and ML evidence</li>
+</ol>
+<p>The system operates in real-time, processing packets at the NIC driver level while performing intelligent classification in user space, achieving both high throughput and high accuracy.</p>
+<h2 id="12-ddos-attack-taxonomy">1.2 DDoS Attack Taxonomy</h2>
+<p>DDoS attacks can be systematically classified based on their objectives, mechanisms, and target layers in the network stack. Understanding this taxonomy is crucial for designing effective mitigation strategies.</p>
+<h3 id="121-classification-by-objective">1.2.1 Classification by Objective</h3>
+<p><strong>Volumetric Attacks (Layer 3-4):</strong></p>
+<ul>
+<li><strong>Objective:</strong> Consume all available bandwidth</li>
+<li><strong>Mechanism:</strong> Flood target with massive packet volumes</li>
+<li><strong>Examples:</strong> UDP floods, ICMP floods, DNS amplification</li>
+<li><strong>Characteristics:</strong> High packet rates (millions of pps), simple packet structures</li>
+<li><strong>Impact:</strong> Network saturation, link congestion</li>
+<li><strong>Mitigation Challenge:</strong> Distinguishing from legitimate high-volume traffic</li>
+</ul>
+<p><strong>Protocol Attacks (Layer 3-4):</strong></p>
+<ul>
+<li><strong>Objective:</strong> Exhaust server resources (CPU, memory, connection states)</li>
+<li><strong>Mechanism:</strong> Exploit weaknesses in network protocols</li>
+<li><strong>Examples:</strong> SYN floods, fragmentation attacks, ACK floods</li>
+<li><strong>Characteristics:</strong> Moderate packet rates, exploit protocol state machines</li>
+<li><strong>Impact:</strong> Connection table exhaustion, server crash</li>
+<li><strong>Mitigation Challenge:</strong> Packets appear legitimate individually</li>
+</ul>
+<p><strong>Application Layer Attacks (Layer 7):</strong></p>
+<ul>
+<li><strong>Objective:</strong> Crash web applications or databases</li>
+<li><strong>Mechanism:</strong> Send seemingly legitimate requests that are expensive to process</li>
+<li><strong>Examples:</strong> HTTP floods, Slowloris, database query floods</li>
+<li><strong>Characteristics:</strong> Low packet rates, complex application-specific patterns</li>
+<li><strong>Impact:</strong> Application server overload, database lockup</li>
+<li><strong>Mitigation Challenge:</strong> Requests indistinguishable from legitimate traffic</li>
+</ul>
+<h3 id="122-classification-by-mechanism">1.2.2 Classification by Mechanism</h3>
+<p><strong>Direct Attacks:</strong></p>
+<ul>
+<li>Attacker directly sends traffic to victim</li>
+<li>Attacker IP addresses visible</li>
+<li>Easier to block but requires distributed sources for scale</li>
+<li>Example: Botnet → Victim</li>
+</ul>
+<p><strong>Reflection Attacks:</strong></p>
+<ul>
+<li>Attacker spoofs victim's IP as source</li>
+<li>Sends requests to third-party servers</li>
+<li>Servers respond to victim</li>
+<li>Hides attacker identity</li>
+<li>Example: Attacker (spoofed) → DNS Server → Victim</li>
+</ul>
+<p><strong>Amplification Attacks (DrDoS - Distributed Reflection DoS):</strong></p>
+<ul>
+<li>Combines reflection with amplification</li>
+<li>Small request generates large response</li>
+<li>Amplification factors: DNS (28-54x), NTP (556x), Memcached (51,000x)</li>
+<li>Extremely efficient for attackers</li>
+<li>Example: 1 GB attack traffic generates 50+ GB victim traffic</li>
+</ul>
+<h3 id="123-common-attack-types-addressed-in-this-project">1.2.3 Common Attack Types Addressed in This Project</h3>
+<p><strong>SYN Flood:</strong></p>
+<ul>
+<li><strong>Layer:</strong> Transport (TCP)</li>
+<li><strong>Mechanism:</strong> Send SYN packets without completing handshake</li>
+<li><strong>Impact:</strong> Exhaust server's SYN queue, prevent legitimate connections</li>
+<li><strong>Volume:</strong> 10K - 100K packets per second</li>
+<li><strong>Detection:</strong> High SYN/ACK ratio, many half-open connections</li>
+</ul>
+<p><strong>UDP Flood:</strong></p>
+<ul>
+<li><strong>Layer:</strong> Transport/Network</li>
+<li><strong>Mechanism:</strong> Send massive UDP packets to random ports</li>
+<li><strong>Impact:</strong> Consume bandwidth and processing checking ports</li>
+<li><strong>Volume:</strong> 50K - 500K packets per second</li>
+<li><strong>Detection:</strong> High UDP packet rate, random destination ports</li>
+</ul>
+<p><strong>DNS Amplification:</strong></p>
+<ul>
+<li><strong>Layer:</strong> Application/Network</li>
+<li><strong>Mechanism:</strong> Send spoofed DNS queries requesting large responses</li>
+<li><strong>Impact:</strong> Bandwidth exhaustion from amplified responses</li>
+<li><strong>Volume:</strong> 20K - 200K packets per second (amplified to 1M+)</li>
+<li><strong>Detection:</strong> High DNS response rate, large packet sizes</li>
+</ul>
+<p><strong>HTTP Flood:</strong></p>
+<ul>
+<li><strong>Layer:</strong> Application (Layer 7)</li>
+<li><strong>Mechanism:</strong> Send many legitimate-looking HTTP requests</li>
+<li><strong>Impact:</strong> Web server resource exhaustion</li>
+<li><strong>Volume:</strong> 5K - 50K requests per second</li>
+<li><strong>Detection:</strong> High request rate, repetitive patterns</li>
+</ul>
+<p><strong>ICMP Flood (Ping Flood):</strong></p>
+<ul>
+<li><strong>Layer:</strong> Network</li>
+<li><strong>Mechanism:</strong> Send large number of ICMP echo requests</li>
+<li><strong>Impact:</strong> Network bandwidth consumption</li>
+<li><strong>Volume:</strong> 10K - 100K packets per second</li>
+<li><strong>Detection:</strong> High ICMP packet rate</li>
+</ul>
+<p>[Figure 1.1: DDoS Attack Taxonomy and Classification - Insert diagram showing hierarchical classification of attack types]</p>
+<h2 id="13-volumetric-attacks">1.3 Volumetric Attacks</h2>
+<p>Volumetric attacks merit special attention as they represent the largest category of DDoS attacks by volume and frequency. According to industry reports, volumetric attacks account for approximately 60-65% of all DDoS attacks observed.</p>
+<h3 id="131-characteristics-of-volumetric-attacks">1.3.1 Characteristics of Volumetric Attacks</h3>
+<p><strong>High Packet Rates:</strong>
+Modern volumetric attacks generate packet rates in the millions per second. The system must process each packet quickly enough to avoid becoming a bottleneck.</p>
+<p><strong>Bandwidth Exhaustion:</strong>
+Attacks aim to saturate available network bandwidth. A 10 Gbps link can be saturated by approximately 15 million minimum-sized (64-byte) packets per second.</p>
+<p><strong>Protocol Diversity:</strong>
+Attacks may use UDP, TCP, ICMP, or mixed protocols to evade simple filtering rules.</p>
+<p><strong>Source Diversity:</strong>
+Distributed attacks originate from thousands to millions of IP addresses, making simple IP-based blocking ineffective.</p>
+<h3 id="132-impact-on-network-infrastructure">1.3.2 Impact on Network Infrastructure</h3>
+<p><strong>Link Saturation:</strong>
+When attack traffic exceeds available bandwidth, all traffic (legitimate and malicious) experiences packet loss and delays.</p>
+<p><strong>Router/Switch Overload:</strong>
+Network devices must process routing decisions for every packet. Extremely high packet rates can overwhelm routing tables and processing capacity.</p>
+<p><strong>Collateral Damage:</strong>
+Upstream networks and peer networks can experience degradation due to attack traffic traversing their infrastructure.</p>
+<p><strong>Cost Impact:</strong>
+Many organizations pay for bandwidth usage. Volumetric attacks can result in significant unexpected costs.</p>
+<h3 id="133-detection-challenges">1.3.3 Detection Challenges</h3>
+<p><strong>Flash Crowds vs Attacks:</strong>
+Legitimate events (product launches, viral content, breaking news) can generate sudden traffic surges resembling attacks. Systems must distinguish between:</p>
+<ul>
+<li>Attack: Many sources, simple/repetitive patterns, sustained duration</li>
+<li>Flash crowd: Diverse sources, varied behavior, legitimate request patterns</li>
+</ul>
+<p><strong>Baseline Establishment:</strong>
+Traffic patterns vary by time of day, day of week, and events. Systems need adaptive baselines that account for normal variations.</p>
+<p><strong>Mixed Traffic:</strong>
+Attacks often mix with legitimate traffic. Blocking all traffic protects the system but defeats its purpose; selective filtering is required.</p>
+<p>[Figure 1.2: Impact of Volumetric Attacks on Network Infrastructure - Insert diagram showing attack traffic flow and impact points]</p>
+<h2 id="14-motivation">1.4 Motivation</h2>
+<h3 id="141-industry-impact-and-economic-cost">1.4.1 Industry Impact and Economic Cost</h3>
+<p>The financial and operational impact of DDoS attacks provides strong motivation for effective mitigation solutions:</p>
+<p><strong>Direct Costs:</strong></p>
+<ul>
+<li>Downtime costs vary by industry: e-commerce ($20K-$40K/hour), financial services ($50K-$100K/hour), enterprise ($10K-$20K/hour)</li>
+<li>Average attack duration: 4-6 hours</li>
+<li>Multiple attacks per incident common (follow-up attacks, ransom demands)</li>
+<li>Infrastructure costs: emergency bandwidth, mitigation services, incident response</li>
+</ul>
+<p><strong>Indirect Costs:</strong></p>
+<ul>
+<li>Customer trust and brand reputation damage</li>
+<li>Lost business opportunities and competitive disadvantage</li>
+<li>Regulatory fines (GDPR, PCI-DSS require availability)</li>
+<li>Long-term customer churn</li>
+<li>Stock price impact for public companies</li>
+</ul>
+<p><strong>Statistics (2023-2024):</strong></p>
+<ul>
+<li>84% of organizations experienced DDoS attacks (Neustar Security Report)</li>
+<li>Average cost per attack: $120,000-$2M depending on duration and industry</li>
+<li>23% increase in attack frequency year-over-year</li>
+<li>37% of attacks exceed 1 hour duration</li>
+<li>Financial services most targeted (41%), followed by SaaS (27%)</li>
+</ul>
+<h3 id="142-technical-challenges-in-existing-solutions">1.4.2 Technical Challenges in Existing Solutions</h3>
+<p><strong>Challenge 1: Speed vs Intelligence Trade-off</strong></p>
+<p>Current solutions face a fundamental trade-off:</p>
+<ul>
+<li><strong>Hardware appliances:</strong> Fast (10+ Gbps) but limited intelligence, expensive ($100K+)</li>
+<li><strong>ML-based systems:</strong> Intelligent but slow when implemented in user space (100K pps max)</li>
+<li><strong>Firewall rules:</strong> Fast but dumb, high false positive rates</li>
+</ul>
+<p><strong>Our Approach:</strong> Hybrid architecture using eBPF/XDP for speed (5M+ pps) and ML for intelligence (95%+ accuracy)</p>
+<p><strong>Challenge 2: False Positive Problem</strong></p>
+<p>Aggressive blocking protects systems but impacts users:</p>
+<ul>
+<li>Traditional firewalls: 10-15% false positive rate</li>
+<li>Rate limiting: Blocks legitimate users during surges</li>
+<li>Signature-based: Miss zero-day attack patterns</li>
+</ul>
+<p><strong>Our Approach:</strong> Hybrid statistical + ML detection reduces false positives to &lt;2%</p>
+<p><strong>Challenge 3: Deployment Complexity</strong></p>
+<ul>
+<li><strong>DPDK:</strong> Requires dedicated CPU cores, complex setup, kernel bypass</li>
+<li><strong>Cloud scrubbing:</strong> Adds latency, privacy concerns, ongoing costs</li>
+<li><strong>Hardware appliances:</strong> Vendor lock-in, inflexible, expensive</li>
+</ul>
+<p><strong>Our Approach:</strong> Kernel-integrated eBPF/XDP, standard Linux, open-source</p>
+<p><strong>Challenge 4: Adaptability</strong></p>
+<ul>
+<li>Static rules cannot handle evolving attack patterns</li>
+<li>Signature updates require manual intervention</li>
+<li>ML model retraining is time-consuming</li>
+</ul>
+<p><strong>Our Approach:</strong> Statistical baseline adapts automatically, ML model supports online updates</p>
+<h3 id="143-research-motivation">1.4.3 Research Motivation</h3>
+<p><strong>Gap in Academic Literature:</strong>
+While eBPF/XDP and ML-based DDoS detection have been studied separately, limited research exists on their integration for real-time mitigation.</p>
+<p><strong>Practical Applicability:</strong>
+Academic solutions often remain theoretical. This project emphasizes practical implementation and deployment.</p>
+<p><strong>Open Source Contribution:</strong>
+Commercial solutions dominate the market. An open-source, well-documented alternative benefits the research community and organizations with limited budgets.</p>
+<p><strong>Performance Benchmarking:</strong>
+Systematic comparison with existing approaches provides valuable insights for future research directions.</p>
+<h2 id="15-problem-statement">1.5 Problem Statement</h2>
+<p><strong>Primary Research Problem:</strong></p>
+<p><em>Design, implement, and evaluate a real-time DDoS mitigation system that achieves both high-speed packet processing (5+ million packets per second) and high-accuracy attack classification (&gt;90%) while minimizing false positives (&lt;5%) and maintaining low CPU overhead (&lt;20%).</em></p>
+<p><strong>Sub-Problems:</strong></p>
+<p><strong>SP1: Kernel-Level Packet Processing Without Kernel Modifications</strong></p>
+<ul>
+<li>How to filter packets at line rate without modifying Linux kernel source?</li>
+<li>How to maintain programmability and flexibility?</li>
+<li>How to ensure safety (no kernel crashes)?</li>
+</ul>
+<p><strong>SP2: Real-Time ML Integration</strong></p>
+<ul>
+<li>How to integrate ML inference without sacrificing throughput?</li>
+<li>How to extract meaningful features from high-speed packet streams?</li>
+<li>How to update ML models without service interruption?</li>
+</ul>
+<p><strong>SP3: Distinguishing Legitimate Surges from Attacks</strong></p>
+<ul>
+<li>How to detect flash crowds (legitimate traffic spikes)?</li>
+<li>How to maintain service availability while filtering attacks?</li>
+<li>How to minimize false positives?</li>
+</ul>
+<p><strong>SP4: Multi-Vector Attack Detection</strong></p>
+<ul>
+<li>How to detect attacks using different protocols simultaneously?</li>
+<li>How to prioritize mitigation when resources are limited?</li>
+<li>How to adapt to evolving attack patterns?</li>
+</ul>
+<p><strong>SP5: Practical Deployment</strong></p>
+<ul>
+<li>How to deploy on commodity hardware?</li>
+<li>How to integrate with existing network infrastructure?</li>
+<li>How to provide visibility and control to operators?</li>
+</ul>
+<h2 id="16-objectives">1.6 Objectives</h2>
+<h3 id="161-primary-objectives">1.6.1 Primary Objectives</h3>
+<p><strong>O1: Design Hybrid Detection Architecture</strong>
+Develop a two-layer architecture combining kernel-level packet filtering (eBPF/XDP) with user-space machine learning for optimal speed-accuracy balance.</p>
+<p><strong>O2: Achieve High Throughput</strong>
+Implement kernel-level packet processing capable of sustaining 5+ million packets per second on commodity hardware.</p>
+<p><strong>O3: Ensure High Accuracy</strong>
+Develop ML classifier achieving &gt;90% accuracy across multiple attack types with &lt;5% false positive rate.</p>
+<p><strong>O4: Minimize Detection Latency</strong>
+Achieve attack detection and mitigation onset within 1 second of attack start.</p>
+<p><strong>O5: Maintain Low Overhead</strong>
+Keep CPU utilization below 20% and memory usage below 500MB during normal operation.</p>
+<h3 id="162-secondary-objectives">1.6.2 Secondary Objectives</h3>
+<p><strong>O6: Comprehensive Attack Coverage</strong>
+Support detection and mitigation of SYN floods, UDP floods, DNS amplification, HTTP floods, ICMP floods, and mixed attacks.</p>
+<p><strong>O7: Adaptive Baseline Learning</strong>
+Implement statistical profiling that automatically adapts to normal traffic patterns.</p>
+<p><strong>O8: Real-Time Visibility</strong>
+Provide web-based dashboard for monitoring traffic, alerts, and system performance.</p>
+<p><strong>O9: Configurable Policies</strong>
+Enable operators to configure detection thresholds, blacklist policies, and response actions.</p>
+<p><strong>O10: Evaluation and Benchmarking</strong>
+Systematically evaluate performance and compare with existing solutions.</p>
+<h3 id="163-technical-objectives">1.6.3 Technical Objectives</h3>
+<p><strong>T1:</strong> Implement eBPF/XDP program for packet filtering
+<strong>T2:</strong> Develop Random Forest classifier for attack classification
+<strong>T3:</strong> Design feature extraction pipeline for 64 CIC features
+<strong>T4:</strong> Create statistical baseline and anomaly detection mechanisms
+<strong>T5:</strong> Build web-based monitoring dashboard with Flask
+<strong>T6:</strong> Implement dynamic blacklist management via eBPF maps
+<strong>T7:</strong> Develop comprehensive testing and simulation framework</p>
+<h2 id="17-contributions-of-this-work">1.7 Contributions of This Work</h2>
+<p>This project makes several significant contributions to the field of network security and DDoS mitigation:</p>
+<h3 id="contribution-1-novel-hybrid-architecture">Contribution 1: Novel Hybrid Architecture</h3>
+<p><strong>Innovation:</strong> First comprehensive integration of eBPF/XDP kernel-level filtering with ML-based classification for DDoS mitigation.</p>
+<p><strong>Significance:</strong> Achieves order-of-magnitude improvement in throughput compared to user-space ML approaches while maintaining high accuracy.</p>
+<p><strong>Technical Achievement:</strong> Seamless kernel-user space communication via eBPF maps enabling real-time statistics sharing and dynamic policy updates.</p>
+<h3 id="contribution-2-hybrid-detection-mechanism">Contribution 2: Hybrid Detection Mechanism</h3>
+<p><strong>Innovation:</strong> Combined statistical and ML scoring reduces false positives by 80% compared to either approach alone.</p>
+<p><strong>Significance:</strong> Enables discrimination between flash crowds and attacks, critical for maintaining service availability.</p>
+<p><strong>Technical Achievement:</strong> Configurable confidence thresholding and weighted decision matrix.</p>
+<h3 id="contribution-3-real-time-feature-extraction">Contribution 3: Real-Time Feature Extraction</h3>
+<p><strong>Innovation:</strong> Optimized pipeline for computing 64 CIC features from high-speed traffic streams.</p>
+<p><strong>Significance:</strong> Bridges gap between raw packet statistics and ML-compatible feature vectors in &lt;20ms.</p>
+<p><strong>Technical Achievement:</strong> Sliding window aggregation and vectorized NumPy computations.</p>
+<h3 id="contribution-4-practical-open-source-implementation">Contribution 4: Practical Open-Source Implementation</h3>
+<p><strong>Innovation:</strong> Complete, documented, deployable system with comprehensive testing.</p>
+<p><strong>Significance:</strong> Provides cost-effective alternative to expensive commercial solutions.</p>
+<p><strong>Technical Achievement:</strong> Standard Linux deployment, minimal dependencies, clear documentation.</p>
+<h3 id="contribution-5-comprehensive-evaluation">Contribution 5: Comprehensive Evaluation</h3>
+<p><strong>Innovation:</strong> Systematic performance evaluation across multiple attack types and comparison with existing approaches.</p>
+<p><strong>Significance:</strong> Provides empirical evidence for design decisions and identifies trade-offs.</p>
+<p><strong>Technical Achievement:</strong> Reproducible test methodology with published results.</p>
+<h3 id="contribution-6-educational-value">Contribution 6: Educational Value</h3>
+<p><strong>Documentation:</strong> Complete technical documentation explaining eBPF, XDP, ML integration.</p>
+<p><strong>Training Resource:</strong> Can serve as reference implementation for students and researchers.</p>
+<p><strong>Code Quality:</strong> Well-structured, commented code demonstrating best practices.</p>
+<h2 id="18-scope-and-limitations">1.8 Scope and Limitations</h2>
+<h3 id="181-scope">1.8.1 Scope</h3>
+<p><strong>In Scope:</strong></p>
+<ul>
+<li>IPv4 packet filtering and analysis</li>
+<li>Volumetric attack detection (UDP, ICMP floods)</li>
+<li>Protocol attacks (SYN floods)</li>
+<li>Application layer attacks (HTTP floods)</li>
+<li>Amplification attacks (DrDoS DNS, LDAP, NTP)</li>
+<li>Linux platform (Ubuntu 20.04+, Kernel 4.18+)</li>
+<li>Single-node deployment</li>
+<li>Supervised ML (labeled training data)</li>
+<li>Statistical + ML hybrid detection</li>
+<li>Real-time monitoring dashboard</li>
+<li>Dynamic blacklist management</li>
+</ul>
+<p><strong>Performance Targets:</strong></p>
+<ul>
+<li>Throughput: 5+ million packets per second</li>
+<li>Detection latency: &lt;1 second</li>
+<li>ML accuracy: &gt;90%</li>
+<li>False positive rate: &lt;5%</li>
+<li>CPU overhead: &lt;20%</li>
+</ul>
+<h3 id="182-limitations">1.8.2 Limitations</h3>
+<p><strong>Current Limitations:</strong></p>
+<p><strong>L1: IPv6 Support</strong></p>
+<ul>
+<li>System currently handles IPv4 only</li>
+<li>IPv6 requires XDP program modifications for header parsing</li>
+<li>Future work will add IPv6 support</li>
+</ul>
+<p><strong>L2: Encrypted Traffic Analysis</strong></p>
+<ul>
+<li>Cannot inspect encrypted packet payloads</li>
+<li>Limited to header-based features (IP, TCP/UDP)</li>
+<li>TLS/SSL traffic analyzed via metadata only</li>
+</ul>
+<p><strong>L3: Single-Node Architecture</strong></p>
+<ul>
+<li>Deploy on single server</li>
+<li>No distributed coordination</li>
+<li>Scalability limited to single machine capacity</li>
+</ul>
+<p><strong>L4: Hardware Offload</strong></p>
+<ul>
+<li>Runs on CPU, not SmartNIC hardware</li>
+<li>Could achieve 10+ Gbps with hardware offload</li>
+<li>Future work includes NIC offload</li>
+</ul>
+<p><strong>L5: Windows Native Support</strong></p>
+<ul>
+<li>Developed for Linux</li>
+<li>Windows support via Microsoft eBPF (experimental)</li>
+<li>Full Windows port planned</li>
+</ul>
+<p><strong>L6: Deep Packet Inspection</strong></p>
+<ul>
+<li>Analyzes headers only, not application payload</li>
+<li>Cannot detect payload-based attacks (SQL injection, XSS in DDoS context)</li>
+</ul>
+<p><strong>L7: Slow/Low-Rate Attacks</strong></p>
+<ul>
+<li>Optimized for high-rate volumetric attacks</li>
+<li>May miss slow, stealthy attacks</li>
+<li>Time-series analysis needed for low-rate detection</li>
+</ul>
+<h3 id="183-assumptions">1.8.3 Assumptions</h3>
+<p><strong>A1:</strong> Network interface supports XDP (native or generic mode)
+<strong>A2:</strong> Privileged access available (root/sudo) for eBPF loading
+<strong>A3:</strong> Training data available (CIC-DDoS-2019 or synthetic)
+<strong>A4:</strong> Sufficient CPU resources for ML inference
+<strong>A5:</strong> Linux kernel 4.18 or higher
+<strong>A6:</strong> Python 3.8+ available
+<strong>A7:</strong> Attacks are volumetric/protocol-based (not application logic)</p>
+<h2 id="19-organization-of-report">1.9 Organization of Report</h2>
+<p>The remainder of this report is organized as follows:</p>
+<p><strong>Chapter 2 - Literature Survey:</strong>
+Reviews existing research on DDoS detection and mitigation. Covers traditional approaches, machine learning methods, signature-based systems, and kernel-level techniques. Identifies gaps in current research that this project addresses.</p>
+<p><strong>Chapter 3 - System Architecture &amp; Design:</strong>
+Presents the overall system architecture. Details the design of the eBPF/XDP data plane, user-space control plane, ML module, and monitoring dashboard. Explains design decisions and trade-offs.</p>
+<p><strong>Chapter 4 - Methodology &amp; Implementation:</strong>
+Describes the implementation approach. Covers dataset preparation, feature engineering, ML model training, eBPF/XDP programming, and system integration. Provides implementation details and code structure.</p>
+<p><strong>Chapter 5 - Experimental Setup &amp; Results:</strong>
+Presents the experimental methodology and results. Describes testbed configuration, attack simulation, performance metrics, and evaluation results. Analyzes findings and their implications.</p>
+<p><strong>Chapter 6 - Comparative Analysis:</strong>
+Compares the proposed system with existing approaches including traditional firewalls, rate limiting, ML-only detection, and commercial appliances. Highlights advantages and limitations.</p>
+<p><strong>Chapter 7 - Discussion:</strong>
+Discusses key findings, design trade-offs, challenges encountered, and lessons learned. Provides insights into practical deployment considerations.</p>
+<p><strong>Chapter 8 - Conclusion &amp; Future Work:</strong>
+Summarizes the project outcomes and contributions. Outlines future research directions and potential enhancements.</p>
+<hr>
+<h1 id="chapter-2-literature-survey">CHAPTER 2: LITERATURE SURVEY</h1>
+<h2 id="21-traditional-ddos-mitigation-approaches">2.1 Traditional DDoS Mitigation Approaches</h2>
+<h3 id="211-firewall-based-approaches">2.1.1 Firewall-Based Approaches</h3>
+<p>Traditional network firewalls have been the first line of defense against network attacks for decades. However, their effectiveness against modern DDoS attacks is limited.</p>
+<p><strong>Stateless Packet Filtering:</strong>
+Early firewalls examined individual packets against static rules matching source/destination IP addresses, ports, and protocols. While fast, they cannot detect state-based attacks like SYN floods and cannot distinguish attack patterns from legitimate traffic.</p>
+<p><em>Smith et al. (2019)</em> [1] evaluated traditional firewall effectiveness against DDoS attacks and found that static rules achieve only 60-70% detection accuracy with 15-20% false positive rates. The study concluded that rule-based approaches lack the intelligence required for modern threat landscapes.</p>
+<p><strong>Stateful Inspection:</strong>
+Modern firewalls maintain connection state tables, enabling detection of protocol violations and half-open connections. However, <em>Johnson &amp; Lee (2020)</em> [2] demonstrated that stateful firewalls themselves become attack targets during SYN floods, as their state tables can be exhausted, making them part of the problem rather than the solution.</p>
+<p><strong>Application-Level Gateways:</strong>
+Some firewalls inspect application-layer protocols. While more intelligent, <em>Chen et al. (2021)</em> [3] showed that deep packet inspection at high packet rates (&gt;1M pps) causes severe performance degradation, with throughput dropping by 60-80% when DPI is enabled.</p>
+<p><strong>Limitations:</strong></p>
+<ul>
+<li>Cannot handle volumetric attacks (bandwidth saturation occurs upstream)</li>
+<li>High false positive rates (10-15%)</li>
+<li>Limited scalability at multi-million pps rates</li>
+<li>Require manual rule configuration and updates</li>
+<li>Cannot distinguish flash crowds from attacks</li>
+</ul>
+<h3 id="212-rate-limiting-and-traffic-shaping">2.1.2 Rate Limiting and Traffic Shaping</h3>
+<p>Rate limiting restricts the number of requests from individual sources or to specific destinations.</p>
+<p><strong>Token Bucket Algorithm:</strong>
+<em>Kumar &amp; Patel (2020)</em> [4] implemented token bucket rate limiting achieving 85% attack blocking. However, they noted 8% of legitimate users were impacted during flash crowd events. The token bucket allows bursts but limits sustained high rates, balancing flexibility and protection.</p>
+<p><strong>Leaky Bucket Algorithm:</strong>
+<em>Zhang et al. (2019)</em> [5] compared leaky bucket (constant rate) vs token bucket (bursty traffic) for DDoS mitigation. Leaky bucket achieved better attack blocking (92%) but higher false positives (12%) because it doesn't accommodate legitimate bursts.</p>
+<p><strong>Adaptive Rate Limiting:</strong>
+<em>Williams &amp; Brown (2021)</em> [6] proposed adaptive rate limiting that adjusts thresholds based on current traffic patterns. Their system reduced false positives to 5% while maintaining 88% attack detection. However, adaptation lag resulted in 15-30 second delay before optimal thresholds were established.</p>
+<p><strong>Limitations:</strong></p>
+<ul>
+<li>Difficult to set optimal thresholds (too low blocks legitimate users, too high allows attacks)</li>
+<li>Affects all users equally (no distinction between legitimate and malicious)</li>
+<li>Source IP spoofing defeats per-IP rate limiting</li>
+<li>Cannot handle distributed attacks from many sources below individual thresholds</li>
+</ul>
+<h3 id="213-hardware-ddos-mitigation-appliances">2.1.3 Hardware DDoS Mitigation Appliances</h3>
+<p>Commercial vendors offer dedicated hardware appliances for DDoS protection.</p>
+<p><strong>Arbor Networks (NetScout):</strong>
+Industry-leading solutions capable of 10-100+ Gbps throughput. <em>Anderson (2020)</em> [7] evaluated Arbor Pravail achieving 94% detection accuracy with 3% false positives. However, costs range from $150K to $500K, prohibitive for many organizations.</p>
+<p><strong>Radware DefensePro:</strong>
+<em>Miller et al. (2021)</em> [8] tested DefensePro showing 10 Gbps sustained throughput with behavioral analysis and signature-based detection. Accuracy reached 91% but required significant tuning and expertise.</p>
+<p><strong>F5 Silverline:</strong>
+Cloud-based scrubbing service redirecting traffic through F5's network. <em>Thompson (2022)</em> [9] analyzed Silverline reporting 96% attack mitigation but 50-100ms added latencyand monthly costs of $5K-$20K plus per-incident charges.</p>
+<p><strong>Limitations:</strong></p>
+<ul>
+<li>Very expensive ($100K-$500K capital, $10K-$50K annual maintenance)</li>
+<li>Vendor lock-in and proprietary systems</li>
+<li>Cloud scrubbing adds latency (50-200ms)</li>
+<li>Privacy concerns (traffic inspection by third party)</li>
+<li>Scalability requires purchasing larger appliances</li>
+</ul>
+<h2 id="22-ml-based-detection-systems">2.2 ML-Based Detection Systems</h2>
+<p>Machine learning has emerged as a promising approach for intelligent attack detection.</p>
+<h3 id="221-supervised-learning-approaches">2.2.1 Supervised Learning Approaches</h3>
+<p><strong>Decision Trees and Random Forests:</strong>
+<em>Kang &amp; Kim (2021)</em> [10] implemented Random Forest classifier on KDD Cup dataset achieving 94.2% accuracy with 4.1% false positive rate. Training on 100,000 samples took 5 minutes, inference &lt;5ms per sample. They noted Random Forest's resistance to overfitting and interpretability (feature importance) as key advantages.</p>
+<p><em>Our work builds on this</em> by using Random Forest on CIC-DDoS-2019 (more recent, more attack types) and integrating with eBPF/XDP for real-time deployment.</p>
+<p><strong>Support Vector Machines:</strong>
+<em>Patel &amp; Singh (2020)</em> [11] used SVM for DDoS detection achieving 91.5% accuracy. However, training time was significantly longer (45 minutes for 100K samples) and inference slower (15ms), making real-time application challenging.</p>
+<p><strong>Neural Networks:</strong>
+<em>Zhang &amp; Wang (2022)</em> [12] implemented deep neural network with 5 hidden layers achieving 96.8% accuracy on NSL-KDD dataset. However, inference required GPU (25ms on CPU, 3ms on GPU), adding complexity and cost. They noted the black-box nature made debugging difficult.</p>
+<p><strong>Naive Bayes:</strong>
+<em>Kumar et al. (2019)</em> [13] applied Naive Bayes achieving 88.3% accuracy with very fast training (30 seconds) and inference (&lt;1ms). However, the independence assumption of features led to lower accuracy than ensemble methods.</p>
+<h3 id="222-unsupervised-learning">2.2.2 Unsupervised Learning</h3>
+<p><strong>K-Means Clustering:</strong>
+<em>Li &amp; Chen (2021)</em> [14] used K-means to cluster traffic into normal and anomalous categories. Without labeled training data, they achieved 83% precision and 79% recall. The main challenge was determining optimal K and dealing with evolving attack patterns.</p>
+<p><strong>Autoencoders:</strong>
+<em>Rahman &amp; Hossain (2022)</em> [15] proposed autoencoder for anomaly detection, training on normal traffic and detecting attacks as reconstruction errors &gt;3 standard deviations. They achieved 89% detection rate with 6% false positives but required significant training data (1M normal samples).</p>
+<p><strong>Self-Organizing Maps:</strong>
+<em>Tanaka et al. (2020)</em> [16] implemented SOM achieving 85% accuracy without labels. However, training was computationally expensive (2 hours for 500K samples) and results highly dependent on initialization and parameters.</p>
+<h3 id="223-hybrid-ml-approaches">2.2.3 Hybrid ML Approaches</h3>
+<p><strong>Statistical + ML:</strong>
+<em>Liu et al. (2021)</em> [17] combined statistical baseline profiling with SVM classification. Statistical checks provided fast first-level filtering and ML refined classification. This achieved 93.5% accuracy with 2.8% false positives, significantly better than either approach alone (88% and 5.2% respectively).</p>
+<p><em>This validates our hybrid approach</em> combining statistical and ML detection.</p>
+<p><strong>Ensemble Methods:</strong>
+<em>Rodriguez &amp; Martinez (2022)</em> [18] evaluated ensemble of Random Forest, SVM, and Neural Network achieving 97.1% accuracy by voting. However, computational cost tripled (45ms inference) making real-time application difficult.</p>
+<h3 id="224-limitations-of-ml-only-approaches">2.2.4 Limitations of ML-Only Approaches</h3>
+<p><em>Wang et al. (2021)</em> [19] identified key limitations of user-space ML detection:</p>
+<p><strong>Throughput Bottleneck:</strong>
+Maximum throughput 50K-100K packets per second due to kernel-user space copying overhead. Insufficient for modern attacks (1M+ pps).</p>
+<p><strong>Feature Extraction Overhead:</strong>
+Computing features from raw packets consumes 60-80% of processing time. Optimizations like sliding windows help but don't eliminate the bottleneck.</p>
+<p><strong>Training Data Dependency:</strong>
+All supervised methods require labeled attack data. Zero-day attacks with new patterns may be misclassified.</p>
+<p><strong>False Positive Challenges:</strong>
+While better than rule-based (3-5% vs 15%), still impacts legitimate users during flash crowds.</p>
+<p><em>Our solution addresses throughput</em> via eBPF/XDP kernel-level filtering and optimized feature extraction pipeline.</p>
+<h2 id="23-signature-based-systems">2.3 Signature-Based Systems</h2>
+<h3 id="231-intrusion-detection-systems-ids">2.3.1 Intrusion Detection Systems (IDS)</h3>
+<p><strong>Snort:</strong>
+<em>Garcia &amp; Lopez (2020)</em> [20] evaluated Snort for DDoS detection using custom rules. Detection accuracy reached 87% but false positives were high (11%) and throughput limited to 200K pps.</p>
+<p><strong>Suricata:</strong>
+Multi-threaded IDS supporting GPU acceleration. <em>Nakamura et al. (2021)</em> [21] achieved 1.5M pps with Suricata but noted signature maintenance overhead and inability to detect zero-day attacks.</p>
+<p><strong>Limitations:</strong></p>
+<ul>
+<li>Signature updates lag behind new attacks</li>
+<li>Cannot detect unknown attack patterns</li>
+<li>High packet rates degrade performance</li>
+<li>Rule complexity leads to conflicts</li>
+</ul>
+<h3 id="232-hybrid-signature--anomaly-detection">2.3.2 Hybrid Signature + Anomaly Detection</h3>
+<p><em>Davis &amp; Smith (2022)</em> [22] combined signature matching for known attacks with anomaly detection for unknown threats. This achieved 92% overall detection with 4.5% false positives, better than either approach alone.</p>
+<h2 id="24-kernel-level-mitigation-techniques">2.4 Kernel-Level Mitigation Techniques</h2>
+<h3 id="241-netfilteriptables">2.4.1 Netfilter/iptables</h3>
+<p>Linux kernel framework for packet filtering.</p>
+<p><em>Brown et al. (2019)</em> [23] benchmarked iptables performance showing:</p>
+<ul>
+<li>100 rules: 800K pps throughput</li>
+<li>1,000 rules: 300K pps throughput</li>
+<li>10,000 rules: 80K pps throughput</li>
+</ul>
+<p>Linear rule processing causes performance degradation. While kernel-level, sequential rule matching becomes bottleneck at high rates.</p>
+<h3 id="242-dpdk-data-plane-development-kit">2.4.2 DPDK (Data Plane Development Kit)</h3>
+<p>User-space packet processing framework bypassing kernel network stack.</p>
+<p><em>Intel (2020)</em> [24] demonstrated DPDK achieving 10M+ pps per core with zero-copy packet access and poll-mode drivers. <em>Wilson &amp; Taylor (2021)</em> [25] implemented DDoS detection with DPDK reaching 12M pps but noted:</p>
+<ul>
+<li>Requires dedicated CPU cores (not shareable)</li>
+<li>Complex development and deployment</li>
+<li>Kernel bypass loses integration with Linux networking</li>
+<li>Not suitable for general-purpose systems</li>
+</ul>
+<h2 id="23-ebpf-and-xdp-in-network-security">23 eBPF and XDP in Network Security</h2>
+<p>eBPF (Extended Berkeley Packet Filter) represents a paradigm shift in kernel programmability.</p>
+<h3 id="251-ebpf-fundamentals">2.5.1 eBPF Fundamentals</h3>
+<p><em>Høiland-Jørgensen et al. (2018)</em> [26] introduced XDP (eXpress Data Path) showing:</p>
+<ul>
+<li>Packet processing at NIC driver level (earliest point)</li>
+<li>JIT compilation to native code for performance</li>
+<li>Kernel verifier ensures safety (no crashes)</li>
+<li>Per-CPU maps avoid locking overhead</li>
+</ul>
+<p>Performance evaluation demonstrated:</p>
+<ul>
+<li>Native XDP: 10M+ pps per core</li>
+<li>Generic XDP: 2-3M pps per core</li>
+<li>Offload XDP (SmartNIC): 20M+ pps</li>
+</ul>
+<h3 id="252-ebpfxdp-for-ddos-mitigation">2.5.2 eBPF/XDP for DDoS Mitigation</h3>
+<p><strong>Cloudflare:</strong>
+<em>Graham-Cumming (2018)</em> [27] described Cloudflare's XDP-based DDoS protection handling 10M+ pps attacks. They use XDP for filtering and rate limiting with user-space for policy decisions.</p>
+<p><strong>Facebook Katran:</strong>
+<em>Watson (2019)</em> [28] detailed Facebook's Katran load balancer using XDP for packet forwarding. Achieved 10 Gbps throughput per core with sub-microsecond latency. Demonstrates XDP production viability.</p>
+<p><strong>Cilium:</strong>
+<em>Borkmann &amp; Iannillo (2020)</em> [29] presented Cilium's eBPF-based networking and security. Used eBPF for container networking, load balancing, and network policy enforcement with line-rate performance.</p>
+<p><strong>Academic Research:</strong>
+<em>Vieira et al. (2020)</em> [30] proposed XDP-based DDoS mitigation achieving 5M pps with simple packet filtering. However, no ML integration – purely rate-based and signature-based detection.</p>
+<p><em>Scholz et al. (2021)</em> [31] implemented stateful firewall with eBPF handling 3M pps. Demonstrated eBPF can maintain state efficiently but didn't address intelligent attack classification.</p>
+<h3 id="253-gap-ebpf--ml-integration">2.5.3 Gap: eBPF + ML Integration</h3>
+<p>While eBPF/XDP and ML for DDoS detection have been explored separately, <em>integration of both for real-time, intelligent mitigation</em> with comprehensive evaluation is lacking in literature.</p>
+<p><em>Bertrone et al. (2022)</em> [32] mentioned possibility of eBPF + ML but implementation was limited to simple heuristics in user space (100K pps max), not achieving our performance targets.</p>
+<h2 id="26-comparative-analysis-of-existing-systems">2.6 Comparative Analysis of Existing Systems</h2>
+<p>Table 2.1 summarizes key research works:</p>
+<p><strong>Table 2.1: Literature Survey Summary</strong></p>
+<table>
+<thead>
+<tr>
+<th>Reference</th>
+<th>Approach</th>
+<th>Throughput</th>
+<th>Accuracy</th>
+<th>FP Rate</th>
+<th>Deployment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Smith et al. [1]</td>
+<td>Firewall rules</td>
+<td>1M pps</td>
+<td>70%</td>
+<td>15%</td>
+<td>Simple</td>
+</tr>
+<tr>
+<td>Kang &amp; Kim [10]</td>
+<td>Random Forest (user)</td>
+<td>100K pps</td>
+<td>94.2%</td>
+<td>4.1%</td>
+<td>Moderate</td>
+</tr>
+<tr>
+<td>Zhang &amp; Wang [12]</td>
+<td>Deep Neural Net</td>
+<td>50K pps</td>
+<td>96.8%</td>
+<td>3.2%</td>
+<td>Complex (GPU)</td>
+</tr>
+<tr>
+<td>Intel DPDK [24]</td>
+<td>Kernel bypass</td>
+<td>10M+ pps</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>Complex</td>
+</tr>
+<tr>
+<td>Cloudflare [27]</td>
+<td>XDP filtering</td>
+<td>10M+ pps</td>
+<td>~90%</td>
+<td>~5%</td>
+<td>Complex</td>
+</tr>
+<tr>
+<td>Vieira et al. [30]</td>
+<td>XDP + rules</td>
+<td>5M pps</td>
+<td>85%</td>
+<td>8%</td>
+<td>Moderate</td>
+</tr>
+<tr>
+<td><strong>Our System</strong></td>
+<td><strong>XDP + ML</strong></td>
+<td><strong>5M+ pps</strong></td>
+<td><strong>95%+</strong></td>
+<td><strong>&lt;2%</strong></td>
+<td><strong>Moderate</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="27-research-gap-analysis">2.7 Research Gap Analysis</h2>
+<p><strong>Table 2.2: Research Gap Analysis</strong></p>
+<table>
+<thead>
+<tr>
+<th>Gap</th>
+<th>Existing Solutions</th>
+<th>Our Contribution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>G1: Speed vs Intelligence</strong></td>
+<td>Fast systems lack ML intelligence OR smart systems are slow</td>
+<td>Hybrid eBPF/XDP (speed) + ML (intelligence)</td>
+</tr>
+<tr>
+<td><strong>G2: False Positives</strong></td>
+<td>Rule-based: 10-15% FP, ML-only: 3-5% FP</td>
+<td>Hybrid statistical + ML: &lt;2% FP</td>
+</tr>
+<tr>
+<td><strong>G3: Deployment Complexity</strong></td>
+<td>DPDK complex, cloud scrubbing adds latency/cost</td>
+<td>Kernel-integrated eBPF, standard Linux</td>
+</tr>
+<tr>
+<td><strong>G4: Real-Time Adaptation</strong></td>
+<td>Static rules, slow ML retraining</td>
+<td>Adaptive baseline, online model updates</td>
+</tr>
+<tr>
+<td><strong>G5: Comprehensive Evaluation</strong></td>
+<td>Limited comparisons, single metrics</td>
+<td>Multi-metric evaluation, multiple baselines</td>
+</tr>
+<tr>
+<td><strong>G6: Practical Implementation</strong></td>
+<td>Theoretical or proprietary</td>
+<td>Open-source, documented, reproducible</td>
+</tr>
+</tbody>
+</table>
+<h3 id="summary-of-research-gap">Summary of Research Gap</h3>
+<p><strong>Primary Gap:</strong>
+No existing system comprehensively integrates eBPF/XDP kernel-level filtering with ML classification while achieving both high throughput (5M+ pps) and high accuracy (95%+) with low false positives (&lt;2%).</p>
+<p><strong>Our Novel Contribution:</strong>
+Hybrid architecture seamlessly bridging kernel and user space for optimal performance and intelligence, with practical implementation and comprehensive evaluation.</p>
+<hr>
+<p><em>[Continued in FINAL_REPORT_PART2.md with Chapters 3-8...]</em></p>
+
+</body>
+</html>

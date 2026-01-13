@@ -1,0 +1,159 @@
+
+
+
+DDoS Mitigation System using eBPF and ML Models
+Under the guidance of:
+Dr. D SanthaDevi
+
+
+Team Members:                                                        
+U chandra Sekhar  - 23BCE9222
+SK kaif sharif – 23BCE9393
+J Hari Kiran -23BCE9389
+
+
+
+
+
+
+
+Table of Contents
+
+
+
+
+
+
+
+CHAPTER 1: INTRODUCTION
+1.1 Overview
+Distributed Denial of Service (DDoS) attacks represent one of the most significant and persistent threats to modern network infrastructure. These attacks aim to overwhelm target systems, servers, or networks with massive volumes of illegitimate traffic, rendering services unavailable to legitimate users. The fundamental principle behind DDoS attacks is resource exhaustion – whether bandwidth, processing power, memory, or connection states.
+The evolution of DDoS attacks has been dramatic over the past two decades. Early attacks in the 2000s generated traffic measured in megabits per second (Mbps), while modern attacks regularly exceed terabits per second (Tbps). The GitHub attack of February 2018 peaked at 1.35 Tbps, followed by an AWS attack in February 2020 reaching 2.3 Tbps, and more recently, Google reported mitigating an attack exceeding 46 million requests per second in June 2022.
+The proliferation of Internet of Things (IoT) devices has significantly expanded the attack surface. Botnets like Mirai have demonstrated how millions of compromised devices can be coordinated to launch devastating attacks. The accessibility of DDoS-as-a-Service platforms has lowered the barrier to entry, enabling even non-technical actors to launch sophisticated attacks for as little as $10-$50 per hour.
+Traditional mitigation approaches face fundamental challenges:
+High Detection Latency: Rule-based systems and manual intervention often take minutes to hours to detect and respond to attacks, during which significant damage occurs.
+False Positives: Aggressive filtering to block attacks often inadvertently blocks legitimate traffic, especially during flash crowd events (sudden surges of legitimate users).
+Limited Scalability: Software-based solutions struggle to maintain performance at multi-million packet-per-second rates typical of modern attacks.
+Cost: Hardware appliances and cloud scrubbing services are prohibitively expensive for small to medium organizations, with costs ranging from $100,000 to $500,000.
+This project addresses these challenges through a novel hybrid approach that combines:
+Kernel-level packet filtering using eBPF (Extended Berkeley Packet Filter) and XDP (eXpress Data Path) for ultra-fast processing
+Machine learning classification using Random Forest trained on labeled attack datasets
+Statistical anomaly detection for baseline comparison and flash crowd detection
+Hybrid decision-making that weighs both statistical and ML evidence
+The system operates in real-time, processing packets at the NIC driver level while performing intelligent classification in user space, achieving both high throughput and high accuracy.
+1.2 DDoS Attack Taxonomy
+DDoS attacks can be systematically classified based on their objectives, mechanisms, and target layers in the network stack. Understanding this taxonomy is crucial for designing effective mitigation strategies.
+1.2.1 Classification by Objective
+Volumetric Attacks (Layer 3-4): - Objective: Consume all available bandwidth - Mechanism: Flood target with massive packet volumes - Examples: UDP floods, ICMP floods, DNS amplification - Characteristics: High packet rates (millions of pps), simple packet structures - Impact: Network saturation, link congestion - Mitigation Challenge: Distinguishing from legitimate high-volume traffic
+Protocol Attacks (Layer 3-4): - Objective: Exhaust server resources (CPU, memory, connection states) - Mechanism: Exploit weaknesses in network protocols - Examples: SYN floods, fragmentation attacks, ACK floods - Characteristics: Moderate packet rates, exploit protocol state machines - Impact: Connection table exhaustion, server crash - Mitigation Challenge: Packets appear legitimate individually
+Application Layer Attacks (Layer 7): - Objective: Crash web applications or databases - Mechanism: Send seemingly legitimate requests that are expensive to process - Examples: HTTP floods, Slowloris, database query floods - Characteristics: Low packet rates, complex application-specific patterns - Impact: Application server overload, database lockup - Mitigation Challenge: Requests indistinguishable from legitimate traffic
+1.2.2 Classification by Mechanism
+Direct Attacks: - Attacker directly sends traffic to victim - Attacker IP addresses visible - Easier to block but requires distributed sources for scale - Example: Botnet → Victim
+Reflection Attacks: - Attacker spoofs victim’s IP as source - Sends requests to third-party servers - Servers respond to victim - Hides attacker identity - Example: Attacker (spoofed) → DNS Server → Victim
+Amplification Attacks (DrDoS - Distributed Reflection DoS): - Combines reflection with amplification - Small request generates large response - Amplification factors: DNS (28-54x), NTP (556x), Memcached (51,000x) - Extremely efficient for attackers - Example: 1 GB attack traffic generates 50+ GB victim traffic
+1.2.3 Common Attack Types Addressed in This Project
+SYN Flood: - Layer: Transport (TCP) - Mechanism: Send SYN packets without completing handshake - Impact: Exhaust server’s SYN queue, prevent legitimate connections - Volume: 10K - 100K packets per second - Detection: High SYN/ACK ratio, many half-open connections
+UDP Flood: - Layer: Transport/Network - Mechanism: Send massive UDP packets to random ports - Impact: Consume bandwidth and processing checking ports - Volume: 50K - 500K packets per second - Detection: High UDP packet rate, random destination ports
+DNS Amplification: - Layer: Application/Network - Mechanism: Send spoofed DNS queries requesting large responses - Impact: Bandwidth exhaustion from amplified responses - Volume: 20K - 200K packets per second (amplified to 1M+) - Detection: High DNS response rate, large packet sizes
+HTTP Flood: - Layer: Application (Layer 7) - Mechanism: Send many legitimate-looking HTTP requests - Impact: Web server resource exhaustion - Volume: 5K - 50K requests per second - Detection: High request rate, repetitive patterns
+ICMP Flood (Ping Flood): - Layer: Network - Mechanism: Send large number of ICMP echo requests - Impact: Network bandwidth consumption - Volume: 10K - 100K packets per second - Detection: High ICMP packet rate
+
+CHAPTER 2: LITERATURE SURVEY
+2.1 Traditional DDoS Mitigation Approaches
+2.1.1 Firewall-Based Approaches
+Traditional network firewalls have been the first line of defense against network attacks for decades. However, their effectiveness against modern DDoS attacks is limited.
+Stateless Packet Filtering: Early firewalls examined individual packets against static rules matching source/destination IP addresses, ports, and protocols. While fast, they cannot detect state-based attacks like SYN floods and cannot distinguish attack patterns from legitimate traffic.
+Smith et al. (2019) [1] evaluated traditional firewall effectiveness against DDoS attacks and found that static rules achieve only 60-70% detection accuracy with 15-20% false positive rates. The study concluded that rule-based approaches lack the intelligence required for modern threat landscapes.
+Stateful Inspection: Modern firewalls maintain connection state tables, enabling detection of protocol violations and half-open connections. However, Johnson & Lee (2020) [2] demonstrated that stateful firewalls themselves become attack targets during SYN floods, as their state tables can be exhausted, making them part of the problem rather than the solution.
+Application-Level Gateways: Some firewalls inspect application-layer protocols. While more intelligent, Chen et al. (2021) [3] showed that deep packet inspection at high packet rates (>1M pps) causes severe performance degradation, with throughput dropping by 60-80% when DPI is enabled.
+Limitations: - Cannot handle volumetric attacks (bandwidth saturation occurs upstream) - High false positive rates (10-15%) - Limited scalability at multi-million pps rates - Require manual rule configuration and updates - Cannot distinguish flash crowds from attacks
+2.1.2 Rate Limiting and Traffic Shaping
+Rate limiting restricts the number of requests from individual sources or to specific destinations.
+Token Bucket Algorithm: Kumar & Patel (2020) [4] implemented token bucket rate limiting achieving 85% attack blocking. However, they noted 8% of legitimate users were impacted during flash crowd events. The token bucket allows bursts but limits sustained high rates, balancing flexibility and protection.
+Leaky Bucket Algorithm: Zhang et al. (2019) [5] compared leaky bucket (constant rate) vs token bucket (bursty traffic) for DDoS mitigation. Leaky bucket achieved better attack blocking (92%) but higher false positives (12%) because it doesn’t accommodate legitimate bursts.
+Adaptive Rate Limiting: Williams & Brown (2021) [6] proposed adaptive rate limiting that adjusts thresholds based on current traffic patterns. Their system reduced false positives to 5% while maintaining 88% attack detection. However, adaptation lag resulted in 15-30 second delay before optimal thresholds were established.
+Limitations: - Difficult to set optimal thresholds (too low blocks legitimate users, too high allows attacks) - Affects all users equally (no distinction between legitimate and malicious) - Source IP spoofing defeats per-IP rate limiting - Cannot handle distributed attacks from many sources below individual thresholds
+2.1.3 Hardware DDoS Mitigation Appliances
+Commercial vendors offer dedicated hardware appliances for DDoS protection.
+Arbor Networks (NetScout): Industry-leading solutions capable of 10-100+ Gbps throughput. Anderson (2020) [7] evaluated Arbor Pravail achieving 94% detection accuracy with 3% false positives. However, costs range from $150K to $500K, prohibitive for many organizations.
+Radware DefensePro: Miller et al. (2021) [8] tested DefensePro showing 10 Gbps sustained throughput with behavioral analysis and signature-based detection. Accuracy reached 91% but required significant tuning and expertise.
+F5 Silverline: Cloud-based scrubbing service redirecting traffic through F5’s network. Thompson (2022) [9] analyzed Silverline reporting 96% attack mitigation but 50-100ms added latencyand monthly costs of $5K-$20K plus per-incident charges.
+Limitations: - Very expensive ($100K-$500K capital, $10K-$50K annual maintenance) - Vendor lock-in and proprietary systems - Cloud scrubbing adds latency (50-200ms) - Privacy concerns (traffic inspection by third party) - Scalability requires purchasing larger appliances
+2.2 ML-Based Detection Systems
+Machine learning has emerged as a promising approach for intelligent attack detection.
+2.2.1 Supervised Learning Approaches
+Decision Trees and Random Forests: Kang & Kim (2021) [10] implemented Random Forest classifier on KDD Cup dataset achieving 94.2% accuracy with 4.1% false positive rate. Training on 100,000 samples took 5 minutes, inference <5ms per sample. They noted Random Forest’s resistance to overfitting and interpretability (feature importance) as key advantages.
+Our work builds on this by using Random Forest on CIC-DDoS-2019 (more recent, more attack types) and integrating with eBPF/XDP for real-time deployment.
+Support Vector Machines: Patel & Singh (2020) [11] used SVM for DDoS detection achieving 91.5% accuracy. However, training time was significantly longer (45 minutes for 100K samples) and inference slower (15ms), making real-time application challenging.
+Neural Networks: Zhang & Wang (2022) [12] implemented deep neural network with 5 hidden layers achieving 96.8% accuracy on NSL-KDD dataset. However, inference required GPU (25ms on CPU, 3ms on GPU), adding complexity and cost. They noted the black-box nature made debugging difficult.
+Naive Bayes: Kumar et al. (2019) [13] applied Naive Bayes achieving 88.3% accuracy with very fast training (30 seconds) and inference (<1ms). However, the independence assumption of features led to lower accuracy than ensemble methods.
+2.2.2 Unsupervised Learning
+K-Means Clustering: Li & Chen (2021) [14] used K-means to cluster traffic into normal and anomalous categories. Without labeled training data, they achieved 83% precision and 79% recall. The main challenge was determining optimal K and dealing with evolving attack patterns.
+Autoencoders: Rahman & Hossain (2022) [15] proposed autoencoder for anomaly detection, training on normal traffic and detecting attacks as reconstruction errors >3 standard deviations. They achieved 89% detection rate with 6% false positives but required significant training data (1M normal samples).
+Self-Organizing Maps: Tanaka et al. (2020) [16] implemented SOM achieving 85% accuracy without labels. However, training was computationally expensive (2 hours for 500K samples) and results highly dependent on initialization and parameters.
+2.2.3 Hybrid ML Approaches
+Statistical + ML: Liu et al. (2021) [17] combined statistical baseline profiling with SVM classification. Statistical checks provided fast first-level filtering and ML refined classification. This achieved 93.5% accuracy with 2.8% false positives, significantly better than either approach alone (88% and 5.2% respectively).
+This validates our hybrid approach combining statistical and ML detection.
+Ensemble Methods: Rodriguez & Martinez (2022) [18] evaluated ensemble of Random Forest, SVM, and Neural Network achieving 97.1% accuracy by voting. However, computational cost tripled (45ms inference) making real-time application difficult.
+2.2.4 Limitations of ML-Only Approaches
+Wang et al. (2021) [19] identified key limitations of user-space ML detection:
+Throughput Bottleneck: Maximum throughput 50K-100K packets per second due to kernel-user space copying overhead. Insufficient for modern attacks (1M+ pps).
+Feature Extraction Overhead: Computing features from raw packets consumes 60-80% of processing time. Optimizations like sliding windows help but don’t eliminate the bottleneck.
+Training Data Dependency: All supervised methods require labeled attack data. Zero-day attacks with new patterns may be misclassified.
+False Positive Challenges: While better than rule-based (3-5% vs 15%), still impacts legitimate users during flash crowds.
+Our solution addresses throughput via eBPF/XDP kernel-level filtering and optimized feature extraction pipeline.
+2.3 Signature-Based Systems
+2.3.1 Intrusion Detection Systems (IDS)
+Snort: Garcia & Lopez (2020) [20] evaluated Snort for DDoS detection using custom rules. Detection accuracy reached 87% but false positives were high (11%) and throughput limited to 200K pps.
+Suricata: Multi-threaded IDS supporting GPU acceleration. Nakamura et al. (2021) [21] achieved 1.5M pps with Suricata but noted signature maintenance overhead and inability to detect zero-day attacks.
+Limitations: - Signature updates lag behind new attacks - Cannot detect unknown attack patterns - High packet rates degrade performance - Rule complexity leads to conflicts
+2.3.2 Hybrid Signature + Anomaly Detection
+Davis & Smith (2022) [22] combined signature matching for known attacks with anomaly detection for unknown threats. This achieved 92% overall detection with 4.5% false positives, better than either approach alone.
+2.4 Kernel-Level Mitigation Techniques
+2.4.1 Netfilter/iptables
+Linux kernel framework for packet filtering.
+Brown et al. (2019) [23] benchmarked iptables performance showing: - 100 rules: 800K pps throughput - 1,000 rules: 300K pps throughput - 10,000 rules: 80K pps throughput
+Linear rule processing causes performance degradation. While kernel-level, sequential rule matching becomes bottleneck at high rates.
+2.4.2 DPDK (Data Plane Development Kit)
+User-space packet processing framework bypassing kernel network stack.
+Intel (2020) [24] demonstrated DPDK achieving 10M+ pps per core with zero-copy packet access and poll-mode drivers. Wilson & Taylor (2021) [25] implemented DDoS detection with DPDK reaching 12M pps but noted: - Requires dedicated CPU cores (not shareable) - Complex development and deployment - Kernel bypass loses integration with Linux networking - Not suitable for general-purpose systems
+23 eBPF and XDP in Network Security
+eBPF (Extended Berkeley Packet Filter) represents a paradigm shift in kernel programmability.
+2.5.1 eBPF Fundamentals
+Høiland-Jørgensen et al. (2018) [26] introduced XDP (eXpress Data Path) showing: - Packet processing at NIC driver level (earliest point) - JIT compilation to native code for performance - Kernel verifier ensures safety (no crashes) - Per-CPU maps avoid locking overhead
+Performance evaluation demonstrated: - Native XDP: 10M+ pps per core - Generic XDP: 2-3M pps per core - Offload XDP (SmartNIC): 20M+ pps
+2.5.2 eBPF/XDP for DDoS Mitigation
+Cloudflare: Graham-Cumming (2018) [27] described Cloudflare’s XDP-based DDoS protection handling 10M+ pps attacks. They use XDP for filtering and rate limiting with user-space for policy decisions.
+Facebook Katran: Watson (2019) [28] detailed Facebook’s Katran load balancer using XDP for packet forwarding. Achieved 10 Gbps throughput per core with sub-microsecond latency. Demonstrates XDP production viability.
+Cilium: Borkmann & Iannillo (2020) [29] presented Cilium’s eBPF-based networking and security. Used eBPF for container networking, load balancing, and network policy enforcement with line-rate performance.
+Academic Research: Vieira et al. (2020) [30] proposed XDP-based DDoS mitigation achieving 5M pps with simple packet filtering. However, no ML integration – purely rate-based and signature-based detection.
+Scholz et al. (2021) [31] implemented stateful firewall with eBPF handling 3M pps. Demonstrated eBPF can maintain state efficiently but didn’t address intelligent attack classification.
+2.5.3 Gap: eBPF + ML Integration
+While eBPF/XDP and ML for DDoS detection have been explored separately, integration of both for real-time, intelligent mitigation with comprehensive evaluation is lacking in literature.
+Bertrone et al. (2022) [32] mentioned possibility of eBPF + ML but implementation was limited to simple heuristics in user space (100K pps max), not achieving our performance targets.
+2.6 Comparative Analysis of Existing Systems
+Table 2.1 summarizes key research works:
+Table 2.1: Literature Survey Summary
+2.7 Research Gap Analysis
+Table 2.2: Research Gap Analysis
+Summary of Research Gap
+Primary Gap: No existing system comprehensively integrates eBPF/XDP kernel-level filtering with ML classification while achieving both high throughput (5M+ pps) and high accuracy (95%+) with low false positives (<2%).
+Our Novel Contribution: Hybrid architecture seamlessly bridging kernel and user space for optimal performance and intelligence, with practical implementation and comprehensive evaluation.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

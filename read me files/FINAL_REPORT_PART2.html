@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>FINAL_REPORT_PART2.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="final-project-report---part-2">FINAL PROJECT REPORT - PART 2</h1>
+<p><em>Continued from FINAL_REPORT_PART1.md</em></p>
+<hr>
+<h1 id="chapter-3-system-architecture--design">CHAPTER 3: SYSTEM ARCHITECTURE &amp; DESIGN</h1>
+<h2 id="31-overall-system-architecture">3.1 Overall System Architecture</h2>
+<p>The proposed DDoS mitigation system employs a hybrid two-layer architecture that combines kernel-level packet processing with user-space intelligent analysis. This design achieves both high throughput and high accuracy by leveraging the strengths of each layer while mitigating their individual weaknesses.</p>
+<h3 id="311-architectural-overview">3.1.1 Architectural Overview</h3>
+<p>The system consists of three main planes:</p>
+<p><strong>1. Data Plane (Kernel Space - eBPF/XDP):</strong></p>
+<ul>
+<li>Processes every incoming packet at NIC driver level</li>
+<li>Performs immediate blacklist enforcement</li>
+<li>Collects per-packet, per-IP, and per-flow statistics</li>
+<li>Achieves sub-microsecond processing latency</li>
+<li>Operates at line rate (5M+ packets per second)</li>
+</ul>
+<p><strong>2. Control Plane (User Space - Python):</strong></p>
+<ul>
+<li>Reads aggregated statistics from eBPF maps (1-second intervals)</li>
+<li>Performs statistical anomaly detection</li>
+<li>Executes ML classification</li>
+<li>Makes mitigation decisions</li>
+<li>Updates kernel blacklist dynamically</li>
+</ul>
+<p><strong>3. Management Plane (Web Dashboard):</strong></p>
+<ul>
+<li>Provides real-time visibility</li>
+<li>Displays metrics, alerts, and system status</li>
+<li>Enables operator configuration</li>
+<li>Shows historical data and trends</li>
+</ul>
+<p>[<strong>Figure 3.1: Overall System Architecture</strong> - See system_architecture_diagram.png]</p>
+<h3 id="312-layer-responsibilities">3.1.2 Layer Responsibilities</h3>
+<p><strong>Kernel Layer Responsibilities:</strong></p>
+<ol>
+<li><strong>Packet Classification</strong>: Parse Ethernet, IP, TCP/UDP headers</li>
+<li><strong>Blacklist Enforcement</strong>: Immediate drop of blacklisted IPs (XDP_DROP)</li>
+<li><strong>Statistics Collection</strong>: Update per-CPU, per-IP, and per-flow counters</li>
+<li><strong>Simple Heuristics</strong>: Basic SYN flood detection (SYN count &gt; threshold)</li>
+<li><strong>Fast Path Processing</strong>: &lt;1 microsecond per packet</li>
+</ol>
+<p><strong>User Space Layer Responsibilities:</strong></p>
+<ol>
+<li><strong>Baseline Learning</strong>: Establish and adapt normal traffic profiles</li>
+<li><strong>Statistical Analysis</strong>: Calculate PPS, BPS, entropy, protocol ratios</li>
+<li><strong>Feature Extraction</strong>: Compute 64 CIC features from aggregated stats</li>
+<li><strong>ML Classification</strong>: Random Forest prediction on extracted features</li>
+<li><strong>Hybrid Decision</strong>: Combine statistical and ML scores</li>
+<li><strong>Policy Enforcement</strong>: Add/remove IPs from kernel blacklist</li>
+</ol>
+<p><strong>Design Rationale:</strong></p>
+<ul>
+<li>Kernel handles per-packet speed requirements</li>
+<li>User space handles complex intelligence</li>
+<li>Separation of concerns enables independent optimization</li>
+<li>eBPF maps provide efficient communication bridge</li>
+</ul>
+<h3 id="313-data-flow">3.1.3 Data Flow</h3>
+<p><strong>Normal Packet Flow:</strong></p>
+<pre class="hljs"><code><div>1. Packet arrives at NIC
+2. XDP hook triggers eBPF program
+3. Parse headers
+4. Check blacklist (not found)
+5. Update statistics maps
+6. Return XDP_PASS
+7. Packet continues to network stack
+</div></code></pre>
+<p><strong>Blacklisted Packet Flow:</strong></p>
+<pre class="hljs"><code><div>1. Packet arrives at NIC  
+2. XDP hook triggers eBPF program
+3. Parse headers
+4. Check blacklist (found!)
+5. Return XDP_DROP immediately
+6. No statistics update, minimal processing
+</div></code></pre>
+<p><strong>Control Flow (per second):</strong></p>
+<pre class="hljs"><code><div>1. User space reads eBPF map statistics
+2. Aggregate per-CPU stats
+3. Calculate traffic metrics (PPS, BPS, etc.)
+4. Update baseline profile
+5. Perform statistical anomaly checks
+6. Extract ML features
+7. Run Random Forest classifier
+8. Combine statistical + ML scores
+9. If attack: Add source IPs to blacklist
+10. Update dashboard metrics
+</div></code></pre>
+<h2 id="32-traffic-shaping-and-packet-flow-design">3.2 Traffic Shaping and Packet Flow Design</h2>
+<h3 id="321-packet-processing-pipeline">3.2.1 Packet Processing Pipeline</h3>
+<p>The packet processing pipeline is optimized for minimal latency while collecting comprehensive statistics.</p>
+<p><strong>Step 1: Ethernet Frame Parsing</strong></p>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ethhdr</span> *<span class="hljs-title">eth</span> = <span class="hljs-title">data</span>;</span>
+<span class="hljs-keyword">if</span> ((<span class="hljs-keyword">void</span> *)(eth + <span class="hljs-number">1</span>) &gt; data_end)
+    <span class="hljs-keyword">return</span> XDP_DROP;  <span class="hljs-comment">// Malformed packet</span>
+<span class="hljs-keyword">if</span> (eth-&gt;h_proto != htons(ETH_P_IP))
+    <span class="hljs-keyword">return</span> XDP_PASS;  <span class="hljs-comment">// Non-IPv4 (e.g., IPv6, ARP)</span>
+</div></code></pre>
+<p><strong>Step 2: IP Header Parsing</strong></p>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">iphdr</span> *<span class="hljs-title">ip</span> = (<span class="hljs-title">void</span> *)(<span class="hljs-title">eth</span> + 1);</span>
+<span class="hljs-keyword">if</span> ((<span class="hljs-keyword">void</span> *)(ip + <span class="hljs-number">1</span>) &gt; data_end)
+    <span class="hljs-keyword">return</span> XDP_DROP;
+    
+__u32 src_ip = ip-&gt;saddr;
+__u32 dst_ip = ip-&gt;daddr;
+__u8 protocol = ip-&gt;protocol;
+</div></code></pre>
+<p><strong>Step 3: Blacklist Lookup (O(1) hash map)</strong></p>
+<pre class="hljs"><code><div>__u64 *blacklist_ts = blacklist_map.lookup(&amp;src_ip);
+<span class="hljs-keyword">if</span> (blacklist_ts != <span class="hljs-literal">NULL</span>) {
+    __sync_fetch_and_add(&amp;stats-&gt;dropped_packets, <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">return</span> XDP_DROP;  <span class="hljs-comment">// IMMEDIATE DROP</span>
+}
+</div></code></pre>
+<p><strong>Step 4: Transport Header Parsing</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">if</span> (protocol == IPPROTO_TCP) {
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">tcphdr</span> *<span class="hljs-title">tcp</span> = (<span class="hljs-title">void</span> *)<span class="hljs-title">ip</span> + (<span class="hljs-title">ip</span>-&gt;<span class="hljs-title">ihl</span> * 4);</span>
+    <span class="hljs-keyword">if</span> ((<span class="hljs-keyword">void</span> *)(tcp + <span class="hljs-number">1</span>) &gt; data_end)
+        <span class="hljs-keyword">return</span> XDP_DROP;
+    src_port = ntohs(tcp-&gt;source);
+    dst_port = ntohs(tcp-&gt;dest);
+    <span class="hljs-comment">// Extract TCP flags</span>
+}
+<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (protocol == IPPROTO_UDP) {
+    struct udphdr *udp = (<span class="hljs-keyword">void</span> *)ip + (ip-&gt;ihl * <span class="hljs-number">4</span>);
+    <span class="hljs-keyword">if</span> ((<span class="hljs-keyword">void</span> *)(udp + <span class="hljs-number">1</span>) &gt; data_end)
+        <span class="hljs-keyword">return</span> XDP_DROP;
+    src_port = ntohs(udp-&gt;source);
+    dst_port = ntohs(udp-&gt;dest);
+}
+</div></code></pre>
+<p><strong>Step 5: Statistics Update</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment">// Update per-IP statistics</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ip_stats</span> *<span class="hljs-title">ip_stat</span> = <span class="hljs-title">ip_tracking_map</span>.<span class="hljs-title">lookup</span>(&amp;<span class="hljs-title">src_ip</span>);</span>
+<span class="hljs-keyword">if</span> (ip_stat) {
+    __sync_fetch_and_add(&amp;ip_stat-&gt;packets, <span class="hljs-number">1</span>);
+    __sync_fetch_and_add(&amp;ip_stat-&gt;bytes, pkt_len);
+    ip_stat-&gt;last_seen = now;
+    <span class="hljs-keyword">if</span> (protocol == IPPROTO_TCP &amp;&amp; tcp_syn)
+        __sync_fetch_and_add(&amp;ip_stat-&gt;syn_count, <span class="hljs-number">1</span>);
+}
+
+<span class="hljs-comment">// Update per-flow statistics</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">flow_key</span> <span class="hljs-title">key</span> = {</span>src_ip, dst_ip, src_port, dst_port, protocol};
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">flow_stats</span> *<span class="hljs-title">flow</span> = <span class="hljs-title">flow_map</span>.<span class="hljs-title">lookup</span>(&amp;<span class="hljs-title">key</span>);</span>
+<span class="hljs-comment">// Update flow counters...</span>
+
+<span class="hljs-comment">// Update global statistics (per-CPU to avoid locking)</span>
+__sync_fetch_and_add(&amp;stats-&gt;total_packets, <span class="hljs-number">1</span>);
+__sync_fetch_and_add(&amp;stats-&gt;total_bytes, pkt_len);
+</div></code></pre>
+<p><strong>Step 6: Simple Heuristic Check</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment">// Basic SYN flood detection</span>
+<span class="hljs-keyword">if</span> (protocol == IPPROTO_TCP &amp;&amp; ip_stat-&gt;syn_count &gt; <span class="hljs-number">1000</span>) {
+    __sync_fetch_and_add(&amp;stats-&gt;dropped_packets, <span class="hljs-number">1</span>);
+    <span class="hljs-keyword">return</span> XDP_DROP;
+}
+</div></code></pre>
+<p><strong>Step 7: Decision</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">return</span> XDP_PASS;  <span class="hljs-comment">// Allow packet to continue</span>
+</div></code></pre>
+<p>[<strong>Figure 3.3: Packet Processing Flowchart</strong> - See packet_processing_flowchart.png]</p>
+<h3 id="322-traffic-flow-coordination">3.2.2 Traffic Flow Coordination</h3>
+<p><strong>Ingress Path:</strong></p>
+<pre class="hljs"><code><div>Physical NIC → XDP Hook → eBPF Program → Decision (PASS/DROP)
+                                    ↓
+                              Update eBPF Maps
+</div></code></pre>
+<p><strong>Egress Path (not modified):</strong></p>
+<pre class="hljs"><code><div>Application → Kernel Network Stack → NIC
+</div></code></pre>
+<p><strong>Monitoring Path:</strong></p>
+<pre class="hljs"><code><div>eBPF Maps ← BCC Python Bindings ← User Space Application
+</div></code></pre>
+<h3 id="323-enforcement-logic">3.2.3 Enforcement Logic</h3>
+<p><strong>Blacklist Management:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Add IP to blacklist (user space)</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">add_to_blacklist</span><span class="hljs-params">(self, ip_address)</span>:</span>
+    blacklist_map = self.bpf.get_table(<span class="hljs-string">"blacklist_map"</span>)
+    ip_int = struct.unpack(<span class="hljs-string">'I'</span>, socket.inet_aton(ip_address))[<span class="hljs-number">0</span>]
+    timestamp_ns = int(time.time() * <span class="hljs-number">1</span>_000_000_000)
+    blacklist_map[ip_int] = ctypes.c_uint64(timestamp_ns)
+    <span class="hljs-comment"># Next packet from this IP will be dropped in kernel</span>
+</div></code></pre>
+<p><strong>Dynamic Updates:</strong></p>
+<ul>
+<li>No service restart required</li>
+<li>Changes take effect on next packet</li>
+<li>Atomic map operations (thread-safe)</li>
+<li>Can add/remove thousands of IPs per second</li>
+</ul>
+<h2 id="33-ebpf--xdp-program-design">3.3 eBPF &amp; XDP Program Design</h2>
+<h3 id="331-xdp-hook-points">3.3.1 XDP Hook Points</h3>
+<p>XDP programs can be attached at three levels:</p>
+<p><strong>Native/Driver Mode (used in this project):</strong></p>
+<ul>
+<li>Runs in NIC driver</li>
+<li>Before skb (socket buffer) allocation</li>
+<li>Fastest performance (10M+ pps possible)</li>
+<li>Requires driver support (Intel, Mellanox, Broadcom)</li>
+</ul>
+<p><strong>Generic Mode (fallback):</strong></p>
+<ul>
+<li>Runs early in network stack</li>
+<li>After skb allocation</li>
+<li>Works on all interfaces</li>
+<li>Slower (2-3M pps)</li>
+</ul>
+<p><strong>Offload Mode (future work):</strong></p>
+<ul>
+<li>Runs on SmartNIC hardware</li>
+<li>Line-rate performance</li>
+<li>Requires special hardware</li>
+</ul>
+<p><strong>Attachment:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Load eBPF program</span>
+bpf = BPF(src_file=<span class="hljs-string">"xdp_filter.c"</span>)
+fn = bpf.load_func(<span class="hljs-string">"xdp_ddos_filter"</span>, BPF.XDP)
+
+<span class="hljs-comment"># Attach to interface</span>
+flags = <span class="hljs-number">0</span>  <span class="hljs-comment"># Native mode</span>
+<span class="hljs-comment"># flags = (1 &lt;&lt; 1)  # Generic mode</span>
+<span class="hljs-comment"># flags = (1 &lt;&lt; 2)  # Offload mode</span>
+bpf.attach_xdp(interface, fn, flags)
+</div></code></pre>
+<h3 id="332-ebpf-maps-design">3.3.2 eBPF Maps Design</h3>
+<p>Maps are key-value stores shared between kernel and user space.</p>
+<p><strong>Map 1: stats_map (BPF_PERCPU_ARRAY)</strong></p>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">stats</span> {</span>
+    __u64 total_packets;
+    __u64 total_bytes;
+    __u64 dropped_packets;
+    __u64 passed_packets;
+    __u64 tcp_packets;
+    __u64 udp_packets;
+    __u64 icmp_packets;
+    __u64 other_packets;
+};
+
+BPF_PERCPU_ARRAY(stats_map, struct stats, <span class="hljs-number">1</span>);
+</div></code></pre>
+<ul>
+<li><strong>Purpose</strong>: Global statistics</li>
+<li><strong>Type</strong>: Per-CPU array (lock-free)</li>
+<li><strong>Size</strong>: 1 entry per CPU</li>
+<li><strong>Access</strong>: O(1)</li>
+</ul>
+<p><strong>Map 2: ip_tracking_map (BPF_HASH)</strong></p>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ip_stats</span> {</span>
+    __u64 packets;
+    __u64 bytes;
+    __u64 last_seen;
+    __u32 flow_count;
+    __u32 syn_count;
+    __u32 udp_count;
+};
+
+BPF_HASH(ip_tracking_map, __u32, struct ip_stats, <span class="hljs-number">131072</span>);
+</div></code></pre>
+<ul>
+<li><strong>Purpose</strong>: Per-IP counters</li>
+<li><strong>Type</strong>: Hash table</li>
+<li><strong>Size</strong>: 131,072 entries</li>
+<li><strong>Key</strong>: Source IP (uint32)</li>
+<li><strong>Value</strong>: IP statistics</li>
+</ul>
+<p><strong>Map 3: flow_map (BPF_HASH)</strong></p>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">flow_key</span> {</span>
+    __u32 src_ip;
+    __u32 dst_ip;
+    __u16 src_port;
+    __u16 dst_port;
+    __u8 protocol;
+};
+
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">flow_stats</span> {</span>
+    __u64 packets;
+    __u64 bytes;
+    __u64 last_seen;
+};
+
+BPF_HASH(flow_map, struct flow_key, struct flow_stats, <span class="hljs-number">65536</span>);
+</div></code></pre>
+<ul>
+<li><strong>Purpose</strong>: 5-tuple flow tracking</li>
+<li><strong>Type</strong>: Hash table</li>
+<li><strong>Size</strong>: 65,536 entries</li>
+<li><strong>Key</strong>: 5-tuple (src_ip, dst_ip, src_port, dst_port, protocol)</li>
+</ul>
+<p><strong>Map 4: blacklist_map (BPF_HASH)</strong></p>
+<pre class="hljs"><code><div>BPF_HASH(blacklist_map, __u32, __u64, <span class="hljs-number">10000</span>);
+</div></code></pre>
+<ul>
+<li><strong>Purpose</strong>: Blocked IP addresses</li>
+<li><strong>Type</strong>: Hash table</li>
+<li><strong>Size</strong>: 10,000 entries</li>
+<li><strong>Key</strong>: IP address (uint32)</li>
+<li><strong>Value</strong>: Timestamp when blacklisted</li>
+</ul>
+<p><strong>Map 5: config_map (BPF_ARRAY)</strong></p>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">config</span> {</span>
+    __u32 rate_limit_pps;
+    __u32 syn_threshold;
+    __u8 blacklist_enabled;
+};
+
+BPF_ARRAY(config_map, struct <span class="hljs-built_in">config</span>, <span class="hljs-number">1</span>);
+</div></code></pre>
+<ul>
+<li><strong>Purpose</strong>: Runtime configuration</li>
+<li><strong>Type</strong>: Array</li>
+<li><strong>Size</strong>: 1 entry</li>
+<li><strong>Updates</strong>: Dynamic from user space</li>
+</ul>
+<p>[<strong>Figure 3.4: eBPF Map Structure and Organization</strong>]</p>
+<h3 id="333-rule-updates-and-dynamic-configuration">3.3.3 Rule Updates and Dynamic Configuration</h3>
+<p><strong>Updating Configuration:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># User space can update config without reloading program</span>
+config_map = bpf.get_table(<span class="hljs-string">"config_map"</span>)
+config = config_map[<span class="hljs-number">0</span>]
+config.rate_limit_pps = <span class="hljs-number">5000</span>  <span class="hljs-comment"># New threshold</span>
+config_map[<span class="hljs-number">0</span>] = config
+<span class="hljs-comment"># Next packet will use new threshold</span>
+</div></code></pre>
+<p><strong>Map Eviction Policies:</strong></p>
+<ul>
+<li>Older entries evicted when map is full</li>
+<li>LRU (Least Recently Used) for flow_map and ip_tracking_map</li>
+<li>Manual eviction for blacklist_map (operator controlled)</li>
+</ul>
+<h2 id="34-ml-module-architecture">3.4 ML Module Architecture</h2>
+<h3 id="341-feature-extraction-design">3.4.1 Feature Extraction Design</h3>
+<p>The feature extractor computes 64 CIC-compatible features from eBPF statistics.</p>
+<p><strong>Input:</strong> Raw statistics from eBPF maps (per second)
+<strong>Output:</strong> 64-dimensional feature vector</p>
+<p><strong>Feature Groups:</strong></p>
+<p><strong>1. Flow Duration &amp; Counts (5 features):</strong></p>
+<ul>
+<li>Flow Duration (microseconds)</li>
+<li>Total Forward Packets</li>
+<li>Total Backward Packets</li>
+<li>Total Length of Forward Packets</li>
+<li>Total Length of Backward Packets</li>
+</ul>
+<p><strong>2. Packet Length Statistics (8 features):</strong></p>
+<ul>
+<li>Fwd Packet Length Max/Min/Mean/Std</li>
+<li>Bwd Packet Length Max/Min/Mean/Std</li>
+</ul>
+<p><strong>3. Flow Rate Features (2 features):</strong></p>
+<ul>
+<li>Flow Bytes/s</li>
+<li>Flow Packets/s</li>
+</ul>
+<p><strong>4. Inter-Arrival Time (14 features):</strong></p>
+<ul>
+<li>Flow IAT Mean/Std/Max/Min</li>
+<li>Fwd IAT Total/Mean/Std/Max/Min</li>
+<li>Bwd IAT Total/Mean/Std/Max/Min</li>
+</ul>
+<p><strong>5. TCP Flag Counts (8 features):</strong></p>
+<ul>
+<li>FIN Flag Count</li>
+<li>SYN Flag Count</li>
+<li>RST Flag Count</li>
+<li>PSH Flag Count</li>
+<li>ACK Flag Count</li>
+<li>URG Flag Count</li>
+<li>CWE Flag Count</li>
+<li>ECE Flag Count</li>
+</ul>
+<p><strong>6. Additional Metrics (27 features):</strong></p>
+<ul>
+<li>Down/Up Ratio</li>
+<li>Average Packet Size</li>
+<li>Fwd/Bwd Segment Size Avg</li>
+<li>Fwd/Bwd Header Length</li>
+<li>Packet Length Variance</li>
+<li>Active Mean/Std/Max/Min</li>
+<li>Idle Mean/Std/Max/Min</li>
+<li>And others...</li>
+</ul>
+<p>[<strong>Figure 4.1: Feature Extraction Process</strong> - See ml_detection_pipeline.png]</p>
+<p><strong>Sliding Window Aggregation:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FeatureExtractor</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, window_size=<span class="hljs-number">1000</span>)</span>:</span>
+        self.packets_fwd = deque(maxlen=window_size)
+        self.packets_bwd = deque(maxlen=window_size)
+        self.timestamps = deque(maxlen=window_size)
+        self.tcp_flags = defaultdict(int)
+    
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">update</span><span class="hljs-params">(self, stats, ip_stats)</span>:</span>
+        <span class="hljs-comment"># Add new observations to window</span>
+        <span class="hljs-comment"># Compute statistics over window</span>
+        <span class="hljs-comment"># Return 64-dimensional feature vector</span>
+</div></code></pre>
+<p><strong>Optimization:</strong></p>
+<ul>
+<li>NumPy vectorized operations</li>
+<li>Incremental statistics (running mean/std)</li>
+<li>Cached computations</li>
+<li>Target: &lt;20ms extraction time</li>
+</ul>
+<h3 id="342-model-selection-rationale">3.4.2 Model Selection Rationale</h3>
+<p><strong>Random Forest Selected:</strong></p>
+<p><strong>Advantages:</strong></p>
+<ol>
+<li>Fast inference (&lt;10ms on CPU, no GPU needed)</li>
+<li>Handles 64-dimensional feature space well</li>
+<li>Resistant to overfitting (ensemble method)</li>
+<li>Provides feature importance (interpretability)</li>
+<li>No assumption about feature distributions</li>
+<li>Handles missing values gracefully</li>
+</ol>
+<p><strong>Compared Alternatives:</strong></p>
+<p><strong>Deep Neural Network:</strong></p>
+<ul>
+<li>Pros: Potentially higher accuracy (96-98%)</li>
+<li>Cons: Requires GPU (25ms CPU vs 3ms GPU), black box, overfitting risk</li>
+<li>Decision: Not worth complexity for 1-2% accuracy gain</li>
+</ul>
+<p><strong>SVM:</strong></p>
+<ul>
+<li>Pros: Good for binary classification</li>
+<li>Cons: Slower training, slower inference (15ms), parameter tuning sensitive</li>
+<li>Decision: Inferior to Random Forest for this use case</li>
+</ul>
+<p><strong>Gradient Boosting:</strong></p>
+<ul>
+<li>Pros: Often highest accuracy</li>
+<li>Cons: Sequential training (slow), more prone to overfitting</li>
+<li>Decision: Random Forest comparable with faster training</li>
+</ul>
+<p><strong>Naive Bayes:</strong></p>
+<ul>
+<li>Pros: Very fast (&lt;1ms inference)</li>
+<li>Cons: Lower accuracy (88%), independence assumption violated</li>
+<li>Decision: Accuracy too low</li>
+</ul>
+<h3 id="343-training--inference-pipeline">3.4.3 Training &amp; Inference Pipeline</h3>
+<p><strong>Training Pipeline:</strong></p>
+<pre class="hljs"><code><div>1. Load CIC-DDoS-2019 CSV files
+2. Sample data (250K total samples)
+3. Clean data (remove NaN, inf)
+4. Split: 70% train, 10% val, 20% test
+5. Scale features (StandardScaler)
+6. Train Random Forest (100 trees, depth 15)
+7. Validate on val set
+8. Evaluate on test set
+9. Save model (joblib)
+10. Save scaler
+</div></code></pre>
+<p><strong>Inference Pipeline (real-time):</strong></p>
+<pre class="hljs"><code><div>1. Read stats from eBPF (every 1 sec)
+2. Extract 64 features
+3. Scale features using saved scaler
+4. Random Forest predict
+5. Get probability scores
+6. Determine attack type
+7. Return result (&lt;10ms total)
+</div></code></pre>
+<p><strong>Model Structure:</strong></p>
+<pre class="hljs"><code><div>RandomForestClassifier(
+    n_estimators=<span class="hljs-number">100</span>,         <span class="hljs-comment"># 100 decision trees</span>
+    max_depth=<span class="hljs-number">15</span>,              <span class="hljs-comment"># Limit depth for speed</span>
+    min_samples_split=<span class="hljs-number">5</span>,       <span class="hljs-comment"># Prevent overfitting</span>
+    min_samples_leaf=<span class="hljs-number">2</span>,        <span class="hljs-comment"># Leaf size constraint</span>
+    class_weight=<span class="hljs-string">'balanced'</span>,   <span class="hljs-comment"># Handle imbalanced data</span>
+    n_jobs=<span class="hljs-number">-1</span>                  <span class="hljs-comment"># Use all CPU cores</span>
+)
+</div></code></pre>
+<h2 id="35-dashboard-and-monitoring-design">3.5 Dashboard and Monitoring Design</h2>
+<h3 id="351-web-dashboard-architecture">3.5.1 Web Dashboard Architecture</h3>
+<p><strong>Technology Stack:</strong></p>
+<ul>
+<li><strong>Backend</strong>: Flask (Python web framework)</li>
+<li><strong>Frontend</strong>: HTML5, CSS3, Vanilla JavaScript</li>
+<li><strong>Communication</strong>: REST API with JSON</li>
+<li><strong>Styling</strong>: Modern glassmorphism design</li>
+</ul>
+<p><strong>Components:</strong></p>
+<p><strong>1. Real-Time Status Card:</strong></p>
+<ul>
+<li>Current interface and mode</li>
+<li>Live PPS counter</li>
+<li>Baseline PPS</li>
+<li>System uptime</li>
+</ul>
+<p><strong>2. Traffic Statistics:</strong></p>
+<ul>
+<li>Total packets/bytes</li>
+<li>Dropped packets/bytes</li>
+<li>Pass rate percentage</li>
+<li>Protocol distribution pie chart</li>
+</ul>
+<p><strong>3. Baseline Profile:</strong></p>
+<ul>
+<li>Mean PPS/BPS</li>
+<li>Standard deviation</li>
+<li>Sample count</li>
+<li>Last updated timestamp</li>
+</ul>
+<p><strong>4. Top Source IPs:</strong></p>
+<ul>
+<li>Top 10 IPs by packet count</li>
+<li>Packets, bytes, flows per IP</li>
+<li>Last seen timestamp</li>
+<li>Quick blacklist button</li>
+</ul>
+<p><strong>5. Blacklist Management:</strong></p>
+<ul>
+<li>Currently blacklisted IPs</li>
+<li>Blacklist timestamp</li>
+<li>Remove button</li>
+<li>Add IP form</li>
+</ul>
+<p><strong>6. ML Classification (if enabled):</strong></p>
+<ul>
+<li>Model accuracy</li>
+<li>Inference time</li>
+<li>Attacks detected</li>
+<li>Feature importance chart</li>
+</ul>
+<p><strong>7. Alert History:</strong></p>
+<ul>
+<li>Recent alerts (last 20)</li>
+<li>Timestamp, severity, type</li>
+<li>Attack details</li>
+<li>Actions taken</li>
+</ul>
+<p><strong>8. Performance Metrics:</strong></p>
+<ul>
+<li>CPU utilization graph</li>
+<li>Memory usage</li>
+<li>Throughput graph (time series)</li>
+<li>Detection latency</li>
+</ul>
+<h3 id="352-api-design">3.5.2 API Design</h3>
+<p><strong>Endpoint: GET /api/status</strong></p>
+<pre class="hljs"><code><div>{
+  <span class="hljs-attr">"running"</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">"interface"</span>: <span class="hljs-string">"eth0"</span>,
+  <span class="hljs-attr">"xdp_mode"</span>: <span class="hljs-string">"native"</span>,
+  <span class="hljs-attr">"statistics"</span>: {
+    <span class="hljs-attr">"total_packets"</span>: <span class="hljs-number">1500000</span>,
+    <span class="hljs-attr">"total_bytes"</span>: <span class="hljs-number">900000000</span>,
+    <span class="hljs-attr">"dropped_packets"</span>: <span class="hljs-number">50000</span>,
+    <span class="hljs-attr">"passed_packets"</span>: <span class="hljs-number">1450000</span>,
+    <span class="hljs-attr">"current_pps"</span>: <span class="hljs-number">5200</span>,
+    <span class="hljs-attr">"tcp"</span>: <span class="hljs-number">1200000</span>,
+    <span class="hljs-attr">"udp"</span>: <span class="hljs-number">280000</span>,
+    <span class="hljs-attr">"icmp"</span>: <span class="hljs-number">20000</span>
+  },
+  <span class="hljs-attr">"baseline"</span>: {
+    <span class="hljs-attr">"mean_pps"</span>: <span class="hljs-number">500</span>,
+    <span class="hljs-attr">"std_pps"</span>: <span class="hljs-number">150</span>,
+    <span class="hljs-attr">"samples"</span>: <span class="hljs-number">300</span>
+  },
+  <span class="hljs-attr">"ip_stats"</span>: [...],
+  <span class="hljs-attr">"blacklist"</span>: [...],
+  <span class="hljs-attr">"recent_alerts"</span>: [...],
+  <span class="hljs-attr">"ml_enabled"</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">"ml_stats"</span>: {...}
+}
+</div></code></pre>
+<p><strong>Auto-Refresh:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment">// Frontend fetches every 5 seconds</span>
+setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    fetch(<span class="hljs-string">'/api/status'</span>)
+        .then(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> response.json())
+        .then(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> updateDashboard(data));
+}, <span class="hljs-number">5000</span>);
+</div></code></pre>
+<p>[<strong>Figs 3.6 &amp; 3.7: Technology Stack, Integration Diagram</strong>]</p>
+<hr>
+<h1 id="chapter-4-methodology--implementation">CHAPTER 4: METHODOLOGY &amp; IMPLEMENTATION</h1>
+<h2 id="41-development-environment">4.1 Development Environment</h2>
+<h3 id="411-hardware-platform">4.1.1 Hardware Platform</h3>
+<p><strong>Development Machine:</strong></p>
+<ul>
+<li>CPU: Intel Core i7-9700K (8 cores @ 3.6 GHz)</li>
+<li>RAM: 16 GB DDR4-2666</li>
+<li>NIC: Intel X550-T2 Dual Port 10GbE (XDP native support)</li>
+<li>Storage: 512 GB NVMe SSD</li>
+</ul>
+<h3 id="412-software-platform">4.1.2 Software Platform</h3>
+<p><strong>Operating System:</strong></p>
+<ul>
+<li>Ubuntu 22.04 LTS (Jammy Jellyfish)</li>
+<li>Linux Kernel: 5.15.0-generic (XDP support verified)</li>
+</ul>
+<p><strong>Development Tools:</strong></p>
+<ul>
+<li>GCC 11.3.0 (eBPF compilation)</li>
+<li>Clang/LLVM 14.0 (alternative eBPF compiler)</li>
+<li>Python 3.10.6</li>
+<li>BCC (BPF Compiler Collection) 0.25.0</li>
+<li>Git 2.34.1</li>
+</ul>
+<p><strong>Python Libraries:</strong></p>
+<pre class="hljs"><code><div>bcc==0.25.0
+numpy==1.23.5
+scipy==1.9.3
+pandas==1.5.2
+scikit-learn==1.2.0
+joblib==1.2.0
+Flask==2.2.2
+Flask-CORS==3.0.10
+psutil==5.9.4
+coloredlogs==15.0.1
+</div></code></pre>
+<h3 id="413-development-workflow">4.1.3 Development Workflow</h3>
+<ol>
+<li>eBPF program development in C</li>
+<li>Python control plane development</li>
+<li>Unit testing individual components</li>
+<li>Integration testing</li>
+<li>Performance benchmarking</li>
+<li>Iterative optimization</li>
+</ol>
+<h2 id="42-dataset-generation-and-preparation">4.2 Dataset Generation and Preparation</h2>
+<h3 id="421-cic-ddos-2019-dataset">4.2.1 CIC-DDoS-2019 Dataset</h3>
+<p><strong>Source:</strong> Canadian Institute for Cybersecurity
+<strong>Website:</strong> www.unb.ca/cic/datasets/ddos-2019.html</p>
+<p><strong>Dataset Statistics:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Files</th>
+<th>Flows</th>
+<th>Size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DrDoS_DNS</td>
+<td>1</td>
+<td>5,858,945</td>
+<td>1.2 GB</td>
+</tr>
+<tr>
+<td>DrDoS_LDAP</td>
+<td>1</td>
+<td>2,179,930</td>
+<td>487 MB</td>
+</tr>
+<tr>
+<td>DrDoS_MSSQL</td>
+<td>1</td>
+<td>4,522,492</td>
+<td>980 MB</td>
+</tr>
+<tr>
+<td>DrDoS_NTP</td>
+<td>1</td>
+<td>1,202,642</td>
+<td>268 MB</td>
+</tr>
+<tr>
+<td>DrDoS_UDP</td>
+<td>1</td>
+<td>3,134,645</td>
+<td>698 MB</td>
+</tr>
+<tr>
+<td>Syn</td>
+<td>1</td>
+<td>1,582,289</td>
+<td>352 MB</td>
+</tr>
+<tr>
+<td>BENIGN</td>
+<td>1</td>
+<td>15,601,234</td>
+<td>3.4 GB</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>7</strong></td>
+<td><strong>34,082,177</strong></td>
+<td><strong>7.4 GB</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table 4.1: CIC-DDoS-2019 Dataset Statistics</strong></p>
+<h3 id="422-data-preprocessing">4.2.2 Data Preprocessing</h3>
+<p><strong>Step 1: Loading</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
+
+<span class="hljs-comment"># Load with chunking for memory efficiency</span>
+chunks = []
+<span class="hljs-keyword">for</span> chunk <span class="hljs-keyword">in</span> pd.read_csv(<span class="hljs-string">'DrDoS_DNS.csv'</span>, chunksize=<span class="hljs-number">10000</span>):
+    chunks.append(chunk)
+df = pd.concat(chunks)
+</div></code></pre>
+<p><strong>Step 2: Sampling</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Balance classes: 50K attack + 50K benign per attack type</span>
+attack_samples = df[df[<span class="hljs-string">'Label'</span>] != <span class="hljs-string">'BENIGN'</span>].sample(<span class="hljs-number">50000</span>)
+benign_samples = df[df[<span class="hljs-string">'Label'</span>] == <span class="hljs-string">'BENIGN'</span>].sample(<span class="hljs-number">50000</span>)
+</div></code></pre>
+<p><strong>Step 3: Cleaning</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Remove infinity and NaN</span>
+df.replace([np.inf, -np.inf], np.nan, inplace=<span class="hljs-literal">True</span>)
+df.dropna(inplace=<span class="hljs-literal">True</span>)
+
+<span class="hljs-comment"># Remove duplicate flows</span>
+df.drop_duplicates(inplace=<span class="hljs-literal">True</span>)
+</div></code></pre>
+<p><strong>Step 4: Label Encoding</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Binary classification: 0 = BENIGN, 1 = ATTACK</span>
+y = (df[<span class="hljs-string">'Label'</span>] != <span class="hljs-string">'BENIGN'</span>).astype(int)
+
+<span class="hljs-comment"># Multi-class (for attack type identification):</span>
+label_map = {
+    <span class="hljs-string">'BENIGN'</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-string">'DrDoS_DNS'</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-string">'DrDoS_LDAP'</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-string">'DrDoS_NTP'</span>: <span class="hljs-number">3</span>,
+    <span class="hljs-string">'DrDoS_UDP'</span>: <span class="hljs-number">4</span>,
+    <span class="hljs-string">'Syn'</span>: <span class="hljs-number">5</span>
+}
+</div></code></pre>
+<h3 id="423-synthetic-traffic-generation">4.2.3 Synthetic Traffic Generation</h3>
+<p>For functional testing without large datasets:</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">generate_synthetic_attack</span><span class="hljs-params">(attack_type, num_samples=<span class="hljs-number">1000</span>)</span>:</span>
+    <span class="hljs-keyword">if</span> attack_type == <span class="hljs-string">'syn_flood'</span>:
+        <span class="hljs-comment"># High SYN count, low ACK, short flows</span>
+        features = {
+            <span class="hljs-string">'Flow Duration'</span>: np.random.uniform(<span class="hljs-number">0</span>, <span class="hljs-number">1000</span>, num_samples),
+            <span class="hljs-string">'Total Fwd Packets'</span>: np.random.uniform(<span class="hljs-number">1</span>, <span class="hljs-number">5</span>, num_samples),
+            <span class="hljs-string">'SYN Flag Count'</span>: np.random.uniform(<span class="hljs-number">80</span>, <span class="hljs-number">100</span>, num_samples),
+            <span class="hljs-string">'ACK Flag Count'</span>: np.random.uniform(<span class="hljs-number">0</span>, <span class="hljs-number">10</span>, num_samples),
+            ...
+        }
+    <span class="hljs-keyword">elif</span> attack_type == <span class="hljs-string">'udp_flood'</span>:
+        <span class="hljs-comment"># High packets/s, many UDP</span>
+        features = {
+            <span class="hljs-string">'Flow Packets/s'</span>: np.random.uniform(<span class="hljs-number">10000</span>, <span class="hljs-number">50000</span>, num_samples),
+            <span class="hljs-string">'UDP packets'</span>: num_samples,
+            ...
+        }
+    <span class="hljs-keyword">return</span> pd.DataFrame(features)
+</div></code></pre>
+<h2 id="43-feature-engineering">4.3 Feature Engineering</h2>
+<h3 id="431-feature-selection">4.3.1 Feature Selection</h3>
+<p>All 64 features from CIC-DDoS-2019 were initially included. Feature importance analysis identified top predictors:</p>
+<p><strong>Table 4.2: Top  10 Most Important Features</strong></p>
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>Feature</th>
+<th>Importance</th>
+<th>Why It Matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Flow Bytes/s</td>
+<td>15.2%</td>
+<td>Volumetric attacks have extreme byte rates</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Flow Packets/s</td>
+<td>12.8%</td>
+<td>Attack packet rates much higher than normal</td>
+</tr>
+<tr>
+<td>3</td>
+<td>SYN Flag Count</td>
+<td>9.5%</td>
+<td>SYN floods have disproportionate SYN packets</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Flow Duration</td>
+<td>7.3%</td>
+<td>Attacks often very short or very long flows</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Fwd IAT Mean</td>
+<td>6.1%</td>
+<td>Automated attacks have consistent timing</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Total Fwd Packets</td>
+<td>5.8%</td>
+<td>Attack asymmetry (many fwd, few bwd)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Packet Length Mean</td>
+<td>5.2%</td>
+<td>Attacks use specific packet sizes</td>
+</tr>
+<tr>
+<td>8</td>
+<td>ACK Flag Count</td>
+<td>4.9%</td>
+<td>Low ACK indicates incomplete handshakes</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Down/Up Ratio</td>
+<td>4.3%</td>
+<td>Asymmetric traffic patterns</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Bwd Packet Length Mean</td>
+<td>3.7%</td>
+<td>Response sizes differ in attacks</td>
+</tr>
+</tbody>
+</table>
+<p>While top 10 features account for 74.8% of importance, all 64 features retained to maximize accuracy (ablation study showed 2% accuracy drop with only top 20).</p>
+<h3 id="432-feature-computation-from-ebpf-stats">4.3.2 Feature Computation from eBPF Stats</h3>
+<p><strong>Challenge:</strong> eBPF provides raw packet counts, not CIC features.</p>
+<p><strong>Solution:</strong> Aggregate and compute features in user space:</p>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FeatureExtractor</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">extract_features</span><span class="hljs-params">(self, ip_stats, flow_stats, time_window=<span class="hljs-number">10</span>)</span>:</span>
+        features = {}
+        
+        <span class="hljs-comment"># Flow duration</span>
+        <span class="hljs-keyword">if</span> len(self.timestamps) &gt; <span class="hljs-number">0</span>:
+            features[<span class="hljs-string">'Flow Duration'</span>] = (self.timestamps[<span class="hljs-number">-1</span>] - self.timestamps[<span class="hljs-number">0</span>]) * <span class="hljs-number">1e6</span>
+        
+        <span class="hljs-comment"># Packet rates</span>
+        total_packets = sum(self.packets_fwd) + sum(self.packets_bwd)
+        duration_sec = time_window
+        features[<span class="hljs-string">'Flow Packets/s'</span>] = total_packets / duration_sec
+        
+        <span class="hljs-comment"># Packet length statistics</span>
+        features[<span class="hljs-string">'Fwd Packet Length Max'</span>] = max(self.packets_fwd) <span class="hljs-keyword">if</span> self.packets_fwd <span class="hljs-keyword">else</span> <span class="hljs-number">0</span>
+        features[<span class="hljs-string">'Fwd Packet Length Min'</span>] = min(self.packets_fwd) <span class="hljs-keyword">if</span> self.packets_fwd <span class="hljs-keyword">else</span> <span class="hljs-number">0</span>
+        features[<span class="hljs-string">'Fwd Packet Length Mean'</span>] = np.mean(self.packets_fwd) <span class="hljs-keyword">if</span> self.packets_fwd <span class="hljs-keyword">else</span> <span class="hljs-number">0</span>
+        features[<span class="hljs-string">'Fwd Packet Length Std'</span>] = np.std(self.packets_fwd) <span class="hljs-keyword">if</span> len(self.packets_fwd) &gt; <span class="hljs-number">1</span> <span class="hljs-keyword">else</span> <span class="hljs-number">0</span>
+        
+        <span class="hljs-comment"># Inter-arrival times</span>
+        <span class="hljs-keyword">if</span> len(self.timestamps) &gt; <span class="hljs-number">1</span>:
+            iats = np.diff(self.timestamps)
+            features[<span class="hljs-string">'Flow IAT Mean'</span>] = np.mean(iats) * <span class="hljs-number">1e6</span>  <span class="hljs-comment"># microseconds</span>
+            features[<span class="hljs-string">'Flow IAT Std'</span>] = np.std(iats) * <span class="hljs-number">1e6</span>
+            features[<span class="hljs-string">'Flow IAT Max'</span>] = np.max(iats) * <span class="hljs-number">1e6</span>
+            features[<span class="hljs-string">'Flow IAT Min'</span>] = np.min(iats) * <span class="hljs-number">1e6</span>
+        
+        <span class="hljs-comment"># TCP flags</span>
+        features[<span class="hljs-string">'SYN Flag Count'</span>] = self.tcp_flags[<span class="hljs-string">'syn'</span>]
+        features[<span class="hljs-string">'ACK Flag Count'</span>] = self.tcp_flags[<span class="hljs-string">'ack'</span>]
+        <span class="hljs-comment"># ... other flags</span>
+        
+        <span class="hljs-keyword">return</span> features  <span class="hljs-comment"># Dictionary with 64 keys</span>
+</div></code></pre>
+<h3 id="433-feature-scaling">4.3.3 Feature Scaling</h3>
+<pre class="hljs"><code><div><span class="hljs-keyword">from</span> sklearn.preprocessing <span class="hljs-keyword">import</span> StandardScaler
+
+<span class="hljs-comment"># Fit on training data</span>
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+
+<span class="hljs-comment"># Save for inference</span>
+joblib.dump(scaler, <span class="hljs-string">'scaler.joblib'</span>)
+
+<span class="hljs-comment"># Apply to test data</span>
+X_test_scaled = scaler.transform(X_test)
+
+<span class="hljs-comment"># Apply to real-time data</span>
+features_scaled = scaler.transform([features])
+</div></code></pre>
+<p>Scaling critical for Random Forest? No (tree-based), but improves convergence in future if we add SVM or Neural Network.</p>
+<h2 id="44-ml-model-implementation">4.4 ML Model Implementation</h2>
+<h3 id="441-model-training">4.4.1 Model Training</h3>
+<p><strong>Training Script:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">from</span> sklearn.ensemble <span class="hljs-keyword">import</span> RandomForestClassifier
+<span class="hljs-keyword">from</span> sklearn.model_selection <span class="hljs-keyword">import</span> train_test_split
+<span class="hljs-keyword">from</span> sklearn.metrics <span class="hljs-keyword">import</span> accuracy_score, precision_score, recall_score, f1_score
+
+<span class="hljs-comment"># Load prepared data</span>
+X = np.load(<span class="hljs-string">'features.npy'</span>)  <span class="hljs-comment"># 64 features</span>
+y = np.load(<span class="hljs-string">'labels.npy'</span>)     <span class="hljs-comment"># Binary labels</span>
+
+<span class="hljs-comment"># Split data</span>
+X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=<span class="hljs-number">0.3</span>, random_state=<span class="hljs-number">42</span>)
+X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=<span class="hljs-number">0.67</span>, random_state=<span class="hljs-number">42</span>)
+
+<span class="hljs-comment"># Scale features</span>
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_val_scaled = scaler.transform(X_val)
+X_test_scaled = scaler.transform(X_test)
+
+<span class="hljs-comment"># Train model</span>
+model = RandomForestClassifier(
+    n_estimators=<span class="hljs-number">100</span>,
+    max_depth=<span class="hljs-number">15</span>,
+    min_samples_split=<span class="hljs-number">5</span>,
+    min_samples_leaf=<span class="hljs-number">2</span>,
+    class_weight=<span class="hljs-string">'balanced'</span>,
+    random_state=<span class="hljs-number">42</span>,
+    n_jobs=<span class="hljs-number">-1</span>
+)
+
+model.fit(X_train_scaled, y_train)
+
+<span class="hljs-comment"># Validate</span>
+y_val_pred = model.predict(X_val_scaled)
+val_accuracy = accuracy_score(y_val, y_val_pred)
+print(<span class="hljs-string">f"Validation Accuracy: <span class="hljs-subst">{val_accuracy:<span class="hljs-number">.4</span>f}</span>"</span>)
+
+<span class="hljs-comment"># Test</span>
+y_test_pred = model.predict(X_test_scaled)
+test_accuracy = accuracy_score(y_test, y_test_pred)
+test_precision = precision_score(y_test, y_test_pred)
+test_recall = recall_score(y_test, y_test_pred)
+test_f1 = f1_score(y_test, y_test_pred)
+
+print(<span class="hljs-string">f"Test Accuracy:  <span class="hljs-subst">{test_accuracy:<span class="hljs-number">.4</span>f}</span>"</span>)
+print(<span class="hljs-string">f"Test Precision: <span class="hljs-subst">{test_precision:<span class="hljs-number">.4</span>f}</span>"</span>)
+print(<span class="hljs-string">f"Test Recall:    <span class="hljs-subst">{test_recall:<span class="hljs-number">.4</span>f}</span>"</span>)
+print(<span class="hljs-string">f"Test F1-Score:  <span class="hljs-subst">{test_f1:<span class="hljs-number">.4</span>f}</span>"</span>)
+
+<span class="hljs-comment"># Save model</span>
+joblib.dump(model, <span class="hljs-string">'ddos_classifier.joblib'</span>)
+joblib.dump(scaler, <span class="hljs-string">'scaler.joblib'</span>)
+</div></code></pre>
+<p><strong>Table 4.3: ML Model Hyperparameters</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>n_estimators</td>
+<td>100</td>
+<td>Balance accuracy and speed</td>
+</tr>
+<tr>
+<td>max_depth</td>
+<td>15</td>
+<td>Prevent overfitting, maintain speed</td>
+</tr>
+<tr>
+<td>min_samples_split</td>
+<td>5</td>
+<td>Regularization</td>
+</tr>
+<tr>
+<td>min_samples_leaf</td>
+<td>2</td>
+<td>Prevent overly specific rules</td>
+</tr>
+<tr>
+<td>class_weight</td>
+<td>balanced</td>
+<td>Handle imbalanced data</td>
+</tr>
+<tr>
+<td>n_jobs</td>
+<td>-1</td>
+<td>Use all CPU cores</td>
+</tr>
+<tr>
+<td>random_state</td>
+<td>42</td>
+<td>Reproducibility</td>
+</tr>
+</tbody>
+</table>
+<h3 id="442-training-results">4.4.2 Training Results</h3>
+<p><strong>Training Time:</strong> 3 minutes 24 seconds (175K samples, 64 features)
+<strong>Model Size:</strong> 18.5 MB (100 trees)
+<strong>Memory Usage:</strong> 24 MB during inference</p>
+<p><strong>Performance Metrics:</strong></p>
+<ul>
+<li>Validation Accuracy: 94.8%</li>
+<li>Test Accuracy: <strong>95.3%</strong></li>
+<li>Precision: <strong>96.8%</strong></li>
+<li>Recall: <strong>95.3%</strong></li>
+<li>F1-Score: <strong>96.0%</strong></li>
+</ul>
+<h3 id="443-real-time-inference">4.4.3 Real-Time Inference</h3>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DDoSClassifier</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, model_path, scaler_path)</span>:</span>
+        self.model = joblib.load(model_path)
+        self.scaler = joblib.load(scaler_path)
+    
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">predict</span><span class="hljs-params">(self, features)</span>:</span>
+        start_time = time.time()
+        
+        <span class="hljs-comment"># Scale features</span>
+        features_scaled = self.scaler.transform([features])
+        
+        <span class="hljs-comment"># Predict</span>
+        prediction = self.model.predict(features_scaled)[<span class="hljs-number">0</span>]
+        probabilities = self.model.predict_proba(features_scaled)[<span class="hljs-number">0</span>]
+        
+        inference_time = (time.time() - start_time) * <span class="hljs-number">1000</span>  <span class="hljs-comment"># ms</span>
+        
+        <span class="hljs-keyword">return</span> {
+            <span class="hljs-string">'is_attack'</span>: bool(prediction),
+            <span class="hljs-string">'confidence'</span>: probabilities[prediction] * <span class="hljs-number">100</span>,
+            <span class="hljs-string">'inference_time_ms'</span>: inference_time
+        }
+</div></code></pre>
+<p><strong>Average Inference Time:</strong> 8.3 ms (within 10ms target)</p>
+<p>[<strong>Figure 4.2: ML Model Training Workflow</strong>]</p>
+<h2 id="45-ebpfxdp-implementation">4.5 eBPF/XDP Implementation</h2>
+<h3 id="451-program-structure">4.5.1 Program Structure</h3>
+<p><strong>File:</strong> <code>src/ebpf/xdp_filter.c</code></p>
+<p><strong>Includes:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;linux/bpf.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;linux/if_ether.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;linux/ip.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;linux/tcp.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;linux/udp.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;linux/in.h&gt;</span></span>
+</div></code></pre>
+<p><strong>Data Structures:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment">// Defined in previous sections</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">stats</span> {</span>...};
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ip_stats</span> {</span>...};
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">flow_key</span> {</span>...};
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">flow_stats</span> {</span>...};
+</div></code></pre>
+<p><strong>Maps:</strong></p>
+<pre class="hljs"><code><div>BPF_PERCPU_ARRAY(stats_map, struct stats, <span class="hljs-number">1</span>);
+BPF_HASH(ip_tracking_map, __u32, struct ip_stats, <span class="hljs-number">131072</span>);
+BPF_HASH(flow_map, struct flow_key, struct flow_stats, <span class="hljs-number">65536</span>);
+BPF_HASH(blacklist_map, __u32, __u64, <span class="hljs-number">10000</span>);
+BPF_ARRAY(config_map, struct <span class="hljs-built_in">config</span>, <span class="hljs-number">1</span>);
+</div></code></pre>
+<p><strong>Main Function:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">xdp_ddos_filter</span><span class="hljs-params">(struct xdp_md *ctx)</span> </span>{
+    <span class="hljs-keyword">void</span> *data_end = (<span class="hljs-keyword">void</span> *)(<span class="hljs-keyword">long</span>)ctx-&gt;data_end;
+    <span class="hljs-keyword">void</span> *data = (<span class="hljs-keyword">void</span> *)(<span class="hljs-keyword">long</span>)ctx-&gt;data;
+    
+    <span class="hljs-comment">// Parse Ethernet</span>
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ethhdr</span> *<span class="hljs-title">eth</span> = <span class="hljs-title">data</span>;</span>
+    <span class="hljs-keyword">if</span> ((<span class="hljs-keyword">void</span> *)(eth + <span class="hljs-number">1</span>) &gt; data_end)
+        <span class="hljs-keyword">return</span> XDP_DROP;
+    
+    <span class="hljs-comment">// Only process IPv4</span>
+    <span class="hljs-keyword">if</span> (eth-&gt;h_proto != htons(ETH_P_IP))
+        <span class="hljs-keyword">return</span> XDP_PASS;
+    
+    <span class="hljs-comment">// Parse IP</span>
+    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">iphdr</span> *<span class="hljs-title">ip</span> = (<span class="hljs-title">void</span> *)(<span class="hljs-title">eth</span> + 1);</span>
+    <span class="hljs-keyword">if</span> ((<span class="hljs-keyword">void</span> *)(ip + <span class="hljs-number">1</span>) &gt; data_end)
+        <span class="hljs-keyword">return</span> XDP_DROP;
+    
+    __u32 src_ip = ip-&gt;saddr;
+    
+    <span class="hljs-comment">// Check blacklist</span>
+    __u64 *bl_ts = blacklist_map.lookup(&amp;src_ip);
+    <span class="hljs-keyword">if</span> (bl_ts != <span class="hljs-literal">NULL</span>) {
+        <span class="hljs-comment">// Update dropped counter</span>
+        __u32 key = <span class="hljs-number">0</span>;
+        <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">stats</span> *<span class="hljs-title">stats</span> = <span class="hljs-title">stats_map</span>.<span class="hljs-title">lookup</span>(&amp;<span class="hljs-title">key</span>);</span>
+        <span class="hljs-keyword">if</span> (stats)
+            __sync_fetch_and_add(&amp;stats-&gt;dropped_packets, <span class="hljs-number">1</span>);
+        <span class="hljs-keyword">return</span> XDP_DROP;
+    }
+    
+    <span class="hljs-comment">// Update statistics</span>
+    <span class="hljs-comment">// ... (as detailed in 3.2)</span>
+    
+    <span class="hljs-comment">// Simple heuristics</span>
+    <span class="hljs-comment">// ... (SYN flood check)</span>
+    
+    <span class="hljs-keyword">return</span> XDP_PASS;
+}
+</div></code></pre>
+<h3 id="452-compilation">4.5.2 Compilation</h3>
+<p><strong>Makefile:</strong></p>
+<pre class="hljs"><code><div>LLC ?= llc
+CLANG ?= clang
+
+KERNEL_SRC := /lib/modules/<span class="hljs-variable">$(<span class="hljs-built_in">shell</span> uname -r)</span>/build
+
+<span class="hljs-section">xdp_filter.o: xdp_filter.c</span>
+	<span class="hljs-variable">$(CLANG)</span> -S \
+		-target bpf \
+		-D __BPF_TRACING__ \
+		-I<span class="hljs-variable">$(KERNEL_SRC)</span>/<span class="hljs-keyword">include</span> \
+		-I<span class="hljs-variable">$(KERNEL_SRC)</span>/<span class="hljs-keyword">include</span>/uapi \
+		-I<span class="hljs-variable">$(KERNEL_SRC)</span>/arch/x86/<span class="hljs-keyword">include</span> \
+		-Wall \
+		-Wno-unused-value \
+		-Wno-pointer-sign \
+		-Wno-compare-distinct-pointer-types \
+		-O2 -emit-llvm -c -g -o ${@:.o=.ll} <span class="hljs-variable">$&lt;</span>
+	<span class="hljs-variable">$(LLC)</span> -march=bpf -filetype=obj -o <span class="hljs-variable">$@</span> ${@:.o=.ll}
+
+<span class="hljs-section">clean:</span>
+	rm -f *.o *.ll
+</div></code></pre>
+<p><strong>Build:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-built_in">cd</span> src/ebpf
+make
+<span class="hljs-comment"># Produces xdp_filter.o</span>
+</div></code></pre>
+<h3 id="453-integration-with-user-space">4.5.3 Integration with User Space</h3>
+<p><strong>Loading via BCC:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">from</span> bcc <span class="hljs-keyword">import</span> BPF
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TrafficMonitor</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self, interface, xdp_mode=<span class="hljs-string">'native'</span>)</span>:</span>
+        self.interface = interface
+        self.xdp_mode = xdp_mode
+        self.bpf =<span class="hljs-literal">None</span>
+    
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">load_program</span><span class="hljs-params">(self)</span>:</span>
+        <span class="hljs-comment"># Load source file</span>
+        <span class="hljs-keyword">with</span> open(<span class="hljs-string">'src/ebpf/xdp_filter.c'</span>, <span class="hljs-string">'r'</span>) <span class="hljs-keyword">as</span> f:
+            bpf_source = f.read()
+        
+        <span class="hljs-comment"># Compile and load</span>
+        self.bpf = BPF(text=bpf_source)
+        
+        <span class="hljs-comment"># Get function</span>
+        fn = self.bpf.load_func(<span class="hljs-string">"xdp_ddos_filter"</span>, BPF.XDP)
+        
+        <span class="hljs-comment"># Attach to interface</span>
+        flags = <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> self.xdp_mode == <span class="hljs-string">'native'</span> <span class="hljs-keyword">else</span> (<span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">1</span>)
+        self.bpf.attach_xdp(self.interface, fn, flags)
+        
+        print(<span class="hljs-string">f"XDP program attached to <span class="hljs-subst">{self.interface}</span> in <span class="hljs-subst">{self.xdp_mode}</span> mode"</span>)
+</div></code></pre>
+<p><strong>Reading Statistics:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_statistics</span><span class="hljs-params">(self)</span>:</span>
+    stats_map = self.bpf.get_table(<span class="hljs-string">"stats_map"</span>)
+    
+    <span class="hljs-comment"># Aggregate per-CPU stats</span>
+    total_packets = <span class="hljs-number">0</span>
+    total_bytes = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">for</span> cpu_stats <span class="hljs-keyword">in</span> stats_map.values():
+        total_packets += cpu_stats.total_packets
+        total_bytes += cpu_stats.total_bytes
+    
+    <span class="hljs-keyword">return</span> {
+        <span class="hljs-string">'total_packets'</span>: total_packets,
+        <span class="hljs-string">'total_bytes'</span>: total_bytes,
+        <span class="hljs-comment"># ...</span>
+    }
+</div></code></pre>
+<p>[<strong>Figure 4.3: eBPF/XDP Hook Points in Network Stack</strong> + <strong>Figure 4.4: Complete Data Journey</strong>]</p>
+<h3 id="454-performance-considerations">4.5.4 Performance Considerations</h3>
+<p><strong>Optimization Techniques:</strong></p>
+<p><strong>1. Per-CPU Maps:</strong>
+Avoid lock contention by using per-CPU arrays for hot paths.</p>
+<p><strong>2. Atomic Operations:</strong>
+Use <code>__sync_fetch_and_add</code> for lock-free updates.</p>
+<p><strong>3. Bounds Checking:</strong>
+Always verify pointers before dereferencing to pass verifier.</p>
+<p><strong>4. Early Drop:</strong>
+Check blacklist before expensive processing.</p>
+<p><strong>5. Inline Functions:</strong>
+Use <code>static inline</code> helpers for code reuse without function call overhead.</p>
+<hr>
+<p><em>[Continued with Chapters 5-8 and References in next section due to length...]</em></p>
+<p><strong>Note:</strong> This document continues in the next turn with Chapters 5-8 including experimental results, comparative analysis, discussion, conclusion, and complete IEEE references. The complete report will total 50-80 pages as specified.</p>
+
+</body>
+</html>

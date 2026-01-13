@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>projectexplained.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="rapid-corona-ddos-mitigation-system---complete-project-explanation">Rapid-Corona: DDoS Mitigation System - Complete Project Explanation</h1>
+<h2 id="%F0%9F%93%8B-table-of-contents">📋 Table of Contents</h2>
+<ol>
+<li><a href="#project-overview">Project Overview</a></li>
+<li><a href="#core-technologies--modules">Core Technologies &amp; Modules</a></li>
+<li><a href="#architecture--design">Architecture &amp; Design</a></li>
+<li><a href="#key-components-explained">Key Components Explained</a></li>
+<li><a href="#ebpfxdp-technology">eBPF/XDP Technology</a></li>
+<li><a href="#machine-learning-integration">Machine Learning Integration</a></li>
+<li><a href="#detection-mechanisms">Detection Mechanisms</a></li>
+<li><a href="#data-flow">Data Flow</a></li>
+<li><a href="#file-structure">File Structure</a></li>
+<li><a href="#dependencies">Dependencies</a></li>
+</ol>
+<hr>
+<h2 id="%F0%9F%8E%AF-project-overview">🎯 Project Overview</h2>
+<p><strong>Rapid-Corona</strong> is a high-performance, machine learning-enhanced DDoS (Distributed Denial of Service) mitigation system designed to detect and prevent network attacks in real-time. The system operates at the kernel level using eBPF/XDP technology for ultra-fast packet filtering while employing sophisticated statistical and ML-based anomaly detection in user space.</p>
+<h3 id="key-features">Key Features</h3>
+<ul>
+<li><strong>Ultra-fast packet processing</strong>: 5M+ packets per second (pps) throughput</li>
+<li><strong>Kernel-level filtering</strong>: Using eBPF/XDP for minimal latency</li>
+<li><strong>Dual detection approach</strong>: Statistical baseline + ML classification</li>
+<li><strong>Real-time monitoring</strong>: Web dashboard with live statistics</li>
+<li><strong>Cross-platform</strong>: Linux (native eBPF) and Windows (Microsoft eBPF)</li>
+<li><strong>Attack classification</strong>: Identifies specific attack types (SYN flood, UDP flood, etc.)</li>
+</ul>
+<h3 id="development-phases">Development Phases</h3>
+<ul>
+<li><strong>Phase 1</strong>: Baseline statistical anomaly detection with eBPF/XDP</li>
+<li><strong>Phase 2</strong>: ML-based classification using Random Forest trained on CIC-DDoS-2019 dataset</li>
+<li><strong>Phase 3</strong> (Future): Auto signature generation and comparative benchmarking</li>
+</ul>
+<hr>
+<h2 id="%F0%9F%94%A7-core-technologies--modules">🔧 Core Technologies &amp; Modules</h2>
+<h3 id="1-ebpf-extended-berkeley-packet-filter">1. <strong>eBPF (Extended Berkeley Packet Filter)</strong></h3>
+<p><strong>What is eBPF?</strong>
+eBPF is a revolutionary Linux kernel technology that allows running sandboxed programs in kernel space without changing kernel source code or loading kernel modules. It provides safe, efficient, and programmable access to kernel events.</p>
+<p><strong>Why eBPF for DDoS Mitigation?</strong></p>
+<ul>
+<li><strong>Performance</strong>: Processes packets at the NIC driver level before they reach the network stack</li>
+<li><strong>Safety</strong>: Verified by the kernel to ensure it won't crash the system</li>
+<li><strong>Efficiency</strong>: Minimal CPU overhead even at millions of packets per second</li>
+<li><strong>Flexibility</strong>: Can be updated without rebooting</li>
+</ul>
+<p><strong>How it works in this project:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment">// XDP program runs on every incoming packet</span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">xdp_ddos_filter</span><span class="hljs-params">(struct xdp_md *ctx)</span> </span>{
+    <span class="hljs-comment">// Parse packet headers</span>
+    <span class="hljs-comment">// Check blacklist</span>
+    <span class="hljs-comment">// Update statistics</span>
+    <span class="hljs-comment">// Return XDP_PASS or XDP_DROP</span>
+}
+</div></code></pre>
+<h3 id="2-xdp-express-data-path">2. <strong>XDP (eXpress Data Path)</strong></h3>
+<p><strong>What is XDP?</strong>
+XDP is a Linux kernel feature that enables eBPF programs to run at the earliest possible point in the networking stack - right when packets arrive at the network interface card (NIC).</p>
+<p><strong>XDP Actions:</strong></p>
+<ul>
+<li><code>XDP_PASS</code>: Allow packet to continue to network stack</li>
+<li><code>XDP_DROP</code>: Drop packet immediately (fastest way to block)</li>
+<li><code>XDP_TX</code>: Transmit packet back out the same interface</li>
+<li><code>XDP_REDIRECT</code>: Redirect to another interface</li>
+</ul>
+<p><strong>XDP Modes in this project:</strong></p>
+<ul>
+<li><strong>Native mode</strong>: Runs in NIC driver (fastest, requires driver support)</li>
+<li><strong>Generic mode</strong>: Runs in kernel network stack (slower but works everywhere)</li>
+<li><strong>Offload mode</strong>: Runs on NIC hardware (requires smart NICs)</li>
+</ul>
+<h3 id="3-bcc-bpf-compiler-collection">3. <strong>BCC (BPF Compiler Collection)</strong></h3>
+<p><strong>What is BCC?</strong>
+BCC is a toolkit for creating efficient kernel tracing and manipulation programs using eBPF. It provides Python bindings to write, compile, and interact with eBPF programs.</p>
+<p><strong>Usage in this project:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Load eBPF program from C source</span>
+self.bpf = BPF(text=bpf_source)
+
+<span class="hljs-comment"># Attach XDP program to network interface</span>
+fn = self.bpf.load_func(<span class="hljs-string">"xdp_ddos_filter"</span>, BPF.XDP)
+self.bpf.attach_xdp(self.interface, fn, flags)
+
+<span class="hljs-comment"># Read statistics from eBPF maps</span>
+stats_map = self.bpf.get_table(<span class="hljs-string">"stats_map"</span>)
+</div></code></pre>
+<h3 id="4-machine-learning-scikit-learn">4. <strong>Machine Learning (scikit-learn)</strong></h3>
+<p><strong>Random Forest Classifier:</strong>
+The project uses Random Forest, an ensemble learning method that constructs multiple decision trees during training and outputs the class that is the mode of the classes.</p>
+<p><strong>Why Random Forest?</strong></p>
+<ul>
+<li><strong>Fast inference</strong>: Critical for real-time detection (&lt;10ms per prediction)</li>
+<li><strong>Robust</strong>: Handles high-dimensional data well (64 features)</li>
+<li><strong>Interpretable</strong>: Provides feature importance rankings</li>
+<li><strong>Accurate</strong>: Achieves &gt;95% accuracy on CIC-DDoS-2019 dataset</li>
+</ul>
+<p><strong>Training Process:</strong></p>
+<pre class="hljs"><code><div>classifier = RandomForestClassifier(
+    n_estimators=<span class="hljs-number">100</span>,      <span class="hljs-comment"># 100 decision trees</span>
+    max_depth=<span class="hljs-number">15</span>,          <span class="hljs-comment"># Limit tree depth for speed</span>
+    class_weight=<span class="hljs-string">'balanced'</span> <span class="hljs-comment"># Handle imbalanced datasets</span>
+)
+classifier.fit(X_train, y_train)
+</div></code></pre>
+<h3 id="5-cic-ddos-2019-dataset">5. <strong>CIC-DDoS-2019 Dataset</strong></h3>
+<p><strong>What is CIC-DDoS-2019?</strong>
+A comprehensive DDoS attack dataset created by the Canadian Institute for Cybersecurity containing labeled network traffic flows with 64 statistical features.</p>
+<p><strong>Attack Types Included:</strong></p>
+<ul>
+<li>DrDoS_DNS (DNS amplification)</li>
+<li>DrDoS_LDAP (LDAP amplification)</li>
+<li>DrDoS_MSSQL (MSSQL amplification)</li>
+<li>DrDoS_NTP (NTP amplification)</li>
+<li>DrDoS_UDP (Generic UDP reflection)</li>
+<li>Syn (SYN flood attacks)</li>
+<li>HTTP_Flood (Application layer attacks)</li>
+<li>BENIGN (Normal traffic)</li>
+</ul>
+<p><strong>Features Extracted (64 total):</strong></p>
+<ul>
+<li>Flow duration and packet counts</li>
+<li>Packet length statistics (min, max, mean, std)</li>
+<li>Inter-arrival times (IAT)</li>
+<li>TCP flags (SYN, ACK, FIN, RST, PSH, URG)</li>
+<li>Bytes/packets per second</li>
+<li>Forward/backward flow ratios</li>
+</ul>
+<h3 id="6-flask-web-framework">6. <strong>Flask Web Framework</strong></h3>
+<p><strong>Purpose:</strong>
+Provides the real-time monitoring dashboard accessible via web browser.</p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>RESTful API endpoint (<code>/api/status</code>)</li>
+<li>Auto-refreshing dashboard (5-second intervals)</li>
+<li>Real-time metrics visualization</li>
+<li>Alert history display</li>
+<li>ML model statistics</li>
+</ul>
+<h3 id="7-numpy--scipy">7. <strong>NumPy &amp; SciPy</strong></h3>
+<p><strong>NumPy:</strong></p>
+<ul>
+<li>Efficient array operations for feature extraction</li>
+<li>Statistical calculations (mean, std, variance)</li>
+<li>Fast numerical computations</li>
+</ul>
+<p><strong>SciPy:</strong></p>
+<ul>
+<li>Advanced statistical functions</li>
+<li>Signal processing for traffic analysis</li>
+<li>Scientific computing utilities</li>
+</ul>
+<h3 id="8-psutil-process-and-system-utilities">8. <strong>psutil (Process and System Utilities)</strong></h3>
+<p><strong>Purpose:</strong>
+Monitors system resources to ensure the DDoS mitigation system itself doesn't overload the server.</p>
+<p><strong>Metrics Collected:</strong></p>
+<ul>
+<li>CPU usage percentage</li>
+<li>Memory consumption</li>
+<li>Network interface statistics</li>
+<li>Process information</li>
+</ul>
+<hr>
+<h2 id="%F0%9F%8F%97%EF%B8%8F-architecture--design">🏗️ Architecture &amp; Design</h2>
+<h3 id="system-architecture-diagram">System Architecture Diagram</h3>
+<pre class="hljs"><code><div>┌─────────────────────────────────────────────────────────────┐
+│                    Network Interface (NIC)                   │
+└────────────────────────┬────────────────────────────────────┘
+                         │ Incoming Packets
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│              XDP/eBPF Layer (Kernel Space)                   │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  xdp_ddos_filter.c - Packet Filtering Program        │   │
+│  │  • Parse packet headers (Ethernet, IP, TCP/UDP)      │   │
+│  │  • Check blacklist_map                               │   │
+│  │  • Update statistics (per-CPU, per-IP, per-flow)     │   │
+│  │  • Return XDP_PASS or XDP_DROP                       │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                                                              │
+│  eBPF Maps (Shared Memory):                                 │
+│  • stats_map (per-CPU statistics)                           │
+│  • ip_tracking_map (per-IP counters)                        │
+│  • flow_map (5-tuple flow tracking)                         │
+│  • blacklist_map (blocked IPs)                              │
+│  • config_map (runtime configuration)                       │
+└────────────────────────┬────────────────────────────────────┘
+                         │ Statistics via BCC
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│           User Space - Control Plane (Python)                │
+│                                                              │
+│  ┌────────────────────────────────────────────────────┐     │
+│  │  TrafficMonitor (traffic_monitor.py)               │     │
+│  │  • Load/unload XDP programs via BCC                │     │
+│  │  • Read eBPF map statistics                        │     │
+│  │  • Manage blacklist (add/remove IPs)               │     │
+│  │  • Update runtime configuration                    │     │
+│  └────────────────────────────────────────────────────┘     │
+│                         │                                    │
+│                         ▼                                    │
+│  ┌────────────────────────────────────────────────────┐     │
+│  │  AnomalyDetector (anomaly_detector.py)             │     │
+│  │  • Baseline learning (mean, std dev)               │     │
+│  │  • Statistical anomaly detection                   │     │
+│  │  • Entropy calculation                             │     │
+│  │  • Protocol distribution analysis                  │     │
+│  └────────────────────────────────────────────────────┘     │
+│                         │                                    │
+│                         ▼                                    │
+│  ┌────────────────────────────────────────────────────┐     │
+│  │  MLEnhancedAnomalyDetector (Phase 2)               │     │
+│  │  ┌──────────────────────────────────────────────┐  │     │
+│  │  │ FeatureExtractor (feature_extractor.py)      │  │     │
+│  │  │ • Extract 64 CIC-compatible features         │  │     │
+│  │  │ • Sliding window aggregation                 │  │     │
+│  │  │ • Flow statistics computation                │  │     │
+│  │  └──────────────────────────────────────────────┘  │     │
+│  │                     │                               │     │
+│  │                     ▼                               │     │
+│  │  ┌──────────────────────────────────────────────┐  │     │
+│  │  │ DDoSClassifier (ml_classifier.py)            │  │     │
+│  │  │ • Random Forest model                        │  │     │
+│  │  │ • Real-time prediction (&lt;10ms)               │  │     │
+│  │  │ • Attack type classification                 │  │     │
+│  │  │ • Confidence scoring                         │  │     │
+│  │  └──────────────────────────────────────────────┘  │     │
+│  │                     │                               │     │
+│  │                     ▼                               │     │
+│  │  ┌──────────────────────────────────────────────┐  │     │
+│  │  │ Hybrid Detection Logic                       │  │     │
+│  │  │ • Combine statistical + ML scores            │  │     │
+│  │  │ • Weighted decision making                   │  │     │
+│  │  │ • Confidence thresholds                      │  │     │
+│  │  └──────────────────────────────────────────────┘  │     │
+│  └────────────────────────────────────────────────────┘     │
+│                         │                                    │
+│                         ▼                                    │
+│  ┌────────────────────────────────────────────────────┐     │
+│  │  AlertSystem (alert_system.py)                     │     │
+│  │  • Generate alerts with severity levels            │     │
+│  │  • Alert cooldown management                       │     │
+│  │  • Log to file and console                         │     │
+│  └────────────────────────────────────────────────────┘     │
+│                         │                                    │
+│                         ▼                                    │
+│  ┌────────────────────────────────────────────────────┐     │
+│  │  TrafficProfiler (traffic_profiler.py)             │     │
+│  │  • Learn normal traffic patterns                   │     │
+│  │  • Save/load traffic profiles                      │     │
+│  │  • Adaptive baseline adjustment                    │     │
+│  └────────────────────────────────────────────────────┘     │
+│                         │                                    │
+│                         ▼                                    │
+│  ┌────────────────────────────────────────────────────┐     │
+│  │  MetricsCollector (metrics_collector.py)           │     │
+│  │  • System resource monitoring (CPU, memory)        │     │
+│  │  • Performance metrics                             │     │
+│  │  • Prometheus-compatible export                    │     │
+│  └────────────────────────────────────────────────────┘     │
+│                         │                                    │
+│                         ▼                                    │
+│  ┌────────────────────────────────────────────────────┐     │
+│  │  Dashboard (dashboard.py - Flask)                  │     │
+│  │  • Real-time web interface (port 5000)             │     │
+│  │  • REST API (/api/status)                          │     │
+│  │  • Live metrics visualization                      │     │
+│  │  • Alert history display                           │     │
+│  └────────────────────────────────────────────────────┘     │
+└─────────────────────────────────────────────────────────────┘
+                         │
+                         ▼
+                  ┌──────────────┐
+                  │ Web Browser  │
+                  │ localhost:5000│
+                  └──────────────┘
+</div></code></pre>
+<h3 id="data-plane-vs-control-plane">Data Plane vs Control Plane</h3>
+<p><strong>Data Plane (eBPF/XDP - Kernel Space):</strong></p>
+<ul>
+<li><strong>Purpose</strong>: Fast packet processing and filtering</li>
+<li><strong>Performance</strong>: 5M+ pps, &lt;1μs per packet</li>
+<li><strong>Operations</strong>: Parse, filter, count, drop</li>
+<li><strong>Language</strong>: C (compiled to eBPF bytecode)</li>
+</ul>
+<p><strong>Control Plane (Python - User Space):</strong></p>
+<ul>
+<li><strong>Purpose</strong>: Decision making and management</li>
+<li><strong>Performance</strong>: 1-second update intervals</li>
+<li><strong>Operations</strong>: Analyze, detect, alert, configure</li>
+<li><strong>Language</strong>: Python 3.8+</li>
+</ul>
+<hr>
+<h2 id="%F0%9F%94%8D-key-components-explained">🔍 Key Components Explained</h2>
+<h3 id="1-mainpy---application-orchestrator">1. main.py - Application Orchestrator</h3>
+<p><strong>Purpose</strong>: Main entry point that coordinates all components.</p>
+<p><strong>Key Responsibilities:</strong></p>
+<ul>
+<li>Parse command-line arguments</li>
+<li>Initialize all subsystems</li>
+<li>Start monitoring loop</li>
+<li>Handle graceful shutdown</li>
+<li>Manage ML model training/loading</li>
+</ul>
+<p><strong>Main Loop Flow:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">while</span> running:
+    <span class="hljs-number">1.</span> Read statistics <span class="hljs-keyword">from</span> eBPF maps
+    <span class="hljs-number">2.</span> Update baseline profile
+    <span class="hljs-number">3.</span> Detect anomalies (statistical + ML)
+    <span class="hljs-number">4.</span> Send alerts <span class="hljs-keyword">if</span> attack detected
+    <span class="hljs-number">5.</span> Update blacklist <span class="hljs-keyword">if</span> needed
+    <span class="hljs-number">6.</span> Collect system metrics
+    <span class="hljs-number">7.</span> Sleep <span class="hljs-keyword">for</span> <span class="hljs-number">1</span> second
+</div></code></pre>
+<h3 id="2-configpy---configuration-management">2. config.py - Configuration Management</h3>
+<p><strong>Purpose</strong>: Centralized configuration for all system parameters.</p>
+<p><strong>Key Configuration Classes:</strong></p>
+<p><strong>DetectionThresholds:</strong></p>
+<pre class="hljs"><code><div>ALERT_PPS_THRESHOLD = <span class="hljs-number">500</span>      <span class="hljs-comment"># Trigger alert</span>
+ATTACK_PPS_THRESHOLD = <span class="hljs-number">2000</span>    <span class="hljs-comment"># Definite attack</span>
+SIGMA_MULTIPLIER = <span class="hljs-number">2.0</span>         <span class="hljs-comment"># Statistical deviation</span>
+MIN_ENTROPY = <span class="hljs-number">3.0</span>              <span class="hljs-comment"># IP diversity threshold</span>
+</div></code></pre>
+<p><strong>TimeWindows:</strong></p>
+<pre class="hljs"><code><div>BASELINE_WINDOW = <span class="hljs-number">300</span>   <span class="hljs-comment"># 5 min baseline learning</span>
+DETECTION_WINDOW = <span class="hljs-number">10</span>   <span class="hljs-comment"># 10 sec detection window</span>
+ALERT_COOLDOWN = <span class="hljs-number">60</span>     <span class="hljs-comment"># 60 sec between duplicate alerts</span>
+</div></code></pre>
+<p><strong>MLConfig:</strong></p>
+<pre class="hljs"><code><div>MODEL_TYPE = <span class="hljs-string">'random_forest'</span>
+N_ESTIMATORS = <span class="hljs-number">100</span>
+MAX_DEPTH = <span class="hljs-number">15</span>
+ML_CONFIDENCE_THRESHOLD = <span class="hljs-number">70.0</span>
+</div></code></pre>
+<h3 id="3-srcebpfxdpfilterc---kernel-packet-filter">3. src/ebpf/xdp_filter.c - Kernel Packet Filter</h3>
+<p><strong>Purpose</strong>: High-performance packet filtering in kernel space.</p>
+<p><strong>Data Structures:</strong></p>
+<p><strong>flow_key</strong> (5-tuple for flow identification):</p>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">flow_key</span> {</span>
+    __u32 src_ip;      <span class="hljs-comment">// Source IP address</span>
+    __u32 dst_ip;      <span class="hljs-comment">// Destination IP address</span>
+    __u16 src_port;    <span class="hljs-comment">// Source port</span>
+    __u16 dst_port;    <span class="hljs-comment">// Destination port</span>
+    __u8 protocol;     <span class="hljs-comment">// Protocol (TCP/UDP/ICMP)</span>
+};
+</div></code></pre>
+<p><strong>ip_stats</strong> (per-IP tracking):</p>
+<pre class="hljs"><code><div><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ip_stats</span> {</span>
+    __u64 packets;      <span class="hljs-comment">// Total packets from this IP</span>
+    __u64 bytes;        <span class="hljs-comment">// Total bytes from this IP</span>
+    __u64 last_seen;    <span class="hljs-comment">// Timestamp of last packet</span>
+    __u32 flow_count;   <span class="hljs-comment">// Number of flows</span>
+    __u32 syn_count;    <span class="hljs-comment">// SYN packets (SYN flood detection)</span>
+    __u32 udp_count;    <span class="hljs-comment">// UDP packets</span>
+};
+</div></code></pre>
+<p><strong>eBPF Maps:</strong></p>
+<ul>
+<li><code>flow_map</code>: Tracks individual network flows (65,536 entries)</li>
+<li><code>ip_tracking_map</code>: Per-IP statistics (131,072 entries)</li>
+<li><code>blacklist_map</code>: Blocked IP addresses (10,000 entries)</li>
+<li><code>stats_map</code>: Per-CPU global statistics</li>
+<li><code>config_map</code>: Runtime configuration</li>
+</ul>
+<p><strong>Packet Processing Logic:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-number">1.</span> Parse <span class="hljs-built_in">Ethernet</span> header → Check <span class="hljs-keyword">if</span> IPv4
+<span class="hljs-number">2.</span> Parse IP header → Extract src_ip, dst_ip, protocol
+<span class="hljs-number">3.</span> Check blacklist → If blacklisted, <span class="hljs-keyword">return</span> XDP_DROP
+<span class="hljs-number">4.</span> Parse TCP/UDP header → Extract ports <span class="hljs-keyword">and</span> flags
+<span class="hljs-number">5.</span> Update ip_tracking_map with packet/<span class="hljs-keyword">byte</span> counts
+<span class="hljs-number">6.</span> Update flow_map with flow statistics
+<span class="hljs-number">7.</span> Simple SYN flood check → Drop <span class="hljs-keyword">if</span> syn_count &gt; <span class="hljs-number">1000</span>
+<span class="hljs-number">8.</span> Update global statistics
+<span class="hljs-number">9.</span> Return XDP_PASS (allow packet)
+</div></code></pre>
+<h3 id="4-srctrafficmonitorpy---ebpf-controller">4. src/traffic_monitor.py - eBPF Controller</h3>
+<p><strong>Purpose</strong>: User-space interface to eBPF programs.</p>
+<p><strong>Key Methods:</strong></p>
+<p><strong>load_xdp_program():</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Compile and load eBPF C code</span>
+self.bpf = BPF(text=bpf_source)
+fn = self.bpf.load_func(<span class="hljs-string">"xdp_ddos_filter"</span>, BPF.XDP)
+self.bpf.attach_xdp(interface, fn, flags)
+</div></code></pre>
+<p><strong>get_statistics():</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Read per-CPU stats and aggregate</span>
+stats_map = self.bpf.get_table(<span class="hljs-string">"stats_map"</span>)
+<span class="hljs-keyword">for</span> cpu_stats <span class="hljs-keyword">in</span> per_cpu_stats:
+    total_packets += cpu_stats.total_packets
+    total_bytes += cpu_stats.total_bytes
+</div></code></pre>
+<p><strong>add_to_blacklist():</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Convert IP to integer and add to blacklist map</span>
+ip_int = struct.unpack(<span class="hljs-string">'I'</span>, socket.inet_aton(ip_address))[<span class="hljs-number">0</span>]
+blacklist_map[ip_int] = timestamp
+</div></code></pre>
+<h3 id="5-srcanomalydetectorpy---statistical-detection">5. src/anomaly_detector.py - Statistical Detection</h3>
+<p><strong>Purpose</strong>: Detect anomalies using statistical methods.</p>
+<p><strong>Detection Techniques:</strong></p>
+<p><strong>1. Absolute Thresholds:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">if</span> pps &gt; ATTACK_PPS_THRESHOLD:
+    score += <span class="hljs-number">50</span>  <span class="hljs-comment"># Very high traffic</span>
+</div></code></pre>
+<p><strong>2. Statistical Deviation (Z-score):</strong></p>
+<pre class="hljs"><code><div>pps_sigma = (current_pps - baseline_mean) / baseline_std
+<span class="hljs-keyword">if</span> abs(pps_sigma) &gt; SIGMA_MULTIPLIER:
+    score += <span class="hljs-number">30</span>  <span class="hljs-comment"># Significant deviation</span>
+</div></code></pre>
+<p><strong>3. Rate of Change:</strong></p>
+<pre class="hljs"><code><div>change_rate = current_pps / previous_pps
+<span class="hljs-keyword">if</span> change_rate &gt; MAX_CHANGE_RATE:
+    score += <span class="hljs-number">20</span>  <span class="hljs-comment"># Sudden spike</span>
+</div></code></pre>
+<p><strong>4. Protocol Distribution:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">if</span> abs(tcp_ratio - NORMAL_TCP_RATIO) &gt; DEVIATION_THRESHOLD:
+    score += <span class="hljs-number">15</span>  <span class="hljs-comment"># Abnormal protocol mix</span>
+</div></code></pre>
+<p><strong>5. IP Entropy (Shannon Entropy):</strong></p>
+<pre class="hljs"><code><div>entropy = -Σ(p_i * log2(p_i))
+<span class="hljs-keyword">if</span> entropy &lt; MIN_ENTROPY:
+    score += <span class="hljs-number">20</span>  <span class="hljs-comment"># Traffic concentrated in few IPs</span>
+</div></code></pre>
+<p><strong>6. SYN Flood Detection:</strong></p>
+<pre class="hljs"><code><div>syn_heavy_ips = [ip <span class="hljs-keyword">for</span> ip <span class="hljs-keyword">in</span> ip_stats <span class="hljs-keyword">if</span> ip.syn_count &gt; <span class="hljs-number">500</span>]
+<span class="hljs-keyword">if</span> syn_heavy_ips:
+    score += <span class="hljs-number">25</span>  <span class="hljs-comment"># Excessive SYN packets</span>
+</div></code></pre>
+<p><strong>Scoring System:</strong></p>
+<ul>
+<li>Score &gt;= 50: Anomaly detected</li>
+<li>Score &gt;= 75: High severity</li>
+<li>Score &lt; 50: Normal traffic</li>
+</ul>
+<h3 id="6-srcmlfeatureextractorpy---real-time-feature-extraction">6. src/ml/feature_extractor.py - Real-time Feature Extraction</h3>
+<p><strong>Purpose</strong>: Convert raw traffic statistics to ML-compatible features.</p>
+<p><strong>Feature Categories (64 total):</strong></p>
+<p><strong>Flow Duration &amp; Counts (5 features):</strong></p>
+<ul>
+<li>Flow Duration (microseconds)</li>
+<li>Total Forward Packets</li>
+<li>Total Backward Packets</li>
+<li>Total Forward Bytes</li>
+<li>Total Backward Bytes</li>
+</ul>
+<p><strong>Packet Length Statistics (8 features):</strong></p>
+<ul>
+<li>Forward: Max, Min, Mean, Std</li>
+<li>Backward: Max, Min, Mean, Std</li>
+</ul>
+<p><strong>Flow Rates (2 features):</strong></p>
+<ul>
+<li>Flow Bytes/s</li>
+<li>Flow Packets/s</li>
+</ul>
+<p><strong>Inter-Arrival Times (14 features):</strong></p>
+<ul>
+<li>Flow IAT: Mean, Std, Max, Min</li>
+<li>Forward IAT: Total, Mean, Std, Max, Min</li>
+<li>Backward IAT: Total, Mean, Std, Max, Min</li>
+</ul>
+<p><strong>TCP Flags (8 features):</strong></p>
+<ul>
+<li>FIN, SYN, RST, PSH, ACK, URG, CWE, ECE counts</li>
+</ul>
+<p><strong>Additional Metrics (27 features):</strong></p>
+<ul>
+<li>Packet length variance</li>
+<li>Down/Up ratio</li>
+<li>Average packet sizes</li>
+<li>Header lengths</li>
+<li>Active/Idle times</li>
+</ul>
+<p><strong>Sliding Window Approach:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Maintain deques for efficient windowing</span>
+packets_fwd: deque(maxlen=<span class="hljs-number">1000</span>)
+packets_bwd: deque(maxlen=<span class="hljs-number">1000</span>)
+timestamps: deque(maxlen=<span class="hljs-number">1000</span>)
+
+<span class="hljs-comment"># Calculate statistics over window</span>
+mean = np.mean(packets_fwd)
+std = np.std(packets_fwd)
+</div></code></pre>
+<h3 id="7-srcmlmlclassifierpy---ml-prediction-engine">7. src/ml/ml_classifier.py - ML Prediction Engine</h3>
+<p><strong>Purpose</strong>: Real-time attack classification using Random Forest.</p>
+<p><strong>Model Architecture:</strong></p>
+<pre class="hljs"><code><div>RandomForestClassifier(
+    n_estimators=<span class="hljs-number">100</span>,        <span class="hljs-comment"># 100 decision trees</span>
+    max_depth=<span class="hljs-number">15</span>,            <span class="hljs-comment"># Limit depth for speed</span>
+    min_samples_split=<span class="hljs-number">5</span>,     <span class="hljs-comment"># Prevent overfitting</span>
+    min_samples_leaf=<span class="hljs-number">2</span>,      <span class="hljs-comment"># Minimum leaf size</span>
+    class_weight=<span class="hljs-string">'balanced'</span>, <span class="hljs-comment"># Handle imbalanced data</span>
+    n_jobs=<span class="hljs-number">-1</span>                <span class="hljs-comment"># Use all CPU cores</span>
+)
+</div></code></pre>
+<p><strong>Prediction Process:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-number">1.</span> Extract <span class="hljs-number">64</span> features <span class="hljs-keyword">from</span> traffic
+<span class="hljs-number">2.</span> Scale features using StandardScaler
+<span class="hljs-number">3.</span> Pass through Random Forest
+<span class="hljs-number">4.</span> Get probability scores <span class="hljs-keyword">for</span> each <span class="hljs-class"><span class="hljs-keyword">class</span>
+5. <span class="hljs-title">Determine</span> <span class="hljs-title">attack</span> <span class="hljs-title">type</span> <span class="hljs-title">and</span> <span class="hljs-title">confidence</span>
+6. <span class="hljs-title">Return</span> <span class="hljs-title">PredictionResult</span>
+</span></div></code></pre>
+<p><strong>Attack Type Inference:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">if</span> syn_count &gt; <span class="hljs-number">100</span> <span class="hljs-keyword">and</span> ack_count &lt; <span class="hljs-number">10</span>:
+    <span class="hljs-keyword">return</span> <span class="hljs-string">'SYN_Flood'</span>
+<span class="hljs-keyword">elif</span> packets_per_sec &gt; <span class="hljs-number">10000</span>:
+    <span class="hljs-keyword">return</span> <span class="hljs-string">'UDP_Flood'</span>
+<span class="hljs-keyword">else</span>:
+    <span class="hljs-keyword">return</span> <span class="hljs-string">'DDoS_Generic'</span>
+</div></code></pre>
+<p><strong>Performance Metrics:</strong></p>
+<ul>
+<li>Inference time: &lt;10ms per prediction</li>
+<li>Accuracy: &gt;95% on test set</li>
+<li>Precision/Recall: &gt;0.93</li>
+</ul>
+<h3 id="8-srcmldataloaderpy---dataset-management">8. src/ml/data_loader.py - Dataset Management</h3>
+<p><strong>Purpose</strong>: Load and preprocess CIC-DDoS-2019 dataset.</p>
+<p><strong>Key Functions:</strong></p>
+<p><strong>Data Loading:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Load CSV files with chunking for memory efficiency</span>
+<span class="hljs-keyword">for</span> chunk <span class="hljs-keyword">in</span> pd.read_csv(file, chunksize=<span class="hljs-number">10000</span>):
+    <span class="hljs-comment"># Sample rows</span>
+    <span class="hljs-comment"># Clean data (remove NaN, infinity)</span>
+    <span class="hljs-comment"># Balance classes</span>
+</div></code></pre>
+<p><strong>Preprocessing:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Remove infinite values</span>
+df.replace([np.inf, -np.inf], np.nan, inplace=<span class="hljs-literal">True</span>)
+
+<span class="hljs-comment"># Fill NaN with 0</span>
+df.fillna(<span class="hljs-number">0</span>, inplace=<span class="hljs-literal">True</span>)
+
+<span class="hljs-comment"># Encode labels (BENIGN=0, Attack=1)</span>
+y = (y != <span class="hljs-string">'BENIGN'</span>).astype(int)
+</div></code></pre>
+<p><strong>Train/Val/Test Split:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># 70% train, 10% validation, 20% test</span>
+X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=<span class="hljs-number">0.3</span>)
+X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=<span class="hljs-number">0.67</span>)
+</div></code></pre>
+<p><strong>Feature Scaling:</strong></p>
+<pre class="hljs"><code><div>scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_val_scaled = scaler.transform(X_val)
+X_test_scaled = scaler.transform(X_test)
+</div></code></pre>
+<h3 id="9-srcdashboardpy---web-interface">9. src/dashboard.py - Web Interface</h3>
+<p><strong>Purpose</strong>: Real-time monitoring dashboard.</p>
+<p><strong>Technology Stack:</strong></p>
+<ul>
+<li><strong>Backend</strong>: Flask (Python web framework)</li>
+<li><strong>Frontend</strong>: Vanilla JavaScript + HTML/CSS</li>
+<li><strong>Styling</strong>: Glassmorphism design with gradient backgrounds</li>
+</ul>
+<p><strong>API Endpoint:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-meta">@app.route('/api/status')</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">api_status</span><span class="hljs-params">()</span>:</span>
+    <span class="hljs-keyword">return</span> jsonify({
+        <span class="hljs-string">'running'</span>: <span class="hljs-literal">True</span>,
+        <span class="hljs-string">'interface'</span>: <span class="hljs-string">'eth0'</span>,
+        <span class="hljs-string">'statistics'</span>: {...},
+        <span class="hljs-string">'baseline'</span>: {...},
+        <span class="hljs-string">'ip_stats'</span>: [...],
+        <span class="hljs-string">'blacklist'</span>: [...],
+        <span class="hljs-string">'recent_alerts'</span>: [...],
+        <span class="hljs-string">'ml_enabled'</span>: <span class="hljs-literal">True</span>,
+        <span class="hljs-string">'ml_stats'</span>: {...}
+    })
+</div></code></pre>
+<p><strong>Dashboard Cards:</strong></p>
+<ol>
+<li>Real-time Status (interface, current PPS, baseline)</li>
+<li>Traffic Statistics (packets, bytes, dropped)</li>
+<li>Protocol Distribution (TCP, UDP, ICMP)</li>
+<li>Baseline Profile (mean, std, samples)</li>
+<li>Top IPs (highest traffic sources)</li>
+<li>Blacklist (blocked IPs)</li>
+<li>ML Classification (model accuracy, predictions)</li>
+<li>Feature Importance (top ML features)</li>
+<li>Recent Alerts (alert history)</li>
+</ol>
+<p><strong>Auto-refresh:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment">// Fetch data every 5 seconds</span>
+setInterval(fetchData, <span class="hljs-number">5000</span>);
+</div></code></pre>
+<h3 id="10-srcalertsystempy---alert-management">10. src/alert_system.py - Alert Management</h3>
+<p><strong>Purpose</strong>: Generate and manage security alerts.</p>
+<p><strong>Alert Severity Levels:</strong></p>
+<ul>
+<li><strong>High</strong>: Score &gt;= 75, immediate action required</li>
+<li><strong>Medium</strong>: Score &gt;= 50, investigation needed</li>
+<li><strong>Low</strong>: Score &lt; 50, informational</li>
+</ul>
+<p><strong>Alert Structure:</strong></p>
+<pre class="hljs"><code><div>{
+    <span class="hljs-string">'timestamp'</span>: <span class="hljs-string">'2026-01-12 15:30:00'</span>,
+    <span class="hljs-string">'alert_type'</span>: <span class="hljs-string">'ddos_attack'</span>,
+    <span class="hljs-string">'severity'</span>: <span class="hljs-string">'high'</span>,
+    <span class="hljs-string">'message'</span>: <span class="hljs-string">'DDoS attack detected (score: 85.0)'</span>,
+    <span class="hljs-string">'details'</span>: {
+        <span class="hljs-string">'reasons'</span>: [...],
+        <span class="hljs-string">'metrics'</span>: {...},
+        <span class="hljs-string">'current_pps'</span>: <span class="hljs-number">15000</span>,
+        <span class="hljs-string">'baseline_pps'</span>: <span class="hljs-number">500</span>
+    }
+}
+</div></code></pre>
+<p><strong>Cooldown Mechanism:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Prevent alert spam - 60 seconds between duplicate alerts</span>
+<span class="hljs-keyword">if</span> current_time - last_alert_time &gt;= ALERT_COOLDOWN:
+    send_alert()
+</div></code></pre>
+<h3 id="11-srctrafficprofilerpy---traffic-profiling">11. src/traffic_profiler.py - Traffic Profiling</h3>
+<p><strong>Purpose</strong>: Learn and maintain normal traffic patterns.</p>
+<p><strong>Profile Data:</strong></p>
+<pre class="hljs"><code><div>{
+    <span class="hljs-string">'mean_pps'</span>: <span class="hljs-number">500.0</span>,
+    <span class="hljs-string">'peak_pps'</span>: <span class="hljs-number">2000.0</span>,
+    <span class="hljs-string">'mean_bps'</span>: <span class="hljs-number">5000000.0</span>,
+    <span class="hljs-string">'protocol_distribution'</span>: {
+        <span class="hljs-string">'tcp'</span>: <span class="hljs-number">0.85</span>,
+        <span class="hljs-string">'udp'</span>: <span class="hljs-number">0.10</span>,
+        <span class="hljs-string">'icmp'</span>: <span class="hljs-number">0.05</span>
+    },
+    <span class="hljs-string">'typical_sources'</span>: <span class="hljs-number">50</span>,
+    <span class="hljs-string">'learning_period'</span>: <span class="hljs-number">3600</span>,
+    <span class="hljs-string">'last_updated'</span>: <span class="hljs-string">'2026-01-12 15:00:00'</span>
+}
+</div></code></pre>
+<p><strong>Adaptive Learning:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Exponential moving average for gradual adaptation</span>
+new_mean = alpha * current_value + (<span class="hljs-number">1</span> - alpha) * old_mean
+</div></code></pre>
+<h3 id="12-srcmetricscollectorpy---system-monitoring">12. src/metrics_collector.py - System Monitoring</h3>
+<p><strong>Purpose</strong>: Monitor system resource usage.</p>
+<p><strong>Metrics Collected:</strong></p>
+<pre class="hljs"><code><div>{
+    <span class="hljs-string">'cpu_percent'</span>: <span class="hljs-number">15.5</span>,
+    <span class="hljs-string">'memory_percent'</span>: <span class="hljs-number">25.3</span>,
+    <span class="hljs-string">'memory_used_mb'</span>: <span class="hljs-number">512</span>,
+    <span class="hljs-string">'network_bytes_sent'</span>: <span class="hljs-number">1000000</span>,
+    <span class="hljs-string">'network_bytes_recv'</span>: <span class="hljs-number">5000000</span>,
+    <span class="hljs-string">'process_cpu_percent'</span>: <span class="hljs-number">5.2</span>,
+    <span class="hljs-string">'process_memory_mb'</span>: <span class="hljs-number">128</span>
+}
+</div></code></pre>
+<p><strong>Purpose</strong>: Ensure the mitigation system doesn't become a performance bottleneck.</p>
+<hr>
+<h2 id="%F0%9F%9A%80-ebpfxdp-technology">🚀 eBPF/XDP Technology</h2>
+<h3 id="why-ebpfxdp-for-ddos-mitigation">Why eBPF/XDP for DDoS Mitigation?</h3>
+<p><strong>Traditional Approach Problems:</strong></p>
+<ol>
+<li>Packets traverse entire network stack</li>
+<li>Context switches to user space</li>
+<li>High CPU usage at scale</li>
+<li>Latency increases under attack</li>
+</ol>
+<p><strong>eBPF/XDP Advantages:</strong></p>
+<ol>
+<li><strong>Kernel-level processing</strong>: No network stack overhead</li>
+<li><strong>Zero-copy</strong>: Direct packet access in NIC driver</li>
+<li><strong>Programmable</strong>: Update logic without kernel recompilation</li>
+<li><strong>Safe</strong>: Verified by kernel verifier</li>
+<li><strong>Fast</strong>: 5M+ pps on commodity hardware</li>
+</ol>
+<h3 id="ebpf-map-types-used">eBPF Map Types Used</h3>
+<p><strong>1. BPF_HASH (Hash Table):</strong></p>
+<pre class="hljs"><code><div>BPF_HASH(ip_tracking_map, __u32, struct ip_stats, <span class="hljs-number">131072</span>);
+</div></code></pre>
+<ul>
+<li><strong>Purpose</strong>: Key-value storage</li>
+<li><strong>Use case</strong>: Per-IP statistics, blacklist</li>
+<li><strong>Performance</strong>: O(1) lookup</li>
+</ul>
+<p><strong>2. BPF_PERCPU_ARRAY (Per-CPU Array):</strong></p>
+<pre class="hljs"><code><div>BPF_PERCPU_ARRAY(stats_map, struct stats, <span class="hljs-number">1</span>);
+</div></code></pre>
+<ul>
+<li><strong>Purpose</strong>: Per-CPU counters (no locking needed)</li>
+<li><strong>Use case</strong>: Global statistics</li>
+<li><strong>Performance</strong>: Lock-free, cache-friendly</li>
+</ul>
+<p><strong>3. BPF_ARRAY (Array):</strong></p>
+<pre class="hljs"><code><div>BPF_ARRAY(config_map, struct <span class="hljs-built_in">config</span>, <span class="hljs-number">1</span>);
+</div></code></pre>
+<ul>
+<li><strong>Purpose</strong>: Simple indexed storage</li>
+<li><strong>Use case</strong>: Configuration parameters</li>
+<li><strong>Performance</strong>: Fastest lookup</li>
+</ul>
+<h3 id="xdp-program-verification">XDP Program Verification</h3>
+<p><strong>Kernel Verifier Checks:</strong></p>
+<ol>
+<li><strong>Bounded loops</strong>: No infinite loops allowed</li>
+<li><strong>Memory safety</strong>: All pointer accesses validated</li>
+<li><strong>Instruction limit</strong>: Max 4096 instructions (older kernels)</li>
+<li><strong>Stack size</strong>: Limited to 512 bytes</li>
+<li><strong>No kernel crashes</strong>: Guaranteed safe execution</li>
+</ol>
+<h3 id="performance-optimization-techniques">Performance Optimization Techniques</h3>
+<p><strong>1. Per-CPU Statistics:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment">// Avoid lock contention by using per-CPU maps</span>
+BPF_PERCPU_ARRAY(stats_map, struct stats, <span class="hljs-number">1</span>);
+</div></code></pre>
+<p><strong>2. Atomic Operations:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment">// Lock-free counter updates</span>
+__sync_fetch_and_add(&amp;stats-&gt;total_packets, <span class="hljs-number">1</span>);
+</div></code></pre>
+<p><strong>3. Early Drop:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment">// Check blacklist before expensive processing</span>
+<span class="hljs-keyword">if</span> (is_blacklisted(src_ip)) {
+    <span class="hljs-keyword">return</span> XDP_DROP;  <span class="hljs-comment">// Immediate drop</span>
+}
+</div></code></pre>
+<p><strong>4. Bounds Checking:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment">// Prevent verifier rejection</span>
+<span class="hljs-keyword">if</span> (data + <span class="hljs-keyword">sizeof</span>(*eth) &gt; data_end)
+    <span class="hljs-keyword">return</span> XDP_DROP;
+</div></code></pre>
+<hr>
+<h2 id="%F0%9F%A4%96-machine-learning-integration">🤖 Machine Learning Integration</h2>
+<h3 id="phase-2-ml-enhanced-detection">Phase 2: ML-Enhanced Detection</h3>
+<p><strong>Hybrid Detection Strategy:</strong></p>
+<pre class="hljs"><code><div>┌─────────────────────────────────────────────┐
+│         Traffic Statistics (eBPF)           │
+└──────────────┬──────────────────────────────┘
+               │
+               ├─────────────────┬─────────────────┐
+               ▼                 ▼                 ▼
+    ┌──────────────────┐  ┌──────────────┐  ┌──────────────┐
+    │   Statistical    │  │   Feature    │  │   Baseline   │
+    │   Detection      │  │  Extraction  │  │   Profiling  │
+    └────────┬─────────┘  └──────┬───────┘  └──────────────┘
+             │                   │
+             │                   ▼
+             │            ┌──────────────┐
+             │            │  ML Model    │
+             │            │  (Random     │
+             │            │   Forest)    │
+             │            └──────┬───────┘
+             │                   │
+             ▼                   ▼
+    ┌─────────────────────────────────┐
+    │    Hybrid Score Calculation     │
+    │  • Statistical score (0-100)    │
+    │  • ML confidence (0-100)        │
+    │  • Weighted combination         │
+    └────────────┬────────────────────┘
+                 │
+                 ▼
+        ┌─────────────────┐
+        │ Final Decision  │
+        │ • is_anomaly    │
+        │ • attack_type   │
+        │ • confidence    │
+        └─────────────────┘
+</div></code></pre>
+<h3 id="hybrid-scoring-logic">Hybrid Scoring Logic</h3>
+<p><strong>Decision Matrix:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Statistical Score</th>
+<th>ML Confidence</th>
+<th>Result</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&gt;= 70</td>
+<td>&gt;= 85</td>
+<td>Attack</td>
+<td>Hybrid (high confidence)</td>
+</tr>
+<tr>
+<td>&gt;= 70</td>
+<td>&lt; 70</td>
+<td>Attack</td>
+<td>Statistical</td>
+</tr>
+<tr>
+<td>&lt; 50</td>
+<td>&gt;= 85</td>
+<td>Attack</td>
+<td>ML</td>
+</tr>
+<tr>
+<td>&gt;= 50</td>
+<td>&gt;= 70</td>
+<td>Attack</td>
+<td>Hybrid</td>
+</tr>
+<tr>
+<td>&lt; 50</td>
+<td>&lt; 70</td>
+<td>Benign</td>
+<td>Both agree</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Combined Score Calculation:</strong></p>
+<pre class="hljs"><code><div>combined_score = statistical_score + (ml_confidence / <span class="hljs-number">100</span>) * <span class="hljs-number">30</span>
+
+<span class="hljs-keyword">if</span> combined_score &gt;= <span class="hljs-number">60</span>:
+    is_anomaly = <span class="hljs-literal">True</span>
+</div></code></pre>
+<h3 id="feature-importance-analysis">Feature Importance Analysis</h3>
+<p><strong>Top 10 Most Important Features (typical):</strong></p>
+<ol>
+<li>Flow Bytes/s (15.2%)</li>
+<li>Flow Packets/s (12.8%)</li>
+<li>SYN Flag Count (9.5%)</li>
+<li>Flow Duration (7.3%)</li>
+<li>Fwd IAT Mean (6.1%)</li>
+<li>Total Fwd Packets (5.8%)</li>
+<li>Packet Length Mean (5.2%)</li>
+<li>ACK Flag Count (4.9%)</li>
+<li>Down/Up Ratio (4.3%)</li>
+<li>Bwd Packet Length Mean (3.7%)</li>
+</ol>
+<p><strong>Interpretation:</strong></p>
+<ul>
+<li><strong>Rate features</strong> (bytes/s, packets/s) are most discriminative</li>
+<li><strong>TCP flags</strong> (SYN, ACK) crucial for SYN flood detection</li>
+<li><strong>Timing features</strong> (IAT) help identify attack patterns</li>
+<li><strong>Size features</strong> distinguish attack types</li>
+</ul>
+<h3 id="model-training-process">Model Training Process</h3>
+<p><strong>1. Data Preparation:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Load CIC-DDoS-2019 dataset</span>
+loader = CICDataLoader(<span class="hljs-string">'data/cic-ddos-2019/'</span>)
+data = loader.prepare_data(
+    max_files=<span class="hljs-number">5</span>,
+    samples_per_file=<span class="hljs-number">50000</span>,
+    binary=<span class="hljs-literal">True</span>,  <span class="hljs-comment"># BENIGN vs ATTACK</span>
+    scale=<span class="hljs-literal">True</span>    <span class="hljs-comment"># StandardScaler</span>
+)
+</div></code></pre>
+<p><strong>2. Model Training:</strong></p>
+<pre class="hljs"><code><div>classifier = DDoSClassifier(
+    model_type=<span class="hljs-string">'random_forest'</span>,
+    n_estimators=<span class="hljs-number">100</span>,
+    max_depth=<span class="hljs-number">15</span>
+)
+
+metrics = classifier.train(
+    X_train=data[<span class="hljs-string">'X_train'</span>],
+    y_train=data[<span class="hljs-string">'y_train'</span>],
+    X_val=data[<span class="hljs-string">'X_val'</span>],
+    y_val=data[<span class="hljs-string">'y_val'</span>]
+)
+</div></code></pre>
+<p><strong>3. Model Evaluation:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Test set evaluation</span>
+y_pred = classifier.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)
+</div></code></pre>
+<p><strong>4. Model Saving:</strong></p>
+<pre class="hljs"><code><div>classifier.save(<span class="hljs-string">'data/models/ddos_classifier.joblib'</span>)
+</div></code></pre>
+<h3 id="real-time-inference">Real-time Inference</h3>
+<p><strong>Inference Pipeline:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-number">1.</span> FeatureExtractor.update(stats, ip_stats)
+   ↓
+<span class="hljs-number">2.</span> features = FeatureExtractor.extract_features()
+   ↓
+<span class="hljs-number">3.</span> scaled_features = scaler.transform(features)
+   ↓
+<span class="hljs-number">4.</span> prediction = classifier.predict(scaled_features)
+   ↓
+<span class="hljs-number">5.</span> PredictionResult(
+       is_attack=<span class="hljs-literal">True</span>,
+       attack_type=<span class="hljs-string">'SYN_Flood'</span>,
+       confidence=<span class="hljs-number">92.5</span>,
+       inference_time_ms=<span class="hljs-number">8.3</span>
+   )
+</div></code></pre>
+<p><strong>Performance Requirements:</strong></p>
+<ul>
+<li>Inference time: &lt;10ms</li>
+<li>Throughput: 100+ predictions/second</li>
+<li>Memory: &lt;100MB for model</li>
+</ul>
+<hr>
+<h2 id="%F0%9F%93%8A-detection-mechanisms">📊 Detection Mechanisms</h2>
+<h3 id="multi-layer-detection-approach">Multi-Layer Detection Approach</h3>
+<p><strong>Layer 1: eBPF/XDP (Kernel) - Immediate Actions</strong></p>
+<ul>
+<li>Blacklist enforcement (instant drop)</li>
+<li>Simple SYN flood detection (syn_count &gt; 1000)</li>
+<li>Packet counting and statistics</li>
+</ul>
+<p><strong>Layer 2: Statistical Analysis (User Space) - Pattern Detection</strong></p>
+<ul>
+<li>Baseline deviation (Z-score)</li>
+<li>Rate of change monitoring</li>
+<li>Protocol distribution analysis</li>
+<li>IP entropy calculation</li>
+<li>Heavy hitter detection</li>
+</ul>
+<p><strong>Layer 3: ML Classification (User Space) - Intelligent Classification</strong></p>
+<ul>
+<li>64-feature analysis</li>
+<li>Attack type identification</li>
+<li>Confidence scoring</li>
+<li>False positive reduction</li>
+</ul>
+<h3 id="detection-scenarios">Detection Scenarios</h3>
+<p><strong>Scenario 1: Large UDP Flood</strong></p>
+<pre class="hljs"><code><div>Traffic Pattern:
+- Sudden spike: 100 pps → 50,000 pps
+- Protocol: 95% UDP (normal: 10%)
+- Source IPs: 1,000 unique IPs
+
+Detection:
+1. Statistical: High PPS (score: 50) + Protocol anomaly (score: 15) = 65
+2. ML: Detects DrDoS_UDP pattern (confidence: 88%)
+3. Hybrid: Attack confirmed (combined score: 91)
+
+Action:
+- Alert: HIGH severity
+- Blacklist: Top 10 source IPs
+- Drop rate: 45,000 pps
+</div></code></pre>
+<p><strong>Scenario 2: SYN Flood</strong></p>
+<pre class="hljs"><code><div>Traffic Pattern:
+- Gradual increase: 500 pps → 5,000 pps
+- Protocol: 100% TCP
+- SYN packets: 4,800/sec, ACK packets: 200/sec
+- Source IPs: 50 unique IPs (low entropy)
+
+Detection:
+1. Statistical: SYN heavy IPs (score: 25) + Low entropy (score: 20) = 45
+2. ML: Detects SYN_Flood pattern (confidence: 95%)
+3. Hybrid: Attack confirmed (combined score: 74)
+
+Action:
+- Alert: HIGH severity
+- Blacklist: All 50 source IPs
+- XDP drops: 4,500 pps
+</div></code></pre>
+<p><strong>Scenario 3: Flash Crowd (False Positive Prevention)</strong></p>
+<pre class="hljs"><code><div>Traffic Pattern:
+- Sudden spike: 200 pps → 10,000 pps
+- Protocol: 85% TCP (normal)
+- Source IPs: 5,000 unique IPs (high entropy)
+- Legitimate user behavior
+
+Detection:
+1. Statistical: High PPS (score: 50) + High entropy (score: -10) = 40
+2. ML: Detects BENIGN pattern (confidence: 78%)
+3. Hybrid: No attack (combined score: 32)
+
+Action:
+- No alert
+- No blacklisting
+- Continue monitoring
+</div></code></pre>
+<h3 id="alert-severity-calculation">Alert Severity Calculation</h3>
+<p><strong>Severity Levels:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-keyword">if</span> combined_score &gt;= <span class="hljs-number">85</span>:
+    severity = <span class="hljs-string">'critical'</span>
+<span class="hljs-keyword">elif</span> combined_score &gt;= <span class="hljs-number">75</span>:
+    severity = <span class="hljs-string">'high'</span>
+<span class="hljs-keyword">elif</span> combined_score &gt;= <span class="hljs-number">60</span>:
+    severity = <span class="hljs-string">'medium'</span>
+<span class="hljs-keyword">else</span>:
+    severity = <span class="hljs-string">'low'</span>
+</div></code></pre>
+<hr>
+<h2 id="%F0%9F%94%84-data-flow">🔄 Data Flow</h2>
+<h3 id="complete-request-flow">Complete Request Flow</h3>
+<pre class="hljs"><code><div>1. Packet Arrival at NIC
+   ↓
+2. XDP Hook Triggered
+   ↓
+3. xdp_ddos_filter() executes
+   │
+   ├─→ Parse headers (Ethernet, IP, TCP/UDP)
+   ├─→ Check blacklist_map
+   │   └─→ If blacklisted: return XDP_DROP
+   ├─→ Update ip_tracking_map
+   ├─→ Update flow_map
+   ├─→ Update stats_map (per-CPU)
+   ├─→ Check SYN flood threshold
+   │   └─→ If exceeded: return XDP_DROP
+   └─→ return XDP_PASS
+   ↓
+4. Packet continues to network stack (if XDP_PASS)
+   ↓
+5. User Space Monitoring Loop (every 1 second)
+   │
+   ├─→ TrafficMonitor.get_statistics()
+   │   └─→ Read eBPF maps via BCC
+   │
+   ├─→ AnomalyDetector.update_baseline()
+   │   └─→ Calculate running mean/std
+   │
+   ├─→ TrafficProfiler.update_profile()
+   │   └─→ Learn normal patterns
+   │
+   ├─→ FeatureExtractor.update()
+   │   └─→ Aggregate features for ML
+   │
+   ├─→ AnomalyDetector.detect_anomaly()
+   │   ├─→ Statistical analysis
+   │   └─→ ML prediction (if enabled)
+   │       └─→ Hybrid scoring
+   │
+   ├─→ If anomaly detected:
+   │   ├─→ AlertSystem.send_alert()
+   │   └─→ TrafficMonitor.add_to_blacklist()
+   │       └─→ Update blacklist_map in eBPF
+   │
+   └─→ MetricsCollector.collect_system_metrics()
+   ↓
+6. Dashboard Update (every 5 seconds)
+   │
+   └─→ GET /api/status
+       └─→ Return JSON with all metrics
+   ↓
+7. Browser displays updated dashboard
+</div></code></pre>
+<h3 id="ebpf-map-update-flow">eBPF Map Update Flow</h3>
+<pre class="hljs"><code><div>User Space (Python)                 Kernel Space (eBPF)
+─────────────────                   ───────────────────
+
+add_to_blacklist(ip)
+    │
+    ├─→ Convert IP to int
+    │
+    └─→ blacklist_map[ip_int] = timestamp
+                                    │
+                                    ↓
+                            blacklist_map updated
+                                    │
+                                    ↓
+                            Next packet from IP
+                                    │
+                                    ↓
+                            is_blacklisted(ip)
+                                    │
+                                    ├─→ Found in map
+                                    │
+                                    └─→ return XDP_DROP
+</div></code></pre>
+<hr>
+<h2 id="%F0%9F%93%81-file-structure">📁 File Structure</h2>
+<pre class="hljs"><code><div>rapid-corona/
+│
+├── main.py                          # Main application entry point
+├── config.py                        # Configuration management
+├── requirements.txt                 # Python dependencies
+├── attack_simulator.py              # Traffic simulation tool
+├── README.md                        # Project overview
+├── USAGE_GUIDE.md                   # Detailed usage instructions
+├── projectexplained.md              # This file
+│
+├── setup_ebpf.sh                    # Linux setup script
+├── setup_ebpf.ps1                   # Windows setup script
+│
+├── src/                             # Source code directory
+│   │
+│   ├── __init__.py
+│   │
+│   ├── traffic_monitor.py           # eBPF/XDP controller
+│   │   • Load/unload XDP programs
+│   │   • Read eBPF map statistics
+│   │   • Manage blacklist
+│   │   • Runtime configuration
+│   │
+│   ├── anomaly_detector.py          # Statistical + ML detection
+│   │   • Baseline learning
+│   │   • Statistical anomaly detection
+│   │   • ML-enhanced detection (Phase 2)
+│   │   • Hybrid scoring
+│   │
+│   ├── traffic_profiler.py          # Traffic profiling
+│   │   • Learn normal patterns
+│   │   • Adaptive baseline
+│   │   • Profile persistence
+│   │
+│   ├── alert_system.py              # Alert management
+│   │   • Alert generation
+│   │   • Severity classification
+│   │   • Cooldown management
+│   │   • Multi-channel alerting
+│   │
+│   ├── metrics_collector.py         # System monitoring
+│   │   • CPU/memory tracking
+│   │   • Performance metrics
+│   │   • Prometheus export
+│   │
+│   ├── dashboard.py                 # Web dashboard (Flask)
+│   │   • Real-time UI
+│   │   • REST API
+│   │   • Metrics visualization
+│   │
+│   ├── ebpf/                        # eBPF programs
+│   │   ├── xdp_filter.c             # Main XDP program (BCC style)
+│   │   ├── xdp_filter_libbpf.c      # Alternative libbpf version
+│   │   ├── xdp_maps.h               # eBPF map definitions
+│   │   ├── Makefile                 # Compilation rules
+│   │   └── xdp_filter.o             # Compiled eBPF object
+│   │
+│   └── ml/                          # Machine Learning module (Phase 2)
+│       ├── __init__.py
+│       │
+│       ├── ml_classifier.py         # Random Forest classifier
+│       │   • Model training
+│       │   • Real-time prediction
+│       │   • Attack type classification
+│       │   • Feature importance
+│       │
+│       ├── feature_extractor.py     # Feature extraction
+│       │   • 64 CIC-compatible features
+│       │   • Sliding window aggregation
+│       │   • Real-time computation
+│       │
+│       ├── data_loader.py           # Dataset management
+│       │   • CIC-DDoS-2019 loading
+│       │   • Preprocessing pipeline
+│       │   • Train/val/test split
+│       │   • Feature scaling
+│       │
+│       └── model_trainer.py         # Training CLI
+│           • Model training workflow
+│           • Hyperparameter tuning
+│           • Model evaluation
+│           • Benchmarking
+│
+├── simulation/                      # Traffic simulation
+│   ├── __init__.py
+│   ├── traffic_simulator.py         # Traffic generation
+│   └── attack_scenarios.py          # Predefined attack patterns
+│
+├── tests/                           # Unit tests
+│   ├── test_detector.py             # Anomaly detector tests
+│   ├── test_simulator.py            # Simulator tests
+│   ├── test_ml_classifier.py        # ML classifier tests
+│   ├── test_feature_extractor.py    # Feature extraction tests
+│   ├── test_integration.py          # Integration tests
+│   ├── benchmark.py                 # Performance benchmarks
+│   └── conftest.py                  # Pytest configuration
+│
+├── data/                            # Data directory
+│   ├── models/                      # Trained ML models
+│   │   └── ddos_classifier.joblib   # Saved Random Forest model
+│   │
+│   ├── cic-ddos-2019/               # Dataset (user-provided)
+│   │   ├── DrDoS_DNS.csv
+│   │   ├── DrDoS_LDAP.csv
+│   │   ├── DrDoS_MSSQL.csv
+│   │   ├── DrDoS_NTP.csv
+│   │   ├── DrDoS_UDP.csv
+│   │   ├── Syn.csv
+│   │   └── BENIGN.csv
+│   │
+│   └── traffic_profile.json         # Learned traffic baseline
+│
+└── logs/                            # Log files
+    ├── ddos_mitigation.log          # Main application log
+    └── alerts.log                   # Alert history
+</div></code></pre>
+<hr>
+<h2 id="%F0%9F%93%A6-dependencies">📦 Dependencies</h2>
+<h3 id="python-packages-requirementstxt">Python Packages (requirements.txt)</h3>
+<p><strong>Core Dependencies:</strong></p>
+<pre class="hljs"><code><div>numpy&gt;=1.21.0              # Array operations, numerical computing
+scipy&gt;=1.7.0               # Scientific computing, statistics
+pandas&gt;=1.3.0              # Data manipulation, CSV loading
+</div></code></pre>
+<p><strong>System Monitoring:</strong></p>
+<pre class="hljs"><code><div>psutil&gt;=5.8.0              # CPU, memory, network monitoring
+</div></code></pre>
+<p><strong>Web Dashboard:</strong></p>
+<pre class="hljs"><code><div>flask&gt;=2.0.0               # Web framework
+flask-cors&gt;=3.0.10         # Cross-origin resource sharing
+</div></code></pre>
+<p><strong>Machine Learning (Phase 2):</strong></p>
+<pre class="hljs"><code><div>scikit-learn&gt;=1.0.0        # Random Forest, preprocessing
+joblib&gt;=1.1.0              # Model serialization
+</div></code></pre>
+<p><strong>Optional ML Accelerators:</strong></p>
+<pre class="hljs"><code><div># xgboost&gt;=1.6.0           # Gradient boosting (faster training)
+# lightgbm&gt;=3.3.0          # Light gradient boosting
+</div></code></pre>
+<p><strong>Testing:</strong></p>
+<pre class="hljs"><code><div>pytest&gt;=7.0.0              # Testing framework
+pytest-cov&gt;=3.0.0          # Code coverage
+pytest-timeout&gt;=2.1.0      # Test timeouts
+</div></code></pre>
+<p><strong>Utilities:</strong></p>
+<pre class="hljs"><code><div>coloredlogs&gt;=15.0          # Colored console output
+python-dotenv&gt;=0.19.0      # Environment variable management
+</div></code></pre>
+<h3 id="system-dependencies">System Dependencies</h3>
+<p><strong>Linux (Ubuntu/Debian):</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># eBPF/BCC</span>
+sudo apt-get install python3-bpfcc
+sudo apt-get install bpfcc-tools
+sudo apt-get install linux-headers-$(uname -r)
+
+<span class="hljs-comment"># Build tools</span>
+sudo apt-get install build-essential
+sudo apt-get install clang
+sudo apt-get install llvm
+
+<span class="hljs-comment"># Python</span>
+sudo apt-get install python3-dev
+sudo apt-get install python3-pip
+</div></code></pre>
+<p><strong>Linux (RHEL/CentOS):</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># eBPF/BCC</span>
+sudo yum install python3-bcc
+sudo yum install bcc-tools
+sudo yum install kernel-devel
+
+<span class="hljs-comment"># Build tools</span>
+sudo yum install gcc
+sudo yum install clang
+sudo yum install llvm
+</div></code></pre>
+<p><strong>Windows:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Microsoft eBPF for Windows</span>
+<span class="hljs-comment"># Download from: https://github.com/microsoft/ebpf-for-windows</span>
+
+<span class="hljs-comment"># Chocolatey (package manager)</span>
+<span class="hljs-built_in">Set-ExecutionPolicy</span> Bypass <span class="hljs-literal">-Scope</span> <span class="hljs-keyword">Process</span> <span class="hljs-literal">-Force</span>
+iex ((<span class="hljs-built_in">New-Object</span> System.Net.WebClient).DownloadString(<span class="hljs-string">'https://chocolatey.org/install.ps1'</span>))
+
+<span class="hljs-comment"># Build tools</span>
+choco install <span class="hljs-literal">-y</span> llvm
+choco install <span class="hljs-literal">-y</span> python3
+choco install <span class="hljs-literal">-y</span> git
+</div></code></pre>
+<h3 id="kernel-requirements">Kernel Requirements</h3>
+<p><strong>Linux:</strong></p>
+<ul>
+<li>Kernel version: 4.18+ (for XDP support)</li>
+<li>Kernel version: 5.10+ (recommended for latest eBPF features)</li>
+<li>CONFIG_BPF=y</li>
+<li>CONFIG_BPF_SYSCALL=y</li>
+<li>CONFIG_XDP_SOCKETS=y</li>
+</ul>
+<p><strong>Check kernel support:</strong></p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Check kernel version</span>
+uname -r
+
+<span class="hljs-comment"># Check eBPF support</span>
+zgrep CONFIG_BPF /proc/config.gz
+
+<span class="hljs-comment"># Check XDP support</span>
+ip link <span class="hljs-built_in">set</span> dev eth0 xdp off  <span class="hljs-comment"># Should not error</span>
+</div></code></pre>
+<hr>
+<h2 id="%F0%9F%8E%93-key-concepts-summary">🎓 Key Concepts Summary</h2>
+<h3 id="1-ebpfxdp">1. eBPF/XDP</h3>
+<ul>
+<li><strong>Kernel-level packet filtering</strong> for ultra-fast processing</li>
+<li><strong>Programmable</strong> without kernel recompilation</li>
+<li><strong>Safe</strong> with kernel verifier guarantees</li>
+<li><strong>Efficient</strong> with per-CPU maps and atomic operations</li>
+</ul>
+<h3 id="2-statistical-anomaly-detection">2. Statistical Anomaly Detection</h3>
+<ul>
+<li><strong>Baseline learning</strong> from normal traffic</li>
+<li><strong>Multi-factor scoring</strong> (PPS, protocols, entropy, etc.)</li>
+<li><strong>Adaptive thresholds</strong> based on historical data</li>
+<li><strong>False positive reduction</strong> through multiple checks</li>
+</ul>
+<h3 id="3-machine-learning-classification">3. Machine Learning Classification</h3>
+<ul>
+<li><strong>Random Forest</strong> for robust, fast predictions</li>
+<li><strong>64 CIC features</strong> for comprehensive analysis</li>
+<li><strong>Hybrid detection</strong> combining statistical + ML</li>
+<li><strong>Attack type identification</strong> (SYN flood, UDP flood, etc.)</li>
+</ul>
+<h3 id="4-real-time-processing">4. Real-time Processing</h3>
+<ul>
+<li><strong>1-second monitoring loop</strong> for timely detection</li>
+<li><strong>&lt;10ms ML inference</strong> for real-time classification</li>
+<li><strong>5M+ pps handling</strong> at kernel level</li>
+<li><strong>Minimal CPU overhead</strong> (&lt;20% at 5M pps)</li>
+</ul>
+<h3 id="5-blacklist-management">5. Blacklist Management</h3>
+<ul>
+<li><strong>Dynamic IP blocking</strong> based on behavior</li>
+<li><strong>Kernel-enforced</strong> via eBPF maps</li>
+<li><strong>Instant packet drops</strong> for blacklisted sources</li>
+<li><strong>Configurable thresholds</strong> for auto-blocking</li>
+</ul>
+<hr>
+<h2 id="%F0%9F%94%92-security-considerations">🔒 Security Considerations</h2>
+<h3 id="ebpf-safety">eBPF Safety</h3>
+<ul>
+<li><strong>Kernel verifier</strong> ensures no crashes</li>
+<li><strong>Bounded execution</strong> prevents infinite loops</li>
+<li><strong>Memory safety</strong> with pointer validation</li>
+<li><strong>Privilege separation</strong> (kernel vs user space)</li>
+</ul>
+<h3 id="attack-surface">Attack Surface</h3>
+<ul>
+<li><strong>Dashboard authentication</strong>: Not implemented (add for production)</li>
+<li><strong>API rate limiting</strong>: Not implemented (add for production)</li>
+<li><strong>Input validation</strong>: eBPF verifier handles kernel side</li>
+<li><strong>Log injection</strong>: Sanitize user-controlled data</li>
+</ul>
+<h3 id="performance-limits">Performance Limits</h3>
+<ul>
+<li><strong>eBPF map sizes</strong>: Limited by configuration</li>
+<li><strong>Memory usage</strong>: Monitor with metrics_collector</li>
+<li><strong>CPU usage</strong>: Track to prevent resource exhaustion</li>
+<li><strong>Disk space</strong>: Rotate logs regularly</li>
+</ul>
+<hr>
+<h2 id="%F0%9F%93%88-performance-characteristics">📈 Performance Characteristics</h2>
+<h3 id="throughput">Throughput</h3>
+<ul>
+<li><strong>Baseline</strong>: 5M+ pps sustained</li>
+<li><strong>Under attack</strong>: 10M+ pps drop rate</li>
+<li><strong>Blacklist enforcement</strong>: Line-rate (NIC speed)</li>
+</ul>
+<h3 id="latency">Latency</h3>
+<ul>
+<li><strong>eBPF processing</strong>: &lt;1μs per packet</li>
+<li><strong>Statistical detection</strong>: 1-second intervals</li>
+<li><strong>ML inference</strong>: &lt;10ms per prediction</li>
+<li><strong>Alert generation</strong>: &lt;100ms</li>
+</ul>
+<h3 id="resource-usage">Resource Usage</h3>
+<ul>
+<li><strong>CPU</strong>: &lt;20% at 5M pps (4-core system)</li>
+<li><strong>Memory</strong>: ~500MB (including ML model)</li>
+<li><strong>Disk</strong>: ~10MB/day logs (normal traffic)</li>
+</ul>
+<h3 id="scalability">Scalability</h3>
+<ul>
+<li><strong>Horizontal</strong>: Multiple interfaces supported</li>
+<li><strong>Vertical</strong>: Scales with CPU cores (per-CPU maps)</li>
+<li><strong>Map limits</strong>: Configurable (65K flows, 131K IPs)</li>
+</ul>
+<hr>
+<h2 id="%F0%9F%9A%80-future-enhancements-phase-3">🚀 Future Enhancements (Phase 3)</h2>
+<h3 id="planned-features">Planned Features</h3>
+<ol>
+<li><strong>Auto signature generation</strong> from detected attacks</li>
+<li><strong>Comparative benchmarking</strong> with other solutions</li>
+<li><strong>Multi-interface support</strong> with load balancing</li>
+<li><strong>Distributed deployment</strong> across multiple servers</li>
+<li><strong>Advanced ML models</strong> (XGBoost, LightGBM, Neural Networks)</li>
+<li><strong>Anomaly explanation</strong> (SHAP values, LIME)</li>
+<li><strong>Automated response</strong> (rate limiting, CAPTCHA)</li>
+<li><strong>Integration</strong> with SIEM systems (Splunk, ELK)</li>
+</ol>
+<hr>
+<h2 id="%F0%9F%93%9A-references">📚 References</h2>
+<h3 id="ebpfxdp">eBPF/XDP</h3>
+<ul>
+<li><a href="https://ebpf.io/">eBPF Documentation</a></li>
+<li><a href="https://github.com/xdp-project/xdp-tutorial">XDP Tutorial</a></li>
+<li><a href="https://github.com/iovisor/bcc">BCC Reference Guide</a></li>
+</ul>
+<h3 id="machine-learning">Machine Learning</h3>
+<ul>
+<li><a href="https://www.unb.ca/cic/datasets/ddos-2019.html">CIC-DDoS-2019 Dataset</a></li>
+<li><a href="https://scikit-learn.org/">scikit-learn Documentation</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Random_forest">Random Forest Explained</a></li>
+</ul>
+<h3 id="ddos-mitigation">DDoS Mitigation</h3>
+<ul>
+<li><a href="https://www.nist.gov/cyberframework">NIST Cybersecurity Framework</a></li>
+<li><a href="https://www.cloudflare.com/learning/ddos/what-is-a-ddos-attack/">DDoS Attack Taxonomy</a></li>
+</ul>
+<hr>
+<h2 id="%F0%9F%93%9D-license">📝 License</h2>
+<p>MIT License - See LICENSE file for details</p>
+<hr>
+<h2 id="%F0%9F%91%A5-contributing">👥 Contributing</h2>
+<p>This project is designed for educational and research purposes. Contributions are welcome!</p>
+<p><strong>Areas for contribution:</strong></p>
+<ul>
+<li>Additional attack detection algorithms</li>
+<li>Performance optimizations</li>
+<li>Cross-platform support improvements</li>
+<li>Documentation enhancements</li>
+<li>Test coverage expansion</li>
+</ul>
+<hr>
+<p><strong>Last Updated</strong>: January 12, 2026<br>
+<strong>Project Version</strong>: Phase 2 (ML-Enhanced Detection)<br>
+<strong>Author</strong>: Rapid-Corona Development Team</p>
+
+</body>
+</html>

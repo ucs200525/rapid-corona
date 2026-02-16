@@ -1,0 +1,63 @@
+1. Network Situation Awareness Technology based on Extended Berkeley Packet Filter
+
+
+H. Chen, D. Song, Y. Zheng and F. Xiong, "Network Situation Awareness Technology based on Extended Berkeley Packet Filter," 2023 3rd International Conference on Electronic Information Engineering and Computer Science (EIECS), Changchun, China, 2023, pp. 101-104, doi: 10.1109/EIECS59936.2023.10435373. keywords: {Computer science;Protocols;Network security;Information filters;Real-time systems;Computer crime;Network Situation Awareness;DDOS detection;EBPF;HBase},
+
+
+
+2.Research on Efficient Packet Filter Technology Based on eBPF
+
+Y. Zhang, H. Wang and P. Gao, "Research on Efficient Packet Filter Technology Based on eBPF," 2025 IEEE 8th Advanced Information Technology, Electronic and Automation Control Conference (IAEAC), Guiyang, China, 2025, pp. 891-894, doi: 10.1109/IAEAC65194.2025.11165810. keywords: {Access control;Protocols;Process control;TCPIP;Real-time systems;Kernel;Computer crime;Time complexity;Observability;Optimization;Packet filter;eBPF;XDP;Efficient processing},
+
+
+
+3.Kernel-Level DDoS Protection Using eBPF in Iot Networks
+
+K. Živanović and P. Vuletić, "Kernel-Level DDoS Protection Using eBPF in Iot Networks," 2025 33rd Telecommunications Forum (TELFOR), Belgrade, Serbia, 2025, pp. 1-4, doi: 10.1109/TELFOR67910.2025.11314317. keywords: {Filtering;Prevention and mitigation;System performance;Sockets;Filtering algorithms;Telecommunications;Internet of Things;Kernel;Protection;Computer crime;MQTT;DoS;eBPF;XDP},
+
+4.eBPF-Based Runtime Detection of Semantic DDoS Attacks in Linux Containers
+
+S. Remya et al., "eBPF-Based Runtime Detection of Semantic DDoS Attacks in Linux Containers," in IEEE Access, vol. 13, pp. 169178-169219, 2025, doi: 10.1109/ACCESS.2025.3614389.
+keywords: {Denial-of-service attack;Containers;Semantics;Computer crime;Linux;Security;Runtime;Monitoring;Kernel;Servers;eBPF;Linux;DDoS attack;Docker;CODA;container security;real-time detection},
+
+
+5.In-Kernel Traffic Sketching for Volumetric DDoS Detection
+
+M. Zang, F. De Iaco, J. Wu and M. Savi, "In-Kernel Traffic Sketching for Volumetric DDoS Detection," ICC 2025 - IEEE International Conference on Communications, Montreal, QC, Canada, 2025, pp. 2180-2185, doi: 10.1109/ICC52391.2025.11161251. keywords: {Filtering;Heuristic algorithms;Telecommunication traffic;Denial-of-service attack;Data structures;Delays;Servers;Computer crime;Kernel;Optimization;eBPF;DDoS Detection;Kernel Space;Sketching},
+
+
+6.Comprehensive Analysis of DDoS Anomaly Detection in Software-Defined Networks
+
+A. Hirsi et al., "Comprehensive Analysis of DDoS Anomaly Detection in Software-Defined Networks," in IEEE Access, vol. 13, pp. 23013-23071, 2025, doi: 10.1109/ACCESS.2025.3535943.
+keywords: {Computer crime;Surveys;Denial-of-service attack;Taxonomy;Security;Floods;Anomaly detection;Software defined networking;Reviews;Hardware;Amplification attacks;anomaly detection;botnet attacks;DDoS detection;flooding attacks;protocol attacks;reflection attacks;SDN security;software-defined networking (SDN);taxonomy of DDoS attacks},
+
+
+7.Enhancing intrusion detection against denial of service anddistributed denial of service attacks: Leveraging extendedBerkeley packet ﬁlter and machine learning algorithms
+
+Anand, N., M A, S., Aakula, P.K., Ponnuru, R.B., Patan, R., Reddy, C.R.P.: Enhancing intrusion detection against denial of service and distributed denial of service attacks: Leveraging extended Berkeley packet filter and machine learning algorithms. IET Commun. 19, e12879 (2025). https://doi.org/10.1049/cmu2.12879
+
+
+
+8.
+
+Chang Liu, Byungchul Tak, and Long Wang. 2024. Understanding Performance of eBPF Maps. In Proceedings of the ACM SIGCOMM 2024 Workshop on eBPF and Kernel Extensions (eBPF '24). Association for Computing Machinery, New York, NY, USA, 9–15. https://doi.org/10.1145/3672197.3673430
+
+
+
+
+9.
+NEMALIKANTI ANAND, SAIFULLA M A, Pavan Kumar Aakula et al. High-performance Intrusion Detection Systemusing eBPF with Machine Learning algorithms, 05 July 2023, PREPRINT (Version 1) available at Research Square [https://doi.org/10.21203/rs.3.rs-3140072/v1]
+
+
+
+10.
+
+Sadiq, A., Syed, H. J., Ansari, A. A., Ibrahim, A. O., Alohaly, M., & Elsadig, M. (2023). Detection of Denial of Service Attack in Cloud Based Kubernetes Using eBPF. Applied Sciences, 13(8), 4700. https://doi.org/10.3390/app13084700
+
+
+11.
+
+Hadi, H. J., Adnan, M., Cao, Y., Hussain, F. B., Ahmad, N., Alshara, M. A., & Javed, Y. (2024). iKern: Advanced Intrusion Detection and Prevention at the Kernel Level Using eBPF. Technologies, 12(8), 122. https://doi.org/10.3390/technologies12080122
+
+
+

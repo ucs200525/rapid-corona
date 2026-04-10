@@ -56,6 +56,13 @@ class DDoSMitigationSystem:
         # Initialize components
         self.traffic_monitor = None
         
+        # Auto-detect ML model if not provided
+        if not ml_model_path:
+            default_model = Path('data/models/ddos_classifier.joblib')
+            if default_model.exists():
+                ml_model_path = str(default_model)
+                logger.info(f"Using auto-detected ML model: {ml_model_path}")
+        
         # Use ML-enhanced detector if model provided
         if ml_model_path:
             self.anomaly_detector = MLEnhancedAnomalyDetector(model_path=ml_model_path)
@@ -172,6 +179,16 @@ class DDoSMitigationSystem:
                 
                 # Handle detected anomalies
                 if anomaly_result.is_anomaly:
+                    # ALWAYS attempt to blacklist top attackers if anomaly is detected, 
+                    # even if alert system is in cooldown
+                    if ip_stats:
+                        top_ips = sorted(ip_stats, key=lambda x: x['packets'], reverse=True)[:5]
+                        for ip_stat in top_ips:
+                            if ip_stat['packets'] > 15:  # Threshold for blacklisting
+                                if self.traffic_monitor.add_to_blacklist(ip_stat['ip']):
+                                    logger.warning(f"Mitigation: Blacklisted {ip_stat['ip']} ({ip_stat['packets']} packets)")
+
+                    # Handle alerting separately
                     if self.anomaly_detector.should_alert('ddos_attack'):
                         self.alert_system.send_alert(
                             alert_type='ddos_attack',
@@ -184,14 +201,6 @@ class DDoSMitigationSystem:
                                 'baseline_pps': self.anomaly_detector.baseline.mean_pps,
                             }
                         )
-                        
-                        # Add top attackers to blacklist
-                        if ip_stats:
-                            top_ips = sorted(ip_stats, key=lambda x: x['packets'], reverse=True)[:5]
-                            for ip_stat in top_ips:
-                                if ip_stat['packets'] > 10000:  # Threshold for blacklisting
-                                    self.traffic_monitor.add_to_blacklist(ip_stat['ip'])
-                                    logger.warning(f"Blacklisted: {ip_stat['ip']} ({ip_stat['packets']} packets)")
                 
                 # Collect system metrics
                 system_metrics = self.metrics_collector.collect_system_metrics()
@@ -254,6 +263,8 @@ class DDoSMitigationSystem:
             'current_pps': current_pps,
             'current_bps': current_bps,
             'ml_enabled': self.ml_enabled,
+            'ml_stats': self.anomaly_detector.get_ml_stats() if hasattr(self.anomaly_detector, 'get_ml_stats') else {},
+            'feature_importance': self.anomaly_detector.get_feature_importance() if hasattr(self.anomaly_detector, 'get_feature_importance') else {},
         }
         
         # Add ML stats if enabled

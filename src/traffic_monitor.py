@@ -8,6 +8,7 @@ import logging
 import struct
 import socket
 import time
+from pathlib import Path
 from typing import Dict, List, Tuple, Optional
 
 # Platform-specific imports
@@ -43,9 +44,13 @@ class TrafficMonitor:
         self.xdp_mode = xdp_mode
         self.bpf = None
         self.loaded = False
+        self.blacklist_file = "data/blacklist.json"
         
         if not BCC_AVAILABLE:
             raise RuntimeError("BCC/eBPF not available on this system")
+        
+        # Ensure data directory exists
+        Path("data").mkdir(exist_ok=True)
     
     def load_xdp_program(self, program_path: str) -> bool:
         """
@@ -85,6 +90,9 @@ class TrafficMonitor:
             
             self.bpf.attach_xdp(self.interface, fn, flags)
             self.loaded = True
+            
+            # Load existing blacklist into eBPF map
+            self._load_blacklist_from_disk()
             
             logger.info(f"XDP program loaded on {self.interface} (mode: {self.xdp_mode})")
             return True
@@ -164,12 +172,26 @@ class TrafficMonitor:
             ip_map = self.bpf.get_table("ip_tracking_map")
             ip_stats = []
             
+            
+            # Fetch ALL IPs first (up to a reasonable safety max), then sort
+            # Iterate through the map without an early break to find the true top talkers
+            # BPF hash maps are not ordered, so the first 100 might be low-traffic IPs
+            MAX_scan = 10000 
             count = 0
+            
             for key, value in ip_map.items():
-                if count >= limit:
+                if count >= MAX_scan:
                     break
                 
-                ip_addr = socket.inet_ntoa(struct.pack('I', key.value))
+                # key is just a c_uint32 (the IP address)
+                # In different BCC versions, key might be 'c_uint', 'c_int', or just an int.
+                # safely cast it
+                try:
+                    ip_int = key.value
+                except AttributeError:
+                    ip_int = key
+                    
+                ip_addr = socket.inet_ntoa(struct.pack('I', ip_int))
                 
                 ip_stats.append({
                     'ip': ip_addr,
@@ -180,12 +202,13 @@ class TrafficMonitor:
                     'udp_count': value.udp_count,
                     'last_seen': value.last_seen,
                 })
-                
                 count += 1
             
             # Sort by packet count (descending)
             ip_stats.sort(key=lambda x: x['packets'], reverse=True)
-            return ip_stats
+            
+            # Return top 'limit'
+            return ip_stats[:limit]
             
         except Exception as e:
             logger.error(f"Failed to read IP statistics: {e}")
@@ -257,6 +280,9 @@ class TrafficMonitor:
             
             blacklist_map[blacklist_map.Key(ip_int)] = blacklist_map.Leaf(timestamp)
             logger.info(f"Added {ip_address} to blacklist")
+            
+            # Save to disk
+            self._save_blacklist_to_disk()
             return True
             
         except Exception as e:
@@ -282,6 +308,9 @@ class TrafficMonitor:
             
             del blacklist_map[blacklist_map.Key(ip_int)]
             logger.info(f"Removed {ip_address} from blacklist")
+            
+            # Save to disk
+            self._save_blacklist_to_disk()
             return True
             
         except Exception as e:
@@ -342,3 +371,33 @@ class TrafficMonitor:
         except Exception as e:
             logger.error(f"Failed to update config: {e}")
             return False
+
+    def _save_blacklist_to_disk(self):
+        """Save current blacklist to disk for persistence"""
+        try:
+            blacklist = self.get_blacklist()
+            with open(self.blacklist_file, 'w') as f:
+                import json
+                json.dump(blacklist, f)
+            logger.debug(f"Saved {len(blacklist)} IPs to blacklist file")
+        except Exception as e:
+            logger.error(f"Failed to save blacklist to disk: {e}")
+
+    def _load_blacklist_from_disk(self):
+        """Load blacklist from disk into eBPF map"""
+        if not Path(self.blacklist_file).exists():
+            return
+        
+        try:
+            import json
+            with open(self.blacklist_file, 'r') as f:
+                blacklist = json.load(f)
+            
+            count = 0
+            for ip in blacklist:
+                if self.add_to_blacklist(ip):
+                    count += 1
+            
+            logger.info(f"Restored {count} IPs from blacklist file")
+        except Exception as e:
+            logger.error(f"Failed to load blacklist from disk: {e}")

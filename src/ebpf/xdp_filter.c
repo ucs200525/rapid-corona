@@ -192,13 +192,6 @@ int xdp_ddos_filter(struct xdp_md *ctx) {
     __u32 dst_ip = iph->daddr;
     __u8 protocol = iph->protocol;
     
-    // Check blacklist
-    if (is_blacklisted(src_ip)) {
-        action = XDP_DROP;
-        update_stats(s, packet_size, protocol, action);
-        return action;
-    }
-    
     // Parse transport layer and create flow key
     struct flow_key fkey = {};
     fkey.src_ip = src_ip;
@@ -220,14 +213,6 @@ int xdp_ddos_filter(struct xdp_md *ctx) {
         // Extract TCP flags
         tcp_flags = ((unsigned char *)tcph)[13];
         
-        // Simple SYN flood detection
-        if (tcp_flags & 0x02) {
-            struct ip_stats *ip_stat = ip_tracking_map.lookup(&src_ip);
-            if (ip_stat && ip_stat->syn_count > 1000) {
-                action = XDP_DROP;
-            }
-        }
-        
     } else if (protocol == IPPROTO_UDP) {
         udph = (void *)iph + (iph->ihl * 4);
         if ((void *)(udph + 1) > data_end)
@@ -238,10 +223,23 @@ int xdp_ddos_filter(struct xdp_md *ctx) {
     }
     
 update_tracking:
-    // Update tracking maps
+    // Update tracking maps regardless of blacklist status
     update_ip_stats(src_ip, packet_size, protocol, tcp_flags);
     update_flow_stats(&fkey, packet_size, tcp_flags);
+
+process_action:
+    // Check blacklist AFTER updating stats so we can see them in Top IPs
+    if (is_blacklisted(src_ip)) {
+        action = XDP_DROP;
+    }
+    else if (protocol == IPPROTO_TCP && (tcp_flags & 0x02)) {
+         // Simple SYN flood detection
+        struct ip_stats *ip_stat = ip_tracking_map.lookup(&src_ip);
+        if (ip_stat && ip_stat->syn_count > 1000) {
+            action = XDP_DROP;
+        }
+    }
+
     update_stats(s, packet_size, protocol, action);
-    
     return action;
 }

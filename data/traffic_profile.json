@@ -1,13 +1,13 @@
 {
-  "avg_pps": 0.0,
-  "peak_pps": 0.0,
-  "avg_bps": 0.0,
-  "peak_bps": 0.0,
-  "tcp_ratio": 0.85,
-  "udp_ratio": 0.1,
-  "icmp_ratio": 0.05,
+  "avg_pps": 39.07647523066861,
+  "peak_pps": 522.0,
+  "avg_bps": 3182.0275875697057,
+  "peak_bps": 463204.0,
+  "tcp_ratio": 0.9815721649484536,
+  "udp_ratio": 0.005154639175257732,
+  "icmp_ratio": 0.01327319587628866,
   "unique_ips_per_minute": 0.0,
-  "learning_samples": 0,
-  "last_updated": 0.0,
-  "is_learned": false
+  "learning_samples": 2411,
+  "last_updated": 1774727421.1488397,
+  "is_learned": true
 }

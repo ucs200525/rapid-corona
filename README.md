@@ -8,154 +8,75 @@ By leveraging XDP, the system can block malicious traffic **before it even reach
 
 ## 🚀 Key Features
 
-### 1. **Kernel-Level Blocking (XDP)**
-   - Uses **eBPF (Extended Berkeley Packet Filter)** to hook into the network driver.
-   - Drops malicious packets directly at the NIC level.
-   - Extremely low CPU overhead compared to userspace firewalls (iptables/nftables).
-   - Blocks based on a dynamic **Blacklist Map** shared between kernel and userspace.
+*   **Kernel-Level Blocking (XDP)**: Uses **eBPF (Extended Berkeley Packet Filter)** to hook into the network driver. Drops malicious packets directly at the NIC level.
+*   **Intelligent Anomaly Detection**:
+    - **Baseline Profiling**: Automatically learns normal traffic patterns (PPS, Protocol distribution) during a learning phase.
+    - **ML Classification**: Uses a trained **Random Forest Classifier** to analyze traffic features (Entropy, Flow duration, Flag counts) and detect sophisticated attacks.
+*   **Real-Time Dashboard**: A modern, dark-themed dashboard built with **Flask** and **Chart.js**.
+*   **Distributed Attack Simulation**: Includes a powerful **Attack Simulator** (`attack_simulator.py`) capable of generating UDP/ICMP Floods, TCP SYN Floods, and HTTP Floods with **Distributed Botnet Attacks** (Spoofed Source IPs).
 
-### 2. **Intelligent Anomaly Detection**
-   - **Baseline Profiling**: Automatically learns normal traffic patterns (PPS, Protocol distribution) during a learning phase.
-   - **ML Classification**: Uses a trained **Random Forest Classifier** to analyze traffic features (Entropy, Flow duration, Flag counts) and detect sophisticated attacks.
-   - **Hybrid Approach**: Combines statistical thresholds (for volumetric floods) with ML (for subtle L7/protocol attacks).
+---
 
-### 3. **Persistent Blacklisting**
-   - Automatically saves blocked IPs to `data/blacklist.json`.
-   - Restores the blacklist on system restart, ensuring persistent protection against known attackers.
-   - Supports manual addition/removal of IPs via the dashboard capabilities.
+## 📂 Project Structure & File Descriptions
 
-### 4. **Real-Time Dashboard**
-   - **Web Interface**: A modern, dark-themed dashboard built with **Flask** and **Chart.js**.
-   - **Live Metrics**: Displays current PPS (Packets Per Second), Drop Rate, Top Attacking IPs, and ML Confidence.
-   - **Protocol Analysis**: Visualizes TCP vs UDP vs ICMP traffic distribution.
-   - **Attack Alerts**: Shows a history of recent detection events with severity scores.
+### Core Controller & UI
+- **`main.py`**: The central entry point. Orchestrates the loading of the XDP filter, the starting of the dashboard, and the periodic polling of kernel metrics.
+- **`src/dashboard.py`**: A Flask-based web application that provides a real-time visualization of network traffic, detection events, and the current blacklist.
+- **`src/traffic_monitor.py`**: Acts as a bridge between the kernel and userspace. It reads BPF maps (stats) and writes to them (blacklist).
 
-### 5. **Distributed Attack Simulation**
-   - Includes a powerful **Attack Simulator** (`attack_simulator.py`) capable of generating:
-     - UDP/ICMP Floods
-     - TCP SYN Floods
-     - HTTP Floods
-     - **Distributed Botnet Attacks** (Spoofed Source IPs)
-   - Supports high-speed packet injection using raw sockets (Scapy L2).
+### Mitigation & Detection Logic
+- **`src/anomaly_detector.py`**: The "brain" of the system. It compares current traffic against the baseline and makes the final decision on whether to blacklist an IP.
+- **`src/alert_system.py`**: Manages notifications and logging for detected attacks.
+- **`src/metrics_collector.py`**: Periodically samples traffic stats to feed into the anomaly detector and dashboard.
+
+### Kernel Plane (eBPF/XDP)
+- **`src/ebpf/xdp_filter.c`**: The C program compiled to BPF bytecode. It handles the actual dropping (`XDP_DROP`) of blacklisted IPs and the initial classification (`XDP_PASS`).
+- **`src/ebpf/xdp_maps.h`**: Defines the shared memory structures (Hash Maps and Arrays) used for communication between the C kernel program and Python userspace.
+
+### Machine Learning (ML)
+- **`src/ml/feature_extractor.py`**: Converts raw packet statistics into numerical features (e.g., protocol ratios, entropy) for the ML model.
+- **`src/ml/ml_classifier.py`**: Wraps the Random Forest model and provides a simple `predict()` interface to the anomaly detector.
+- **`src/ml/model_trainer.py`**: Utility for training the Random Forest model using historical DDoS datasets (like CIC-DDoS2019).
+
+### Simulation & Testing
+- **`attack_simulator.py`**: A multi-functional tool for testing the system. Supports various attack vectors and **Spoofed IP** simulation to test botnet defense.
+- **`run_attack_demo.py`**: A high-level automation script that simulates a multi-phase attack (Baseline -> UDP Flood -> SYN Flood) to showcase the system's capabilities on the dashboard.
 
 ---
 
 ## 🏗️ System Architecture
 
-1.  **Ingress Filter (`src/ebpf/xdp_filter.c`)**:
-    - The C program compiled into eBPF bytecode.
-    - Inspects every incoming packet header.
-    - Checks the **Blacklist Map**. If the Source IP is blacklisted -> `XDP_DROP`.
-    - Updates **Statistics Maps** (Per-IP packet counts, Protocol counts) -> `XDP_PASS`.
-
-2.  **Userspace Controller (`main.py`)**:
-    - Loads the XDP program into the kernel.
-    - Periodically reads the **Statistics Maps** from the kernel.
-    - Feeds traffic data into the **Anomaly Detector**.
-    - Updates the dashboard and logs.
-
-3.  **Anomaly Detector (`src/anomaly_detector.py`)**:
-    - Compares current traffic against the learned **Baseline Profile**.
-    - Runs the **ML Classifier** on traffic features.
-    - If an attack is detected:
-        - Identifies the top offending IPs.
-        - Adds them to the **Blacklist Map** (blocking them instantly in the kernel).
-        - Triggers an alert.
+1.  **Ingress Filter (Kernel)**: The `XDP_DROP` hook intercepts packets.
+2.  **Shared Memory (BPF Maps)**: Stats flow up; Blacklist flows down.
+3.  **Analysis Engine (Python)**: Anomaly detector runs Every 1s.
+4.  **Action**: Offenders added to `blacklist_map` (instant block).
+5.  **Visualization**: Dashboard reflects the current state.
 
 ---
 
-## 📦 Installation & Requirements
+## 🛠️ Installation & Usage
 
 ### Prerequisites
 - **Linux OS** (Kernel 4.15+ for XDP support).
 - **Python 3.8+**.
-- **Root privileges** (Sudo) are required to load eBPF programs and send raw packets.
+- **Root privileges** (Sudo) for eBPF loading.
 
-### Install Dependencies
-```bash
-# System dependencies (for eBPF compilation)
-sudo apt update
-sudo apt install -y bpfcc-tools linux-headers-$(uname -r) python3-bpfcc clang llvm libelf-dev python3-pip tcpdump
-
-# Python dependencies
-sudo pip3 install scapy flask joblib scikit-learn numpy pandas
-```
-
----
-
-## 🛠️ Usage
-
-### 1. Setup Network (Local Testing)
-Since XDP filters ingress traffic, testing on a single machine requires a virtual ethernet pair (`veth`).
-
-```bash
-# Create veth0 <-> veth1 pair
-sudo ip link add veth0 type veth peer name veth1
-sudo ip link set veth0 up
-sudo ip link set veth1 up
-sudo ip addr add 192.168.99.1/24 dev veth0
-sudo ip addr add 192.168.99.2/24 dev veth1
-```
-
-### 2. Run the DDoS System
-Run the system on the "victim" interface (`veth1`).
-
-```bash
-echo "password" | sudo -S python3 main.py --interface veth1 --mode generic --dashboard
-```
-*   **--interface**: Network interface to protect.
-*   **--mode**: `native` (driver support) or `generic` (software emulation, works on all NICs).
-*   **--dashboard**: Starts the web UI at `http://localhost:5000`.
-
-### 3. Simulate an Attack
-Run the simulator on the "attacker" interface (`veth0`).
-
-```bash
-# Mixed attack from a distributed botnet (100+ random persistent IPs)
-sudo python3 attack_simulator.py --type mixed --distributed --target 192.168.99.2 --duration 30 --interface veth0
-```
-*   **--distributed**: Spoofs random source IPs (simulating a botnet).
-*   **--target**: Must match the IP of the victim interface (`veth1`).
-*   **--interface**: Must be the attacker interface (`veth0`).
-
----
-
-## 📊 Dashboard
-
-The dashboard is accessible at **`http://localhost:5000`**.
-
-- **Real-time Status**: Shows current traffic load vs baseline.
-- **Top IPs**: Lists the IP addresses sending the most packets.
-- **Blacklist**: Shows IPs currently blocked by the XDP filter.
-- **ML Analysis**: Displays which features (e.g., "High UDP count") triggered the detection.
-
----
-
-## 📂 Project Structure
-
-```
-rapid-corona/
-├── main.py                 # Entry point (Controller)
-├── attack_simulator.py     # DDoS Simulation Tool
-├── run_attack_demo.py      # Automated Demo Script (Dashboard Direct)
-├── run.md                  # Quick Start Guide
-├── requirements.txt        # Python dependencies
-├── src/
-│   ├── anomaly_detector.py # Logic for detection & blocking
-│   ├── dashboard.py        # Flask Web App
-│   ├── traffic_monitor.py  # Interface to eBPF maps
-│   ├── ml/                 # Machine Learning modules
-│   └── ebpf/
-│       ├── xdp_filter.c    # CORE XDP C Program (Kernel)
-│       └── xdp_maps.h      # BPF Map definitions
-├── data/
-│   ├── blacklist.json      # Persistent blocked IPs
-│   ├── traffic_profile.json# Learned baseline stats
-│   └── models/             # Trained ML models (.joblib)
-└── logs/                   # System logs
-```
+### Quick Start
+1.  **Install dependencies**:
+    `sudo apt install -y bpfcc-tools clang llvm libelf-dev python3-pip`
+    `sudo pip3 install scapy flask joblib scikit-learn numpy pandas`
+2.  **Setup Virtual Network**:
+    `sudo ip link add veth0 type veth peer name veth1 && sudo ip link set veth0 up && sudo ip link set veth1 up`
+    `sudo ip addr add 192.168.99.1/24 dev veth0 && sudo ip addr add 192.168.99.2/24 dev veth1`
+3.  **Run the system** (Victim):
+    `sudo python3 main.py --interface veth1 --mode generic --dashboard`
+4.  **Launch the demo attack** (Attacker):
+    `sudo python3 attack_simulator.py --type mixed --distributed --target 192.168.99.2 --interface veth0`
 
 ---
 
 ## ⚠️ Disclaimer
-This tool is for **educational and testing purposes only**. Using DDoS tools on networks you do not own is illegal. The XDP filter is powerful and can block all traffic if misconfigured. Always test in a controlled environment.
+This tool is for **educational and testing purposes only**. Using DDoS tools on networks you do not own is illegal.
+
+---
+*Developed for research into hybrid kernel/ML defense mechanisms.*

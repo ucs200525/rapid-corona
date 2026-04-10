@@ -43,7 +43,6 @@ By leveraging XDP, the system can block malicious traffic **before it even reach
 - **`run_attack_demo.py`**: A high-level automation script that simulates a multi-phase attack (Baseline -> UDP Flood -> SYN Flood) to showcase the system's capabilities on the dashboard.
 
 ---
-
 ## 🏗️ System Architecture
 
 1.  **Ingress Filter (Kernel)**: The `XDP_DROP` hook intercepts packets.
